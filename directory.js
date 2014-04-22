@@ -81,11 +81,13 @@ let Directory = {
 				// Add other properties for directories/files
 				if (isDir) {
 					it.basename = it.name;
-					it.link = it.name + '/';
+					it.sortIndex = it.name.toLowerCase();
+					it.link = encodeURIComponent(it.name) + '/';
 				} else {
 					let basename = self.stripMdSuffix(it.name);
 					it.basename = basename;
-					it.link = basename;
+					it.sortIndex = it.name.toLowerCase();
+					it.link = encodeURIComponent(basename);
 				}
 			});
 			return dirContent;
@@ -104,6 +106,16 @@ let Directory = {
 		});
 	},
 
+	sortDirectory: function(items) {
+		return items.sort(function(a, b) {
+			// Arrange directories on top
+			if (a.isDirectory && !b.isDirectory) { return -1; }
+			if (!a.isDirectory && b.isDirectory) { return 1; }
+			// And sort case-insensitively by name
+			return a.sortIndex.localeCompare(b.sortIndex);
+		});
+	},
+
 	viewDirectory: function(res, relativePath) {
 		let self = this;
 		let absolutePath = self.getAbsolutePath(relativePath);
@@ -112,10 +124,12 @@ let Directory = {
 		return self.parseDirectory(absolutePath)
 		.then(function(items) {
 			let filtered = self.filterDirectory(items);
+			filtered = self.sortDirectory(filtered);
 
 			let basename = path.basename(relativePath);
 			let data = {
-				title: basename.length !== 0 ? basename : self.settings.brandName,
+				brandName: self.settings.brandName,
+				title: basename,
 				items: filtered
 			};
 			res.render('directory', data);
@@ -128,9 +142,12 @@ let Directory = {
 
 		return FS.readFile(absolutePath, { encoding: 'utf-8' })
 		.then(function(content) {
-			let data = {};
-			data.title = path.basename(relativePath, self.settings.mdSuffix);
-			data.content = marked(content)
+			let data = {
+				brandName: self.settings.brandName,
+				title: path.basename(relativePath, self.settings.mdSuffix),
+				content: marked(content)
+			};
+
 			res.render('document', data);
 		});
 	},

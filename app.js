@@ -1,7 +1,7 @@
 'use strict';
 
 let express = require('express');
-let expressHelpers = require('express-helpers');
+// let expressHelpers = require('express-helpers');
 let ejsLocals = require('ejs-locals');
 let stylus = require('stylus');
 let path = require('path');
@@ -10,7 +10,7 @@ let directory = require('./directory');
 
 let app = express();
 // view engine setup
-expressHelpers(app);
+// expressHelpers(app);
 app.engine('ejs', ejsLocals);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');

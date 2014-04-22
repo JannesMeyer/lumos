@@ -1,7 +1,9 @@
 <% layout('layout') %>
-<h1><%= title %></h1>
-<ul>
+<p class="title"><%= title %></p>
+<ul class="nav">
 <% items.forEach(function(item) { -%>
-	<li><%- link_to(item.basename, item.link) %></li>
+	<li class="<% if (item.isDirectory) { %>directory<% } else { %>file<% } %>">
+	<a href="<%- item.link %>"><%= item.basename %></a>
+	</li>
 <% }) -%>
 </ul>

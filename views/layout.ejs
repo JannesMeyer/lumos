@@ -1,10 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title><%= title %></title>
-<link rel="stylesheet" href="/stylesheets/style.css">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %></title>
+  <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+  <link rel="stylesheet" href="/stylesheets/style.css">
 </head>
 <body>
-  <%- body %>
+  <div class="navbar navbar-default navbar-static-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/"><%= brandName %></a>
+      </div>
+    </div>
+  </div>
+
+  <div class="container m-content m-navigation">
+    <%- body %>
+  </div>
+
+<!-- Bootstrap
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <script src="/javascripts/bootstrap.min.js"></script>
+-->
+<!-- InstantClick
+  <script src="/javascripts/instantclick-3.0.1.js" data-no-instant></script>
+  <script data-no-instant>InstantClick.init();</script>
+-->
 </body>
 </html>

@@ -1,7 +1,21 @@
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  background: #ddd;
 }
-a {
+.navbar .brand {
+  margin-left: 0;
+}
+.m-navigation .directory > a {
+  color: #d2322d;
+}
+.m-navigation .file > a {
   color: #00b7ff;
+}
+.m-content {
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  background: #fff;
+  border-radius: 10px;
+}
+#instantclick {
+  display: none;
 }
