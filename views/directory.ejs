@@ -1,7 +1,7 @@
 <% layout('layout') %>
 <h1><%= title %></h1>
 <ul>
-<% files.forEach(function(file) { -%>
-	<li><%- link_to(file, file) %></li>
+<% items.forEach(function(item) { -%>
+	<li><%- link_to(item.basename, item.link) %></li>
 <% }) -%>
 </ul>
