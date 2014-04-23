@@ -1,20 +1,36 @@
+html {
+  background: url("/images/old_map.png");
+  min-height: 100%;
+}
 body {
-  background: #ddd;
+  background: rgba(255,255,255,0.5);
+  min-height: 100%;
 }
 .navbar .brand {
   margin-left: 0;
 }
-.m-navigation .directory > a {
-  color: #d2322d;
-}
-.m-navigation .file > a {
+a {
   color: #00b7ff;
 }
+.m-breadcrumb {
+  padding-left: 0;
+  padding-right: 0;
+}
+.m-breadcrumb ol {
+  background-color: #fcfcfc;
+}
+.m-navigation,
 .m-content {
-  padding-bottom: 20px;
   margin-bottom: 20px;
-  background: #fff;
-  border-radius: 10px;
+  background-color: #fcfcfc;
+  border-radius: 4px;
+  min-height: 200px;
+}
+.m-content {
+  padding: 15px;
+}
+.m-navigation {
+  padding: 4px;
 }
 #instantclick {
   display: none;

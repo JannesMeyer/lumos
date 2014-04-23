@@ -7,6 +7,7 @@
   <title><%= title %></title>
   <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
   <link rel="stylesheet" href="/stylesheets/style.css">
+  <link rel="icon" href="/images/favicon.png">
 </head>
 <body>
   <div class="navbar navbar-default navbar-static-top" role="navigation">
@@ -17,9 +18,18 @@
     </div>
   </div>
 
-  <div class="container m-content m-navigation">
-    <%- body %>
+  <!-- Breadcrumb navigation -->
+  <div class="container m-breadcrumb">
+    <ol class="breadcrumb">
+    <% breadcrumbs.forEach(function(item) { if (!item.isActive) { %>
+      <li><a href="<%- item.path %>"><%= item.name %></a></li>
+    <% } else { %>
+      <li class="active"><%= item.name %></li>
+    <% }}) %>
+    </ol>
   </div>
+
+  <%- body %>
 
 <!-- Bootstrap
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>

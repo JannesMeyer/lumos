@@ -1,9 +1,15 @@
 <% layout('layout') %>
-<p class="title"><%= title %></p>
-<ul class="nav">
-<% items.forEach(function(item) { -%>
-	<li class="<% if (item.isDirectory) { %>directory<% } else { %>file<% } %>">
-	<a href="<%- item.link %>"><%= item.basename %></a>
-	</li>
-<% }) -%>
-</ul>
+<div class="container m-navigation">
+	<ul class="nav">
+	<% items.forEach(function(item) { -%>
+		<li class="<% if (item.isDirectory) { %>directory<% } else { %>file<% } %>">
+		<a href="<%- item.link %>">
+			<% if (item.isDirectory) { -%><span class="label label-success">DIR</span><% } else { -%>
+			<span class="label label-default">MD</span>
+			<% } -%>
+			<%= item.basename %>
+		</a>
+		</li>
+	<% }) -%>
+	</ul>
+</div>

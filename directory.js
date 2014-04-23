@@ -94,6 +94,54 @@ let Directory = {
 		});
 	},
 
+	// Directories have to end with a slash
+	makeBreadcrumbs: function(relativePath, emptyLeaf) {
+		let self = this;
+
+		let pathSegments = relativePath.split('/');
+
+		if (emptyLeaf && pathSegments.length > 2) {
+			// Remove last element if it's empty
+			pathSegments.pop()
+		}
+		let lastSegment = pathSegments.length - 1;
+
+		let currentPath = '';
+		let breadcrumbs = [];
+		pathSegments.forEach(function(segment, i) {
+			let value = {
+				name: segment,
+				isActive: false
+			};
+
+			// Replace the first segment '' with 'Home'
+			if (i === 0) {
+				value.name = 'Home';
+			}
+
+			if (i === lastSegment) {
+				// Directory
+				if (emptyLeaf) {
+					value.name = segment;
+					// value.path = currentPath + segment;
+					value.isActive = true;
+				} else {
+					// File
+					value.name = self.stripMdSuffix(segment);
+					// value.path = currentPath + self.stripMdSuffix(segment);
+					value.isActive = true;
+				}
+			} else {
+				currentPath += segment + '/';
+				value.path = currentPath;
+			}
+
+			breadcrumbs.push(value);
+		});
+
+		return breadcrumbs;
+	},
+
 	filterDirectory: function(items) {
 		let self = this;
 		let indexFilename = self.getIndexFilename();
@@ -123,14 +171,14 @@ let Directory = {
 		// Read directory contents
 		return self.parseDirectory(absolutePath)
 		.then(function(items) {
-			let filtered = self.filterDirectory(items);
-			filtered = self.sortDirectory(filtered);
+			let filtered = self.sortDirectory(self.filterDirectory(items));
 
-			let basename = path.basename(relativePath);
+			let basename = path.basename(relativePath); // could be empty at the root
 			let data = {
 				brandName: self.settings.brandName,
 				title: basename,
-				items: filtered
+				items: filtered,
+				breadcrumbs: self.makeBreadcrumbs(relativePath, true)
 			};
 			res.render('directory', data);
 		});
@@ -145,7 +193,8 @@ let Directory = {
 			let data = {
 				brandName: self.settings.brandName,
 				title: path.basename(relativePath, self.settings.mdSuffix),
-				content: marked(content)
+				content: marked(content),
+				breadcrumbs: self.makeBreadcrumbs(relativePath, false)
 			};
 
 			res.render('document', data);
