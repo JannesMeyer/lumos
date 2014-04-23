@@ -95,50 +95,33 @@ let Directory = {
 	},
 
 	// Directories have to end with a slash
-	makeBreadcrumbs: function(relativePath, emptyLeaf) {
+	makeBreadcrumbs: function(relativePath, lastIsFile) {
 		let self = this;
-
-		let pathSegments = relativePath.split('/');
-
-		if (emptyLeaf && pathSegments.length > 2) {
-			// Remove last element if it's empty
-			pathSegments.pop()
-		}
-		let lastSegment = pathSegments.length - 1;
-
-		let currentPath = '';
 		let breadcrumbs = [];
-		pathSegments.forEach(function(segment, i) {
-			let value = {
-				name: segment,
-				isActive: false
-			};
-
-			// Replace the first segment '' with 'Home'
-			if (i === 0) {
-				value.name = 'Home';
-			}
-
-			if (i === lastSegment) {
-				// Directory
-				if (emptyLeaf) {
-					value.name = segment;
-					// value.path = currentPath + segment;
-					value.isActive = true;
-				} else {
-					// File
-					value.name = self.stripMdSuffix(segment);
-					// value.path = currentPath + self.stripMdSuffix(segment);
-					value.isActive = true;
-				}
-			} else {
-				currentPath += segment + '/';
-				value.path = currentPath;
-			}
-
-			breadcrumbs.push(value);
+		// Split path
+		let pathSegments = relativePath.split('/').filter(function(item) {
+			return item !== ''; // Remove all empty segments
 		});
+		// Home item
+		let item = {
+			name: 'Home',
+			path: '/',
+			isActive: (pathSegments.length === 0)
+		};
+		breadcrumbs.push(item);
+		// The rest of the path
+		pathSegments.forEach(function(segment, i) {
+			let isLast = (i === pathSegments.length - 1);
+			let isFile = (isLast && lastIsFile);
 
+			let beautifulName = isFile ? self.stripMdSuffix(segment) : segment;
+			item = {
+				name: beautifulName,
+				path: item.path + beautifulName + (isFile ? '' : '/'),
+				isActive: isLast
+			};
+			breadcrumbs.push(item);
+		});
 		return breadcrumbs;
 	},
 
@@ -178,7 +161,7 @@ let Directory = {
 				brandName: self.settings.brandName,
 				title: basename,
 				items: filtered,
-				breadcrumbs: self.makeBreadcrumbs(relativePath, true)
+				breadcrumbs: self.makeBreadcrumbs(relativePath, false)
 			};
 			res.render('directory', data);
 		});
@@ -194,7 +177,7 @@ let Directory = {
 				brandName: self.settings.brandName,
 				title: path.basename(relativePath, self.settings.mdSuffix),
 				content: marked(content),
-				breadcrumbs: self.makeBreadcrumbs(relativePath, false)
+				breadcrumbs: self.makeBreadcrumbs(relativePath, true)
 			};
 
 			res.render('document', data);
