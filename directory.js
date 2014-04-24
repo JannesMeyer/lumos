@@ -1,5 +1,7 @@
 'use strict';
 
+// If you want your file lists to sort correctly you have to compile Node.js with libicu i18n support.
+
 let fs = require('fs');
 let path = require('path');
 let util = require('util');
@@ -19,7 +21,6 @@ function startsWith(str, search) {
 	// no type checking or null checking
 	return str.length >= search.length && str.slice(0, search.length) === search;
 }
-// Stat all of these fuckers
 function endsWith(str, search) {
 	// no type checking or null checking
 	return str.length >= search.length && str.slice(str.length - search.length) === search;
@@ -81,12 +82,12 @@ let Directory = {
 				// Add other properties for directories/files
 				if (isDir) {
 					it.basename = it.name;
-					it.sortIndex = it.name.toLowerCase();
+					it.sortString = it.name.toLowerCase();
 					it.link = encodeURIComponent(it.name) + '/';
 				} else {
 					let basename = self.stripMdSuffix(it.name);
 					it.basename = basename;
-					it.sortIndex = it.name.toLowerCase();
+					it.sortString = it.name.toLowerCase();
 					it.link = encodeURIComponent(basename);
 				}
 			});
@@ -143,7 +144,7 @@ let Directory = {
 			if (a.isDirectory && !b.isDirectory) { return -1; }
 			if (!a.isDirectory && b.isDirectory) { return 1; }
 			// And sort case-insensitively by name
-			return a.sortIndex.localeCompare(b.sortIndex);
+			return a.sortString.localeCompare(b.sortString, undefined, { numeric: true });
 		});
 	},
 

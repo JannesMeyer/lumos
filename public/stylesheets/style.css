@@ -1,16 +1,15 @@
-html {
-  background: url("/images/old_map.png");
-  min-height: 100%;
-}
 body {
-  background: rgba(255,255,255,0.5);
-  min-height: 100%;
+  background: url("/images/old_map_50.png");
 }
 .navbar .brand {
   margin-left: 0;
 }
 a {
   color: #00b7ff;
+}
+a:active {
+  color: #eee;
+  background-color: #000;
 }
 .m-breadcrumb {
   padding-left: 0;
@@ -32,6 +31,6 @@ a {
 .m-navigation {
   padding: 4px;
 }
-#instantclick {
-  display: none;
+#instantclick-bar {
+  background: #ffb40e;
 }
