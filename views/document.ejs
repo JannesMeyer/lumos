@@ -1,6 +1,22 @@
 <% layout('layout') -%>
 <div class="container m-content">
-	<article>
-	<%- content %>
-	</article>
+	<ol class="breadcrumb">
+	<% breadcrumbs.forEach(function(item) { %>
+	<% if (!item.isActive) { %>
+	  <li><a href="<%- item.path %>"><%= item.name %></a></li>
+	<% } else { %>
+	  <li class="active"><%= item.name %></li>
+	<% }}) %>
+	</ol>
+
+	<div class="row">
+	<% if (typeof items !== 'undefined') { %>
+		<% include directory %>
+	<% } %>
+	<% if (typeof content !== 'undefined') { %>
+		<article class="col-xs-12 col-sm-9">
+		<%- content %>
+		</article>
+	<% } %>
+	</div>
 </div>

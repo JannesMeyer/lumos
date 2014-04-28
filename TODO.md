@@ -36,7 +36,24 @@ ES6:
 	Object.preventExtensions()
 	Object.seal()
 	Object.freeze()
+	const
+	let
+	Destructuring
+	Functions in block scope
+	Parameter default values
+	Rest parameters
+	Spread operator
+	Generators, iterators
+	Classes
+	Promises
+	Expression closures
 
+	[a, b] = [b, a]
+	var [s,v,o] = db.getTriple()
+	let {'Title': title} = jsonResult
+	for({'Title': title} of dict)
+
+	[What's New In A Spec](http://espadrine.github.io/New-In-A-Spec/es6/)
 
 ## Natural sorting
 

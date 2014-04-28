@@ -1,5 +1,5 @@
 body {
-  background: url("/images/old_map_50.png");
+  background: url("/images/congruent_pentagon.png");
 }
 .navbar .brand {
   margin-left: 0;
@@ -7,25 +7,24 @@ body {
 a {
   color: #00b7ff;
 }
-.m-breadcrumb {
-  padding-left: 0;
-  padding-right: 0;
-}
-.m-breadcrumb ol {
-  background-color: #fcfcfc;
-}
-.m-navigation,
 .m-content {
-  margin-bottom: 20px;
   background-color: #fcfcfc;
   border-radius: 4px;
   min-height: 200px;
+  margin-bottom: 20px;
 }
-.m-content {
-  padding: 15px;
+.m-content .breadcrumb {
+  background-color: #f4f4f4;
+  margin-left: -15px;
+  margin-right: -15px;
+  margin-bottom: 0;
+  border-radius: 0;
 }
-.m-navigation {
+.m-content .m-navigation {
   padding: 4px;
+}
+.m-content article {
+  padding: 15px;
 }
 #instantclick-bar {
   background: #ffb40e;

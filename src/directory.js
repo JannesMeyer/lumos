@@ -13,6 +13,10 @@ let FS = {
 	readFile: denodeify(fs, fs.readFile)
 };
 
+// class Directory {
+
+// }
+
 // Main
 let Directory = {
 
@@ -152,23 +156,31 @@ let Directory = {
 				items: filtered,
 				breadcrumbs: self.makeBreadcrumbs(relativePath, false)
 			};
-			res.render('directory', data);
+			res.render('document', data);
 		});
 	},
 
 	viewFile: function(res, relativePath) {
 		let self = this;
 		let absolutePath = self.getAbsolutePath(relativePath);
+		var absoluteDirPath = path.dirname(absolutePath);
+
+		let data = {
+			brandName: self.settings.brandName,
+			title: path.basename(relativePath, self.settings.mdSuffix),
+			breadcrumbs: self.makeBreadcrumbs(relativePath, true)
+			// self.makeBreadcrumbs(relativePath, false)
+		};
 
 		return FS.readFile(absolutePath, { encoding: 'utf-8' })
 		.then(function(content) {
-			let data = {
-				brandName: self.settings.brandName,
-				title: path.basename(relativePath, self.settings.mdSuffix),
-				content: marked(content),
-				breadcrumbs: self.makeBreadcrumbs(relativePath, true)
-			};
-
+			data.content = marked(content);
+			// Get the directory contents, too
+			return self.parseDirectory(absoluteDirPath);
+		})
+		.then(function(items) {
+			data.title = path.basename(relativePath); // could be empty at the root
+			data.items = self.sortDirectory(self.filterDirectory(items));
 			res.render('document', data);
 		});
 	},
