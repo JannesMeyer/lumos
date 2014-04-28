@@ -4,7 +4,7 @@ https://github.com/expressjs/serve-index/blob/master/index.js
 https://github.com/jed/browserver-client
 https://github.com/wearefractal/vinyl
 
-
+- Replace spaces in path with hyphen or underscore
 - Sort by creation date and offer ability to file change creation date
 	- <http://apple.stackexchange.com/questions/99536/changing-creation-date-of-a-file>
 - Create backup script that preserves file creation date

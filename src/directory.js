@@ -181,6 +181,12 @@ let Directory = {
 		.then(function(items) {
 			data.title = path.basename(relativePath); // could be empty at the root
 			data.items = self.sortDirectory(self.filterDirectory(items));
+
+			// Find active file
+			for (let item of data.items) {
+				item.isActive = !item.isDirectory && item.path === absolutePath;
+			}
+
 			res.render('document', data);
 		});
 	},

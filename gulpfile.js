@@ -1,5 +1,8 @@
 'use strict';
 
+// sudo PORT=80 gulp node-server
+// gulp dev
+
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var stylus = require('gulp-stylus');
