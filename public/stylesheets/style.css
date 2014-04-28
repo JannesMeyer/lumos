@@ -1,6 +1,9 @@
 body {
   background: #ddd;
 }
+.label {
+  -webkit-font-smoothing: antialiased;
+}
 .navbar .brand {
   margin-left: 0;
 }
@@ -18,10 +21,17 @@ body {
   border-radius: 4px 4px 0 0;
 }
 .m-content .m-navigation {
-  padding: 4px;
+  padding: 0;
 }
 .m-content article {
   padding: 15px;
+}
+.nav > li > a:hover,
+.nav > li > a:focus {
+  background-color: #f5f5f5;
+}
+.nav-pills > li > a {
+  border-radius: 0;
 }
 .nav-pills > li.active > a,
 .nav-pills > li.active > a:hover,
@@ -33,6 +43,24 @@ body {
 }
 .nav-stacked > li + li {
   margin-top: 0;
+}
+/*
+ * Theme
+ *
+ */
+article {
+  font-family: 'PT Serif', 'Georgia', sans-serif;
+  font-size: 17px;
+  color: #111;
+  word-wrap: break-word;
+}
+article h1,
+article h2,
+article h3,
+article h4,
+article h5,
+article h6 {
+  font-weight: bold;
 }
 /*
  * Callouts
