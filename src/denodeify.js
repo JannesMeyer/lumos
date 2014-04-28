@@ -1,7 +1,3 @@
-'use strict';
-
-let Promise = require('es6-promise').Promise;
-
 // Convert node.js async functions into Promises
 module.exports = function denodeify(thisArg, nodeFn) {
 	return function() {

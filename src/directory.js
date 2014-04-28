@@ -1,5 +1,3 @@
-'use strict';
-
 // If you want your file lists to sort correctly you have to compile Node.js with libicu i18n support.
 
 let fs = require('fs');
@@ -7,7 +5,6 @@ let path = require('path');
 let util = require('util');
 let marked = require('marked');
 let denodeify = require('./denodeify');
-let Promise = require('es6-promise').Promise;
 
 // Convert async functions
 let FS = {
@@ -15,6 +12,12 @@ let FS = {
 	readDir: denodeify(fs, fs.readdir),
 	readFile: denodeify(fs, fs.readFile)
 };
+
+// class Greeter {
+//   sayHi(name = 'Anonymous') {
+//     console.log(`Hi ${name}!`);
+//   }
+// }
 
 // Helpers
 function startsWith(str, search) {
@@ -31,7 +34,7 @@ let Directory = {
 
 	settings: {
 		brandName: 'Notes',
-		root: path.join(__dirname, 'markdown'),
+		root: '/Users/jannes/Dropbox/Notes', // __dirname
 		mdSuffix: '.md'
 	},
 

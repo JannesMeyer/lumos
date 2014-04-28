@@ -1,21 +1,13 @@
 var util = require('util');
 
-var t = [ 'untitled 1 asd.md',
-  'untitled 100 asd.md',
-  'untitled 2 1.md',
-  'untitled 3 asd.md',
-  'untitled 99 asd.md',
-  'untitled.md',
-  'ä.md',
-  'untitled 2.md',
-  'úntitled 2.md',
+var t = [ 'ä.md',
   'z.md',
   'á',
   'Untitled 1',
   'Untitled 2',
   'Untitled 3',
-  'Untitled 10 2',
-  'Untitled 10',
+  'Untitled 10 2.md',
+  'Untitled 10.md',
   'Untitled 99',
   'Untitled 100',
   'Z',
@@ -136,8 +128,8 @@ Array.prototype.alphanumSort = function(caseInsensitive) {
 }
 
 
-
-t.sort(function(a, b) {
-  return a.localeCompare(b, undefined, { numeric: true });
-});
+t.sort(naturalSortJim);
+// t.sort(function(a, b) {
+//   return a.localeCompare(b, undefined, { numeric: true });
+// });
 console.log(util.inspect(t));

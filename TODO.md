@@ -1,9 +1,15 @@
 # TODO
 
-Breadcrumbs<br>
-Spotlight search<br>
-http://osxnotes.net/spotlight.html
-https://github.com/afriggeri/jump/blob/master/lib/find.js
+https://github.com/expressjs/serve-index/blob/master/index.js
+https://github.com/jed/browserver-client
+
+- Sort by creation date and offer ability to file change creation date
+	- <http://apple.stackexchange.com/questions/99536/changing-creation-date-of-a-file>
+- Create backup script that preserves file creation date
+- Incorporate Spotlight search
+	- <http://osxnotes.net/spotlight.html>
+	- <https://github.com/afriggeri/jump/blob/master/lib/find.js>
+
 
 	mdfind -onlyin /Users/jannes/Dropbox/Notes 'kMDItemFSName=*.mdown'
 	mdls /Users/jannes/Dropbox/Notes/Computer/Mac/Sleep.mdown

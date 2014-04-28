@@ -1,23 +1,23 @@
-'use strict';
-
 let express = require('express');
-// let expressHelpers = require('express-helpers');
 let ejsLocals = require('ejs-locals');
-let stylus = require('stylus');
 let path = require('path');
 let morgan = require('morgan');
+// let connectLiveReload = require('connect-livereload');
+
 let directory = require('./directory');
 
 let app = express();
 // view engine setup
-// expressHelpers(app);
 app.engine('ejs', ejsLocals);
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'ejs');
 
-app.use(morgan('dev'));
-app.use(stylus.middleware(path.join(__dirname, 'public')));
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(morgan(':method :url :status (done after :response-time ms)'));
+// Static routes
+app.use(express.static(path.join(__dirname, '../public')));
+// // LiveReload javascript
+// app.use(connectLiveReload({ port: 35729 }));
+// Dynamic routes
 app.use(directory);
 
 // catch 404 and forwarding to error handler
