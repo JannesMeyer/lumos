@@ -1,4 +1,4 @@
-<ul class="col-xs-12 nav m-navigation<% if (typeof content !== 'undefined') { %> hidden-xs col-sm-3<% } %>">
+<ul class="col-xs-12 nav nav-pills nav-stacked m-navigation<% if (typeof content !== 'undefined') { %> hidden-xs col-sm-3<% } %>">
 <% items.forEach(function(item) { -%>
 	<li class="<% if (item.isDirectory) { %>directory<% } else { %>file<% } %>">
 	<a href="<%- item.link %>">
