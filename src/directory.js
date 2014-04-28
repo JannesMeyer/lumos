@@ -13,12 +13,6 @@ let FS = {
 	readFile: denodeify(fs, fs.readFile)
 };
 
-// class Greeter {
-//   sayHi(name = 'Anonymous') {
-//     console.log(`Hi ${name}!`);
-//   }
-// }
-
 // Helpers
 function startsWith(str, search) {
 	// no type checking or null checking

@@ -18,19 +18,6 @@ var paths = {
 	viewFiles: 'views/**'
 };
 
-/*
-gulp: https://github.com/gulpjs/gulp
-https://github.com/gulpjs/gulp/blob/master/docs/API.md
-gulp-util: https://github.com/gulpjs/gulp-util
-gulp-stylus: https://github.com/stevelacy/gulp-stylus
-gulp-nodemon: https://github.com/JacksonGariety/gulp-nodemon/issues/14
-https://gist.github.com/webdesserts/5632955
-http://rhumaric.com/2014/01/livereload-magic-gulp-style/
-  // `gulp.watch()` events provide an absolute path
-  // so we need to make it relative to the server root
-  var fileName = require('path').relative(EXPRESS_ROOT, event.path);
-*/
-
 // Default task
 gulp.task('default', ['stylesheets', 'javascripts']);
 
@@ -68,11 +55,11 @@ gulp.task('node-server', function() {
 	nodeServer = child_process.spawn(paths.nodeScript, undefined, { stdio: 'inherit' });
 	nodeServer.stdout.setEncoding('utf8');
 	nodeServer.stdout.on('data', function (data) {
-		gutil.log(data.trim());
+		gutil.log(gutil.colors.cyan('node') + ':', data.trim());
 	});
 	nodeServer.stderr.setEncoding('utf8');
 	nodeServer.stderr.on('data', function (data) {
-		gutil.log(gutil.colors.red(data.trim()));
+		gutil.log(gutil.colors.cyan('node') + ':', gutil.colors.red(data.trim()));
 	});
 	nodeServer.on('close', function(code) {
 		if (code === 8) {
