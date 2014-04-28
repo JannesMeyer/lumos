@@ -13,16 +13,6 @@ let FS = {
 	readFile: denodeify(fs, fs.readFile)
 };
 
-// Helpers
-function startsWith(str, search) {
-	// no type checking or null checking
-	return str.length >= search.length && str.slice(0, search.length) === search;
-}
-function endsWith(str, search) {
-	// no type checking or null checking
-	return str.length >= search.length && str.slice(str.length - search.length) === search;
-}
-
 // Main
 let Directory = {
 
@@ -59,7 +49,7 @@ let Directory = {
 					name: name,
 					extension: path.extname(name).toLowerCase(),
 					path: path.join(dirPath, name),
-					isHidden: startsWith(name, '.')
+					isHidden: name.startsWith('.')
 				};
 			});
 
@@ -136,6 +126,7 @@ let Directory = {
 	},
 
 	sortDirectory: function(items) {
+		// TODO use Intl.Collator
 		return items.sort(function(a, b) {
 			// Arrange directories on top
 			if (a.isDirectory && !b.isDirectory) { return -1; }
@@ -188,7 +179,7 @@ let Directory = {
 		let absolutePath = self.getAbsolutePath(relativePath);
 
 		// Make sure the sandbox isn't left
-		if (!startsWith(absolutePath, self.settings.root)) {
+		if (!absolutePath.startsWith(self.settings.root)) {
 			let err = new Error('Bad Request');
 		    err.status = 400;
 		    next(err);
@@ -201,7 +192,7 @@ let Directory = {
 			if (stat.isDirectory()) {
 				// The URL standard only allows / as a path separator
 				// Make sure directory requests end with a slash
-				if (!endsWith(relativePath, '/')) {
+				if (!relativePath.endsWith('/')) {
 					res.redirect(301, relativePath + '/');
 					return;
 				}

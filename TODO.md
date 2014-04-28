@@ -2,6 +2,8 @@
 
 https://github.com/expressjs/serve-index/blob/master/index.js
 https://github.com/jed/browserver-client
+https://github.com/wearefractal/vinyl
+
 
 - Sort by creation date and offer ability to file change creation date
 	- <http://apple.stackexchange.com/questions/99536/changing-creation-date-of-a-file>
@@ -27,6 +29,13 @@ https://github.com/dcurtis/markdown-mark/blob/master/README.md
 
 Markdown Extensions:
 	spoiler
+
+ES6:
+	Object.create()
+	Object.defineProperty()
+	Object.preventExtensions()
+	Object.seal()
+	Object.freeze()
 
 
 ## Natural sorting
