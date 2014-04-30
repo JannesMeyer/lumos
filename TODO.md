@@ -62,6 +62,10 @@ ES6:
 
 	[What's New In A Spec](http://espadrine.github.io/New-In-A-Spec/es6/)
 
+http://kangax.github.io/es5-compat-table/es6/
+http://code.tutsplus.com/articles/use-ecmascript-6-today--net-31582
+http://espadrine.github.io/New-In-A-Spec/es6/
+
 ## Natural sorting
 
 - Source: <http://www.davekoelle.com/alphanum.html>
