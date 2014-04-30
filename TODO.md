@@ -1,5 +1,12 @@
 # TODO
 
+j/k movement
+
+Preserve line-breaks in Markdown (like Github comments)
+http://notes:9000/Tagebuch%202014/3/Mar%2017
+
+Ability to create separate, but adjacent lists
+
 https://github.com/expressjs/serve-index/blob/master/index.js
 https://github.com/jed/browserver-client
 https://github.com/wearefractal/vinyl

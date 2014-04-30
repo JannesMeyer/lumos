@@ -18,7 +18,9 @@ var paths = {
 	serverJsTarget: 'dist',
 
 	publicFiles: 'public/**',
-	viewFiles: 'views/**'
+	viewFiles: 'views/**',
+
+	markdownFiles: '/Users/jannes/Dropbox/Notes/**/*.md'
 };
 
 // Default task
@@ -81,3 +83,13 @@ gulp.task('livereload-server', function() {
 		server.changed(file.path);
 	});
 });
+
+// Writing
+gulp.task('writing', ['node-server'], function() {
+	var livereload = require('gulp-livereload');
+	var server = livereload();
+
+	gulp.watch([paths.markdownFiles]).on('change', function(file) {
+		server.changed(file.path);
+	});
+})

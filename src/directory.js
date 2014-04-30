@@ -17,13 +17,16 @@ let FS = {
 
 // }
 
+// Read: https://github.com/chjj/marked/blob/master/README.md
+
 // Main
 let Directory = {
 
 	settings: {
 		brandName: 'Notes',
 		root: '/Users/jannes/Dropbox/Notes', // __dirname
-		mdSuffix: '.md'
+		mdSuffix: '.md',
+		markedOptions: { gfm: true, breaks: true }
 	},
 
 	getIndexFilename: function() {
@@ -174,7 +177,7 @@ let Directory = {
 
 		return FS.readFile(absolutePath, { encoding: 'utf-8' })
 		.then(function(content) {
-			data.content = marked(content);
+			data.content = marked(content, self.settings.markedOptions);
 			// Get the directory contents, too
 			return self.parseDirectory(absoluteDirPath);
 		})
