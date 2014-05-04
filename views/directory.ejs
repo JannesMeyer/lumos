@@ -1,11 +1,11 @@
 <ul class="col-xs-12 nav nav-pills nav-stacked m-navigation<% if (typeof content !== 'undefined') { %> hidden-xs col-sm-3<% } %>">
 <% items.forEach(function(item) { -%>
-	<li class="<% if (item.isDirectory) { %>directory<% } else { %>file<% } %><% if (item.isActive) { %> active<% } %>">
+	<li class="<% if (item.isDir) { %>directory<% } else { %>file<% } %><% if (item.isActive) { %> active<% } %>">
 	<a href="<%- item.link %>">
-		<% if (item.isDirectory) { -%><span class="label label-success">DIR</span><% } else { -%>
+		<% if (item.isDir) { -%><span class="label label-success">DIR</span><% } else { -%>
 		<span class="label label-default">MD</span>
 		<% } -%>
-		<%= item.basename %>
+		<%= item.name %>
 	</a>
 	</li>
 <% }) -%>

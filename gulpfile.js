@@ -3,6 +3,8 @@
 // sudo PORT=80 gulp node-server
 // gulp dev
 
+var child_process = require('child_process');
+
 var gulp = require('gulp');
 var gutil = require('gulp-util');
 var stylus = require('gulp-stylus');
@@ -34,7 +36,7 @@ gulp.task('stylesheets', function() {
 });
 
 // Compile server-side JavaScript
-gulp.task('javascripts', function () {
+gulp.task('javascripts', function() {
 	gulp.src(paths.serverJs)
 		.pipe(traceur({ sourceMap: true, experimental: true }))
 		.pipe(gulp.dest(paths.serverJsTarget));
@@ -46,6 +48,26 @@ gulp.task('dev', ['default', 'node-server', 'livereload-server'], function() {
 	gulp.watch(paths.serverJs, ['javascripts', 'node-server']);
 });
 
+// Run debug environment
+gulp.task('debug', ['default', 'node-server', 'livereload-server', 'node-inspector'], function() {
+	gulp.watch(paths.stylus, ['stylesheets']);
+	gulp.watch(paths.serverJs, ['javascripts', 'node-server']);
+});
+
+// Node inspector
+var nodeInspector;
+gulp.task('node-inspector', function() {
+	nodeInspector = child_process.spawn('node-inspector');
+	nodeInspector.stdout.setEncoding('utf8');
+	nodeInspector.stdout.on('data', function (data) {
+		gutil.log(gutil.colors.cyan('node') + ':', data.trim());
+	});
+	nodeInspector.stderr.setEncoding('utf8');
+	nodeInspector.stderr.on('data', function (data) {
+		gutil.log(gutil.colors.cyan('node') + ':', gutil.colors.red(data.trim()));
+	});
+});
+
 // Node server
 var nodeServer;
 function killNodeServer() {
@@ -54,10 +76,8 @@ function killNodeServer() {
 	}
 }
 gulp.task('node-server', function() {
-	var child_process = require('child_process');
-
 	killNodeServer();
-	nodeServer = child_process.spawn(paths.nodeScript, undefined, { stdio: 'inherit' });
+	nodeServer = child_process.spawn('node', ['--harmony', '--debug', paths.nodeScript]);
 	nodeServer.stdout.setEncoding('utf8');
 	nodeServer.stdout.on('data', function (data) {
 		gutil.log(gutil.colors.cyan('node') + ':', data.trim());
@@ -65,11 +85,6 @@ gulp.task('node-server', function() {
 	nodeServer.stderr.setEncoding('utf8');
 	nodeServer.stderr.on('data', function (data) {
 		gutil.log(gutil.colors.cyan('node') + ':', gutil.colors.red(data.trim()));
-	});
-	nodeServer.on('close', function(code) {
-		if (code === 8) {
-			gutil.log('Error detected, waiting for changes...');
-		}
 	});
 });
 process.on('exit', killNodeServer);

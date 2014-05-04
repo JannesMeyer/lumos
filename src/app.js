@@ -4,7 +4,7 @@ let path = require('path');
 let morgan = require('morgan');
 // let connectLiveReload = require('connect-livereload');
 
-let directory = require('./directory');
+let serve = require('./serve');
 
 let app = express();
 // view engine setup
@@ -18,21 +18,13 @@ app.use(express.static(path.join(__dirname, '../public')));
 // // LiveReload javascript
 // app.use(connectLiveReload({ port: 35729 }));
 // Dynamic routes
-app.use(directory);
-
-// catch 404 and forwarding to error handler
-app.use(function(req, res, next) {
-    let err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
+app.use(serve);
 
 // development error handler
 app.use(function(err, req, res, next) {
     res.status(err.status || 500);
     res.render('error', {
         message: err.message,
-        // will print stacktrace
         error: err
     });
 });

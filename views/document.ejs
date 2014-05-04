@@ -1,5 +1,7 @@
 <% layout('layout') -%>
 <div class="container m-content">
+
+<% if (typeof breadcrumbs !== 'undefined') { %>
 	<ol class="breadcrumb">
 	<% breadcrumbs.forEach(function(item) { %>
 	<% if (!item.isActive) { %>
@@ -8,6 +10,8 @@
 	  <li class="active"><%= item.name %></li>
 	<% }}) %>
 	</ol>
+<% } %>
+
 
 	<div class="row">
 	<% if (typeof items !== 'undefined') { %>

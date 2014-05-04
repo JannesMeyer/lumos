@@ -1,2 +1,2 @@
-<h1><%= message %> <% if (typeof error.status !== 'undefined') { %><%= error.status %><% } %></h1>
+<h1><% if (typeof error.status !== 'undefined') { %><%= error.status %> <% } %><%= message %></h1>
 <pre><%= error.stack %></pre>
