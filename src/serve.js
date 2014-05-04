@@ -1,5 +1,3 @@
-// If you want your file lists to sort correctly you have to compile Node.js with libicu i18n support.
-
 module util from 'util'
 module marked from 'marked'
 
