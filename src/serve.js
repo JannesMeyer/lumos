@@ -36,16 +36,12 @@ module.exports = function(req, res, next) {
 		// content
 	};
 
-	let dirPromise;
-	let docPromise;
-
 	if (requestPath.isDir)
 	{
-		data.breadcrumbs = requestPath.makeBreadcrumbs();
-
 		// Read directory
-		dirPromise = readDir(requestPath)
+		readDir(requestPath)
 		.then(dir => {
+			data.breadcrumbs = requestPath.makeBreadcrumbs();
 			data.items = dir.filteredContents;
 			data.title = dir.path.name === '' ? settings.brandName : dir.path.name;
 
@@ -59,41 +55,44 @@ module.exports = function(req, res, next) {
 			}
 		}, err => {
 			throw mHTTPError(404, 'Directory Not Found');
-		});
+		})
+		.then(() => res.render('document', data))
+		.catch(err => next(err));
 	} else {
-		requestPath.leaf += settings.mdSuffix;
 		requestPath.makeFile();
-		data.breadcrumbs = requestPath.makeBreadcrumbs();
+		let requestPathMd = requestPath.makeClone();
+		requestPathMd.leaf += settings.mdSuffix;
+		requestPathMd.makeFile();
+		data.breadcrumbs = requestPathMd.makeBreadcrumbs();
 
 		// Read file
-		docPromise = readFile(requestPath)
+		readFile(requestPathMd)
 		.then(content => {
 			data.content = convertToHtml(content);
-			data.title = requestPath.name;
+			data.title = requestPathMd.name;
 
-			return readDir(requestPath.makeParent());
+			// Read directory
+			return readDir(requestPathMd.makeParent())
+			.then(dir => {
+				data.items = dir.filteredContents;
+
+				// Find active file
+				for (let item of data.items) {
+					// TODO: make this a normalized representation,
+					// so that there can be no mistake between
+					// folders and files
+					item.isActive = !item.isDir && item.absolute === requestPathMd.absolute;
+				}
+			})
+			.then(() => res.render('document', data))
+			.catch(err => next(err));
 		}, err => {
-			throw mHTTPError(404, 'File Not Found');
+			// Document not found, try to deliver the file at the original path
+			let send = denodeify(res, res.sendfile);
+			return send(requestPath.absolute);
 		})
-		.then(dir => {
-			data.items = dir.filteredContents;
-
-			// Find active file
-			for (let item of data.items) {
-				// TODO: make this a normalized representation,
-				// so that there can be no mistake between
-				// folders and files
-				item.isActive = !item.isDir && item.absolute === requestPath.absolute;
-			}
-		});
+		.catch(err => next(mHTTPError(404, 'File Not Found')));
 	}
-
-	// Wait for data and render it
-	Promise.all([dirPromise, docPromise])
-	.then(() => {
-		res.render('document', data);
-	})
-	.catch(err => next(err));
 }
 
 function readDir(dirPath) {

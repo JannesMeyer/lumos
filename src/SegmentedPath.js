@@ -78,6 +78,12 @@ export class SegmentedPath {
 		return new SegmentedPath(this.basePath, ...segments);
 	}
 
+	makeClone() {
+		// Clone segments
+		let segments = this.segments_.slice();
+		return new SegmentedPath(this.basePath, ...segments);
+	}
+
 	makeBreadcrumbs() {
 		let breadcrumbs = [];
 		/*{
