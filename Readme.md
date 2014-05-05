@@ -6,4 +6,4 @@ If you want your file lists to sort correctly you have to compile Node.js with l
 
 # To do
 
-- <https://github.com/wearefractal/vinyl>
+- <https://github.com/wearefractal/vinyl>, <https://github.com/hparra/gulp-rename/blob/master/index.js>

@@ -82,6 +82,12 @@ module.exports = function(req, res, next) {
 					// so that there can be no mistake between
 					// folders and files
 					item.isActive = !item.isDir && item.absolute === requestPathMd.absolute;
+					// TODO: re-implement path
+					if (item.isActive) {
+						// strip filename
+						let path = require('path');
+						item.link = path.dirname(item.link);
+					}
 				}
 			})
 			.then(() => res.render('document', data))
