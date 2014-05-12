@@ -1,19 +1,21 @@
 # TODO
 
-BIN command
-https://github.com/visionmedia/serve/blob/master/bin/serve
-
-j/k movement
-
-Preserve line-breaks in Markdown (like Github comments)
-http://notes:9000/Tagebuch%202014/3/Mar%2017
-
-Ability to create separate, but adjacent lists
-
-https://github.com/expressjs/serve-index/blob/master/index.js
-https://github.com/jed/browserver-client
-https://github.com/wearefractal/vinyl
-
+- Script that automatically opens a file for the current day
+- Support for link-lists (favicon, domain, bullet color, etc.)
+- Better syntax highlighting
+- Fix list styling
+- Add collapsible spoiler tags
+	- [StackOverflow](http://meta.stackexchange.com/questions/1191/add-markdown-support-for-hidden-until-you-click-text-aka-spoilers)
+- Syntax highlighting
+- Jumping to headers: [here][section-preview]
+- Support more MultiMarkdown
+	- [MultiMarkdown features](http://bywordapp.com/markdown/guide.html#section-mmd)
+	- [MultiMarkdown User's Guide](https://github.com/fletcher/MultiMarkdown/blob/master/Documentation/MultiMarkdown%20User%27s%20Guide.md)
+	- [Markdown cheat sheet](http://warpedvisions.org/projects/markdown-cheat-sheet.md)
+	- [dtjm/node-multimarkdown](https://github.com/dtjm/node-multimarkdown)
+- make a command line command to serve the current directory ([reference](https://github.com/visionmedia/serve/blob/master/bin/serve))
+- j/k movement
+- Ability to create separate, but adjacent lists
 - Replace spaces in path with hyphen or underscore
 - Sort by creation date and offer ability to file change creation date
 	- <http://apple.stackexchange.com/questions/99536/changing-creation-date-of-a-file>
@@ -21,24 +23,12 @@ https://github.com/wearefractal/vinyl
 - Incorporate Spotlight search
 	- <http://osxnotes.net/spotlight.html>
 	- <https://github.com/afriggeri/jump/blob/master/lib/find.js>
-
-
-	mdfind -onlyin /Users/jannes/Dropbox/Notes 'kMDItemFSName=*.mdown'
-	mdls /Users/jannes/Dropbox/Notes/Computer/Mac/Sleep.mdown
-
-
-
-Caching + Watchman
-https://github.com/paulmillr/chokidar
-https://www.npmjs.org/package/fsevents
-
-Favicon addon
-
-Markdown mark
-https://github.com/dcurtis/markdown-mark/blob/master/README.md
-
-Markdown Extensions:
-	spoiler
+	- `mdfind -onlyin /Users/jannes/Dropbox/Notes 'kMDItemFSName=*.mdown'`
+	- `mdls /Users/jannes/Dropbox/Notes/Computer/Mac/Sleep.mdown`
+- Caching + Watchman
+	- <https://github.com/paulmillr/chokidar>
+	- <https://www.npmjs.org/package/fsevents>
+- Use the [Markdown mark](https://github.com/dcurtis/markdown-mark/blob/master/README.md)
 
 ES6:
 	Object.create()
@@ -85,15 +75,15 @@ http://code.tutsplus.com/articles/use-ecmascript-6-today--net-31582
 - Discussion: <http://blog.codinghorror.com/sorting-for-humans-natural-sort-order/>
 - Discussion: <http://blog.rodneyrehm.de/archives/14-Sorting-Were-Doing-It-Wrong.html>
 
+# Resources
 
-Node.js doesn't enable v8-i18n, which means that libicu doesn't get bundled.
-https://github.com/joyent/node/issues/6371
-https://github.com/joyent/node/issues/4689
-https://github.com/joyent/node
-
-installing /usr/local/bin/node
-installing /usr/local/lib/dtrace/node.d
-installing /usr/local/share/systemtap/tapset/node.stp
-installing /usr/local/share/man/man1/node.1
-installing /usr/local/include/node/*
-installing /usr/local/lib/node_modules/*
+- <https://github.com/expressjs/serve-index/blob/master/index.js>
+- <https://github.com/jed/browserver-client>
+- <https://github.com/wearefractal/vinyl>
+- <https://github.com/hparra/gulp-rename/blob/master/index.js>
+- [SearchLink - BrettTerpstra.com](http://brettterpstra.com/projects/searchlink/)
+- Markdown formatting tools
+	- [Markdown Service Tools](http://brettterpstra.com/projects/markdown-service-tools/)
+	- [drbunsen/formd](https://github.com/drbunsen/formd)
+	- [Convert inline Markdown links to references](https://gist.github.com/ttscoff/1207337)
+- [TextExpander](https://smilesoftware.com/TextExpander/index.html)

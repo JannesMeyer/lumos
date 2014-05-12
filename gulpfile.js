@@ -13,7 +13,7 @@ var traceur = require('gulp-traceur');
 var paths = {
 	nodeScript: './bin/www',
 
-	stylus: 'assets/stylus/**/*.styl',
+	stylus: 'assets/stylus/*.styl',
 	stylusTarget: 'public/stylesheets',
 
 	serverJs: 'src/**/*.js',
@@ -31,7 +31,7 @@ gulp.task('default', ['stylesheets', 'javascripts']);
 // Compile Stylus
 gulp.task('stylesheets', function() {
 	gulp.src(paths.stylus)
-		.pipe(stylus())
+		.pipe(stylus({ errors: true }))
 		.pipe(gulp.dest(paths.stylusTarget));
 });
 
@@ -44,13 +44,13 @@ gulp.task('javascripts', function() {
 
 // Run dev environment
 gulp.task('dev', ['default', 'node-server', 'livereload-server'], function() {
-	gulp.watch(paths.stylus, ['stylesheets']);
+	gulp.watch('assets/stylus/**/*.styl', ['stylesheets']);
 	gulp.watch(paths.serverJs, ['javascripts', 'node-server']);
 });
 
 // Run debug environment
 gulp.task('debug', ['default', 'node-server', 'livereload-server', 'node-inspector'], function() {
-	gulp.watch(paths.stylus, ['stylesheets']);
+	gulp.watch('assets/stylus/**/*.styl', ['stylesheets']);
 	gulp.watch(paths.serverJs, ['javascripts', 'node-server']);
 });
 

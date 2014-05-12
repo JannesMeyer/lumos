@@ -1,5 +1,6 @@
 module util from 'util'
 module marked from 'marked'
+module hljs from 'highlight.js'
 
 module fs from 'fs'
 module denodeify from './denodeify'
@@ -15,10 +16,12 @@ let settings = {
 	root: '/Users/jannes/Dropbox/Notes', // __dirname
 	mdSuffix: '.md',
 	indexFile: 'index.md',
-	markedOptions: { gfm: true, breaks: true }
+	markedOptions: {
+		gfm: true,
+		breaks: true,
+		highlight: (code, lang) => lang ? hljs.highlight(lang, code).value : code
+	}
 };
-
-// Read: https://github.com/chjj/marked/blob/master/README.md
 
 module.exports = function(req, res, next) {
 	let requestPath = new SegmentedPath(settings.root, decodeURIComponent(req.path));
@@ -39,7 +42,7 @@ module.exports = function(req, res, next) {
 	if (requestPath.isDir)
 	{
 		// Read directory
-		readDir(requestPath)
+		return readDir(requestPath)
 		.then(dir => {
 			data.breadcrumbs = requestPath.makeBreadcrumbs();
 			data.items = dir.filteredContents;
@@ -66,7 +69,7 @@ module.exports = function(req, res, next) {
 		data.breadcrumbs = requestPathMd.makeBreadcrumbs();
 
 		// Read file
-		readFile(requestPathMd)
+		return readFile(requestPathMd)
 		.then(content => {
 			data.content = convertToHtml(content);
 			data.title = requestPathMd.name;
@@ -97,7 +100,8 @@ module.exports = function(req, res, next) {
 			let send = denodeify(res, res.sendfile);
 			return send(requestPath.absolute);
 		})
-		.catch(err => next(mHTTPError(404, 'File Not Found')));
+		// TODO: don't swallow errors in file rendering
+		.catch(err => mHTTPError(404, 'File Not Found'));
 	}
 }
 
@@ -130,9 +134,15 @@ function readFile(filePath) {
 
 /**
  * This function is used to convert the plain text to HTML
+ * Read: https://github.com/chjj/marked/blob/master/README.md
  */
+marked.setOptions(settings.markedOptions);
 function convertToHtml(content) {
-	return marked(content, settings.markedOptions);
+	let md = marked(content);
+	// TODO: Fix html
+	md = md.replace(/(<table>)/g, '<div class="table-responsive"><table class="table table-hover"></div>');
+	// md = md.replace(/(<pre>)/g, '<pre class="hljs">');
+	return md;
 }
 
 /**

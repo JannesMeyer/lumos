@@ -4,6 +4,12 @@
 
 If you want your file lists to sort correctly you have to compile Node.js with libicu i18n support.
 
-# To do
+- <https://github.com/joyent/node/issues/6371>
+- <https://github.com/joyent/node/issues/4689>
 
-- <https://github.com/wearefractal/vinyl>, <https://github.com/hparra/gulp-rename/blob/master/index.js>
+	/usr/local/bin/node
+	/usr/local/lib/dtrace/node.d
+	/usr/local/share/systemtap/tapset/node.stp
+	/usr/local/share/man/man1/node.1
+	/usr/local/include/node/*
+	/usr/local/lib/node_modules/*

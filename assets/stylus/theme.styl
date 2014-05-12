@@ -1,0 +1,81 @@
+@require 'includes/base.styl'
+
+$link-color = #00a5e6
+$hover-link-color = darken(saturate($link-color, 30), 10)
+
+$nav-hover-bg = #f5f5f5
+$nav-active-bg = #b2f6a5
+$nav-active-color = #00920c
+
+$bg-color = #ddd
+$content-bg = #fcfcfc
+
+/*==========================================
+ * THEME
+ *==========================================*/
+
+body
+  background: url('/images/sativa.png')
+
+a
+  color: $link-color
+
+  &:hover
+    color: $hover-link-color
+
+  &:active
+    outline: 2px solid $link-color
+
+    &:hover
+      outline: 2px solid $hover-link-color
+
+.m-content
+  background: $content-bg
+  border-radius: 8px 8px 4px 4px
+
+/*==========================================
+ * File list
+ *==========================================*/
+.nav > li > a:hover,
+.nav > li > a:focus
+  background: $nav-hover-bg
+
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
+.nav-pills > li.active > a:focus
+  background: $nav-active-bg
+  color: $nav-active-color
+
+/*==========================================
+ * Content
+ *==========================================*/
+
+article
+  font-family: 'Inconsolata', monospace
+  line-height: 1.5
+  font-size: 16px
+  color: #333
+
+  h1, h2, h3, h4, h5, h6
+    font-family: 'Avenir Next Condensed'
+    font-weight: bold
+
+  h1
+    font-size: 1.7em
+
+  h2
+    font-size: 1.4em
+
+  h3
+    font-size: 1.2em
+    font-style: oblique
+
+  h4
+    font-size: 1em
+
+  ul
+    list-style-type: disc
+    padding-left: 30px
+
+#instantclick-bar
+  background-color: $hover-link-color
