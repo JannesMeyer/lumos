@@ -1,3 +1,6 @@
+body {
+  -webkit-font-smoothing: antialiased;
+}
 code,
 kbd,
 pre,
@@ -16,13 +19,9 @@ article > h3:first-child,
 article > h4:first-child,
 article > h5:first-child,
 article > h6:first-child {
-  margin-top: 0 !important;
+  margin-top: 0;
 }
-.m-content {
-  margin-bottom: 20px;
-  min-height: 360px;
-}
-.m-navigation {
+.nav-pills {
   padding: 0;
 }
 .nav-pills > li > a {
@@ -33,12 +32,6 @@ article > h6:first-child {
 }
 .breadcrumb {
   margin: 0 -15px;
-}
-.breadcrumb > li {
-  white-space: pre;
-}
-blockquote {
-  font-size: 1em;
 }
 .callout {
   margin: 20px 0;
@@ -57,63 +50,43 @@ blockquote {
 .callout code {
   background-color: #fff;
 }
+/*
+	Based on maxvoltar.com
+ */
 /*==========================================
  * THEME
  *==========================================*/
 body {
   background: url("/images/sativa.png");
-  -webkit-font-smoothing: antialiased;
 }
 a {
   color: #00a5e6;
 }
 a:hover {
-  color: #006897;
+  color: #0090cc;
 }
 a:active {
   outline: 2px solid #00a5e6;
 }
 a:active:hover {
-  outline: 2px solid #006897;
+  outline: 2px solid #0090cc;
 }
 .m-content {
   background: #fcfcfc;
   border-radius: 8px 8px 4px 4px;
 }
 /*==========================================
- * Directory listing
+ * File list
  *==========================================*/
-.m-navigation > li > a:hover,
-.m-navigation > li > a:focus {
+.nav > li > a:hover,
+.nav > li > a:focus {
   background: #f5f5f5;
 }
-.m-navigation > li.active > a,
-.m-navigation > li.active > a:hover,
-.m-navigation > li.active > a:focus {
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:hover,
+.nav-pills > li.active > a:focus {
   background: #b2f6a5;
   color: #00920c;
-}
-.m-navigation > li.directory > a::before,
-.m-navigation > li.file > a::before {
-  display: inline;
-  padding: 0.2em 0.6em 0.3em;
-  font-size: 75%;
-  font-weight: bold;
-  line-height: 1;
-  color: #fff;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: baseline;
-  border-radius: 0.25em;
-  margin-right: 7px;
-}
-.m-navigation > li.directory > a::before {
-  content: "DIR";
-  background-color: #5cb85c;
-}
-.m-navigation > li.file > a::before {
-  content: "MD";
-  background-color: #999;
 }
 /*==========================================
  * Content
@@ -150,9 +123,6 @@ article ul {
   list-style-type: disc;
   padding-left: 30px;
 }
-article a {
-  text-decoration: underline;
-}
 #instantclick-bar {
-  background-color: #006897;
+  background-color: #0090cc;
 }

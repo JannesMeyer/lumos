@@ -77,7 +77,7 @@ function killNodeServer() {
 }
 gulp.task('node-server', function() {
 	killNodeServer();
-	nodeServer = child_process.spawn('node', ['--harmony', '--debug', paths.nodeScript]);
+	nodeServer = child_process.spawn('node', ['--harmony'/*, '--debug'*/, paths.nodeScript]);
 	nodeServer.stdout.setEncoding('utf8');
 	nodeServer.stdout.on('data', function (data) {
 		gutil.log(gutil.colors.cyan('node') + ':', data.trim());

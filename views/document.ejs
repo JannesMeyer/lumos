@@ -7,7 +7,7 @@
 	<% if (!item.isActive) { %>
 	  <li><a href="<%- item.path %>"><%= item.name %></a></li>
 	<% } else { %>
-	  <li class="active"><%= item.name %></li>
+	  <li class="active dropdown"><%= item.name %></li>
 	<% }}) %>
 	</ol>
 <% } %>
@@ -18,9 +18,11 @@
 		<% include directory %>
 	<% } %>
 	<% if (typeof content !== 'undefined') { %>
+		<section role="content">
 		<article class="col-xs-12 col-sm-9">
 		<%- content %>
 		</article>
+		</section>
 	<% } %>
 	</div>
 </div>
