@@ -5,13 +5,17 @@ $(function() {
 	// Mousein/out code
 	if ($nav.hasClass('col-sm-3')) {
 		$('body').on('mousemove', function(e) {
-			var distance = $p.offset().left;
-			if (e.clientX < distance) {
-				$nav.addClass('show');
+			// var distance = $p.offset().left;
+			// if (e.clientX < distance) {
+			var distance = $p.width() + $p.offset().left;
+			if (e.clientX > distance) {
+				$nav.fadeIn({ duration: Math.floor(100/6*6) });
 			}
 		});
 		$nav.on('mouseleave', function(e) {
-			$nav.removeClass('show');
+			if (e.toElement) {
+				$nav.fadeOut({ duration: Math.floor(100/6*6), queue: false, easing: 'linear' });
+			}
 		});
 	}
 });

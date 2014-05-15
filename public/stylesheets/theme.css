@@ -25,8 +25,19 @@ article > h6:first-child {
 .m-navigation {
   padding: 0;
 }
+.m-navigation .nav a {
+  color: rgba(0,0,0,0.5);
+}
+.m-navigation .nav a:hover,
+.m-navigation .nav a:focus {
+  color: #111;
+}
 .nav-pills > li > a {
   border-radius: 0;
+}
+.nav > li > a:hover,
+.nav > li > a:focus {
+  background-color: initial;
 }
 .nav-stacked > li + li {
   margin-top: 0;

@@ -1,17 +1,6 @@
 module path from 'path'
 
 /**
- * ES6-style generator function for iterating an Array in pairs
- */
-function* pairs(array) {
-	for (let i = 0; i < array.length - 1; ++i) {
-		let e1 = array[i];
-		let e2 = array[i + 1];
-		yield [e1, e2];
-	}
-}
-
-/**
  * Represents a path that is relative to a base path
  */
 export class SegmentedPath {
