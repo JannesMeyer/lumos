@@ -92,14 +92,13 @@ a:active:hover {
   background: #444;
 }
 .m-navigation > ul > li > a {
-  color: rgba(225,225,225,0.8);
+  color: #c7c7c7;
 }
 .m-navigation > ul > li > a:hover,
 .m-navigation > ul > li > a:focus {
-  color: #eee;
   background: #585858;
 }
-.m-navigation > ul > li > a:active {
+.m-navigation > ul > li > a:active:hover {
   outline: 2px solid #b2f6a5;
 }
 .m-navigation > ul > li.active > a,

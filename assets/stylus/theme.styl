@@ -35,6 +35,7 @@ a
  *==========================================*/
 
 $nav-bg = #444
+$nav-active-bg = #b2f6a5
 
 .m-navigation
   background: $nav-bg
@@ -42,20 +43,19 @@ $nav-bg = #444
 .m-navigation > ul > li
 
   & > a
-    color: rgba(225, 225, 225, 0.8)
+    color: lighten(invert($nav-bg), 4.8) // #c7c7c7
 
     &:hover,
     &:focus
-      color: #eee
-      background: #585858
+      background: lighten($nav-bg, 8)
 
-    &:active
-      outline: 2px solid #b2f6a5
+    &:active:hover
+      outline: 2px solid $nav-active-bg
 
   &.active > a,
   &.active > a:hover,
   &.active > a:focus
-    background: #b2f6a5
+    background: $nav-active-bg
     color: #00920c
 
   // &.file > a::before,
