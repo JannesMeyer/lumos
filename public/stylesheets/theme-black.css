@@ -7,9 +7,6 @@ samp {
 code {
   font-size: 100%;
 }
-section[role=content] {
-  padding: 16px;
-}
 section[role=content] > article > h1:first-child,
 section[role=content] > article > h2:first-child,
 section[role=content] > article > h3:first-child,
@@ -18,9 +15,11 @@ section[role=content] > article > h5:first-child,
 section[role=content] > article > h6:first-child {
   margin-top: 0 !important;
 }
-.m-content {
+.m-container {
   margin-bottom: 20px;
-  min-height: 360px;
+}
+.m-container > .row {
+  display: flex;
 }
 .m-navigation {
   padding: 0;
@@ -107,7 +106,7 @@ a:hover {
   color: #3cf;
   text-decoration: none;
 }
-.m-content {
+.m-container {
   background: #eee;
 }
 /*==========================================
@@ -129,7 +128,7 @@ a:hover {
  * Directory listing
  *==========================================*/
 .m-navigation.col-sm-3,
-.m-content .col-sm-9 {
+.m-container .col-sm-9 {
   width: 100%;
 }
 .m-navigation {

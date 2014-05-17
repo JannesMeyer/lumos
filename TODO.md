@@ -1,5 +1,8 @@
 # TODO
 
+- Rename .m-content
+- Replace spaces in URL
+- Fix styling for http://notes:9000/GTD/Todo2
 - Script that automatically opens a file for the current day
 - Support for link-lists (favicon, domain, bullet color, etc.)
 - Better syntax highlighting
