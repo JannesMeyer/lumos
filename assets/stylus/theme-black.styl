@@ -55,18 +55,25 @@ a
 .m-content .col-sm-9
   width: 100%
 
-.m-navigation.col-sm-3
-  display: none
-  position: absolute
-  top: 0
-  right: 0
-  width: 300px
-  z-index: 100
-  min-height: 100%
-  background: darken($content-bg, 3)
-
 .m-navigation
   background: $content-bg
+
+  &.col-sm-3
+    display: none
+    position: absolute
+    top: 0
+    right: 0
+    width: 300px
+    z-index: 100
+    min-height: 100%
+    background: darken($content-bg, 3)
+
+  a
+    color: rgba(0, 0, 0, 0.5)
+
+  a:hover,
+  a:focus
+    color: #111
 
   & > li > a:active
     background: #e2e2e2

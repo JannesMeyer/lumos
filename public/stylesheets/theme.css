@@ -25,13 +25,6 @@ article > h6:first-child {
 .m-navigation {
   padding: 0;
 }
-.m-navigation .nav a {
-  color: rgba(0,0,0,0.5);
-}
-.m-navigation .nav a:hover,
-.m-navigation .nav a:focus {
-  color: #111;
-}
 .nav-pills > li > a {
   border-radius: 0;
 }
@@ -83,6 +76,7 @@ a:hover {
 }
 a:active {
   outline: 2px solid #00a5e6;
+  z-index: 10;
 }
 a:active:hover {
   outline: 2px solid #006897;
@@ -94,37 +88,25 @@ a:active:hover {
 /*==========================================
  * Directory listing
  *==========================================*/
-.m-navigation > li > a:hover,
-.m-navigation > li > a:focus {
-  background: #f5f5f5;
+.m-navigation {
+  background: #444;
 }
-.m-navigation > li.active > a,
-.m-navigation > li.active > a:hover,
-.m-navigation > li.active > a:focus {
+.m-navigation > ul > li > a {
+  color: rgba(225,225,225,0.8);
+}
+.m-navigation > ul > li > a:hover,
+.m-navigation > ul > li > a:focus {
+  color: #eee;
+  background: #585858;
+}
+.m-navigation > ul > li > a:active {
+  outline: 2px solid #b2f6a5;
+}
+.m-navigation > ul > li.active > a,
+.m-navigation > ul > li.active > a:hover,
+.m-navigation > ul > li.active > a:focus {
   background: #b2f6a5;
   color: #00920c;
-}
-.m-navigation > li.directory > a::before,
-.m-navigation > li.file > a::before {
-  display: inline;
-  padding: 0.2em 0.6em 0.3em;
-  font-size: 75%;
-  font-weight: bold;
-  line-height: 1;
-  color: #fff;
-  text-align: center;
-  white-space: nowrap;
-  vertical-align: baseline;
-  border-radius: 0.25em;
-  margin-right: 7px;
-}
-.m-navigation > li.directory > a::before {
-  content: "DIR";
-  background-color: #5cb85c;
-}
-.m-navigation > li.file > a::before {
-  content: "MD";
-  background-color: #999;
 }
 /*==========================================
  * Content

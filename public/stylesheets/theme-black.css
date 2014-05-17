@@ -25,13 +25,6 @@ article > h6:first-child {
 .m-navigation {
   padding: 0;
 }
-.m-navigation .nav a {
-  color: rgba(0,0,0,0.5);
-}
-.m-navigation .nav a:hover,
-.m-navigation .nav a:focus {
-  color: #111;
-}
 .nav-pills > li > a {
   border-radius: 0;
 }
@@ -136,6 +129,9 @@ a:hover {
 .m-content .col-sm-9 {
   width: 100%;
 }
+.m-navigation {
+  background: #eee;
+}
 .m-navigation.col-sm-3 {
   display: none;
   position: absolute;
@@ -146,8 +142,12 @@ a:hover {
   min-height: 100%;
   background: #e6e6e6;
 }
-.m-navigation {
-  background: #eee;
+.m-navigation a {
+  color: rgba(0,0,0,0.5);
+}
+.m-navigation a:hover,
+.m-navigation a:focus {
+  color: #111;
 }
 .m-navigation > li > a:active {
   background: #e2e2e2;

@@ -12,17 +12,16 @@
 	</ol>
 <% } %>
 
-
 	<div class="row">
-	<% if (typeof items !== 'undefined') { %>
-		<% include directory %>
-	<% } %>
 	<% if (typeof content !== 'undefined') { %>
 		<section role="content">
 		<article class="col-xs-12 col-sm-9">
 		<%- content %>
 		</article>
 		</section>
+	<% } %>
+	<% if (typeof items !== 'undefined') { %>
+		<% include directory %>
 	<% } %>
 	</div>
 </div>

@@ -1,8 +1,8 @@
 <div class="m-navigation col-xs-12<% if (typeof content !== 'undefined') { %> col-sm-3<% } %>">
 	<ul class="nav nav-pills nav-stacked">
 	<% items.forEach(function(item) { -%>
-		<li class="<% if (item.isDir) { %>directory<% } else { %>file<% } %><% if (item.isActive) { %> active<% } %>"<% if (item.color) { %> style="background: <%= item.color %>"<% } %>>
-		<a href="<%- item.link %>"><%= item.name %></a>
+		<li class="<% if (item.isDir) { %>directory<% } else { %>file<% } %><% if (item.isActive) { %> active<% } %>">
+		<a href="<%- item.link %>"><% if(item.isDir) { %><span class="glyphicon glyphicon-plus"></span> <% } %><%= item.name %></a>
 		</li>
 	<% }) -%>
 	</ul>
