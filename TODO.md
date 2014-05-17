@@ -1,6 +1,6 @@
 # TODO
 
-- Rename .m-content
+- File opener that opens a diary file
 - Replace spaces in URL
 - Fix styling for http://notes:9000/GTD/Todo2
 - Script that automatically opens a file for the current day
