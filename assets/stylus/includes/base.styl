@@ -4,15 +4,15 @@ code, kbd, pre, samp
 code
 	font-size: 100%
 
-article
+section[role=content]
 	padding: 16px
 
-	> h1:first-child,
-	> h2:first-child,
-	> h3:first-child,
-	> h4:first-child,
-	> h5:first-child,
-	> h6:first-child
+	> article > h1:first-child,
+	> article > h2:first-child,
+	> article > h3:first-child,
+	> article > h4:first-child,
+	> article > h5:first-child,
+	> article > h6:first-child
 	  margin-top: 0 !important
 
 .m-content
@@ -21,6 +21,9 @@ article
 
 .m-navigation
   padding: 0
+
+  & > ul > li.file > a
+    padding-left: 32px
 
 /*==========================================
  * Bootstrap customizations

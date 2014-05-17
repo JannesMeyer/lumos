@@ -30,12 +30,16 @@ a
   background: $content-bg
   border-radius: 8px 8px 4px 4px
 
+section[role=content]
+  padding: 2em 3em
+
 /*==========================================
  * Directory listing
  *==========================================*/
 
-$nav-bg = #444
+$nav-bg = #eee
 $nav-active-bg = #b2f6a5
+$nav-link-color = #888
 
 .m-navigation
   background: $nav-bg
@@ -43,7 +47,7 @@ $nav-active-bg = #b2f6a5
 .m-navigation > ul > li
 
   & > a
-    color: lighten(invert($nav-bg), 4.8) // #c7c7c7
+    color: $nav-link-color
 
     &:hover,
     &:focus

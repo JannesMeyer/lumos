@@ -7,15 +7,15 @@ samp {
 code {
   font-size: 100%;
 }
-article {
+section[role=content] {
   padding: 16px;
 }
-article > h1:first-child,
-article > h2:first-child,
-article > h3:first-child,
-article > h4:first-child,
-article > h5:first-child,
-article > h6:first-child {
+section[role=content] > article > h1:first-child,
+section[role=content] > article > h2:first-child,
+section[role=content] > article > h3:first-child,
+section[role=content] > article > h4:first-child,
+section[role=content] > article > h5:first-child,
+section[role=content] > article > h6:first-child {
   margin-top: 0 !important;
 }
 .m-content {
@@ -24,6 +24,9 @@ article > h6:first-child {
 }
 .m-navigation {
   padding: 0;
+}
+.m-navigation > ul > li.file > a {
+  padding-left: 32px;
 }
 .nav-pills > li > a {
   border-radius: 0;
