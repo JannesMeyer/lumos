@@ -11,6 +11,17 @@ samp {
 code {
   font-size: 100%;
 }
+.m-empty {
+  padding: 0.75em;
+  margin: 1em 1.5em;
+  color: #ddd;
+  text-align: center;
+  background: #f5f5f5;
+  border-radius: 10px;
+}
+.m-empty .glyphicon {
+  top: 4px;
+}
 section[role=content] > article > h1:first-child,
 section[role=content] > article > h2:first-child,
 section[role=content] > article > h3:first-child,

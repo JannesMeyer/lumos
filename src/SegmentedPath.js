@@ -1,5 +1,7 @@
 module path from 'path'
 
+// TODO: allow settings.spaceChar instead of an actual space
+
 /**
  * Represents a path that is relative to a base path
  */

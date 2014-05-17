@@ -14,6 +14,7 @@ import { Directory } from './Directory'
 let settings = {
 	brandName: 'Notes',
 	root: '/Users/jannes/Dropbox/Notes', // __dirname
+	spaceChar: '-',
 	mdSuffix: '.md',
 	indexFile: 'index.md',
 	markedOptions: {
@@ -24,7 +25,8 @@ let settings = {
 };
 
 module.exports = function(req, res, next) {
-	let requestPath = new SegmentedPath(settings.root, decodeURIComponent(req.path));
+	let processedPath = decodeURIComponent(req.path);
+	let requestPath = new SegmentedPath(settings.root, processedPath);
 	if (!requestPath.verifyDescendance()) {
 	    next(mMakeError(400, 'Bad Request'));
 	    return;
