@@ -1,4 +1,5 @@
 #!/usr/bin/env node --harmony
+'use strict';
 
 var traceur = require('traceur');
 var path = require('path');

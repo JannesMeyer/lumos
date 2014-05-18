@@ -1,0 +1,17 @@
+#!/usr/bin/env node --harmony
+'use strict';
+
+/*
+ * Installation:
+ *
+ * LUMOSPATH=~/lumos
+ * ln -s $LUMOSPATH/bin/diary /usr/local/bin
+ */
+const path = require('path');
+const traceur = require('traceur');
+
+// Init ES6, forward command line arguments
+traceur.require.makeDefault(function(filename) {
+  return filename.startsWith(path.join(__dirname, '../dist'));
+});
+require('../dist/open')(process.argv.slice(2));
