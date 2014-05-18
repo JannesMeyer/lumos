@@ -6,13 +6,13 @@ module denodeify from './denodeify';
 const fsStat = denodeify(fs, fs.stat);
 
 // Config
-// const settings = {
-// };
-const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-const baseDir = '/Users/jannes/Dropbox/Notes/Tagebuch';
-const mdSuffix = '.md';
-const editor = 'subl';
-const editorArgs = ['--project', '/Users/jannes/Dropbox/Notes/notes.sublime-project'];
+const settings = {
+	monthNames: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+	baseDir: '/Users/jannes/Dropbox/Notes/Tagebuch',
+	mdSuffix: '.md',
+	editor: 'subl',
+	editorArgs: ['--project', '/Users/jannes/Dropbox/Notes/notes.sublime-project']
+};
 
 function ignoreUndefined(value) {
 	return value !== undefined;
@@ -28,10 +28,11 @@ function openFiles(...days) {
 	let files = days.map(function(day) {
 		let year = day.getFullYear().toString();
 		let month = (day.getMonth() + 1).toString();
+		let monthName = settings.monthNames[day.getMonth()];
 
 		// Generate paths
-		let dirName = path.join(baseDir, year, month);
-		let fileName = months[day.getMonth()] + ' ' + day.getDate() + mdSuffix;
+		let dirName = path.join(settings.baseDir, year, month);
+		let fileName = monthName + ' ' + day.getDate() + settings.mdSuffix;
 		let filePath = path.join(dirName, fileName);
 
 		// Make sure the directory exists
@@ -61,8 +62,8 @@ function openFiles(...days) {
 
 	// Otherwise, open sublime text
 	console.log('Opening files...\n' + files.join('\n'));
-	let args = new Array(...editorArgs, ...files);
-	child_process.spawn(editor, args);
+	let args = new Array(...settings.editorArgs, ...files);
+	child_process.spawn(settings.editor, args);
 }
 
 
