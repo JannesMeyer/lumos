@@ -1,0 +1,12 @@
+{
+	"brandName": "Notes",
+	"baseDir": "/Users/jannes/Dropbox/Notes",
+	"mdSuffix": ".md",
+	"indexFile": "index.md",
+
+	"editor": "subl",
+	"editorArgs": ["--project", "/Users/jannes/Dropbox/Notes/notes.sublime-project"],
+
+	"diaryBaseDir": "/Users/jannes/Dropbox/Notes/Tagebuch",
+	"monthNames": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+}

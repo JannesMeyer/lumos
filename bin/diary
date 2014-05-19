@@ -3,15 +3,15 @@
 
 /*
  * Installation:
- *
  * LUMOSPATH=~/lumos
  * ln -s $LUMOSPATH/bin/diary /usr/local/bin
  */
-const path = require('path');
-const traceur = require('traceur');
 
-// Init ES6, forward command line arguments
+const traceur = require('traceur');
 traceur.require.makeDefault(function(filename) {
-  return filename.startsWith(path.join(__dirname, '../dist'));
+	return filename.startsWith(__dirname + '/../dist');
 });
-require('../dist/open')(process.argv.slice(2));
+const open = require('../dist/open');
+
+let days = process.argv.slice(2);
+open.openDiary(days);

@@ -2,110 +2,75 @@ module child_process from 'child_process'
 module fs from 'fs'
 module path from 'path'
 
+module cfg from '../config.json'
 module denodeify from './denodeify';
 const fsStat = denodeify(fs, fs.stat);
+const fsMkdir = denodeify(fs, fs.mkdir);
 
-// Config
-const settings = {
-	monthNames: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-	baseDir: '/Users/jannes/Dropbox/Notes/Tagebuch',
-	mdSuffix: '.md',
-	editor: 'subl',
-	editorArgs: ['--project', '/Users/jannes/Dropbox/Notes/notes.sublime-project']
-};
-
-function ignoreUndefined(value) {
+function isDefined(value) {
 	return value !== undefined;
 }
 
-function mkdir(dirName) {
-	// TODO: create recursively
-	console.log(`Creating directory '${dirName}'`);
-	fs.mkdirSync(dirName);
-}
-
-function openFiles(...days) {
-	let files = days.map(function(day) {
-		let year = day.getFullYear().toString();
-		let month = (day.getMonth() + 1).toString();
-		let monthName = settings.monthNames[day.getMonth()];
-
-		// Generate paths
-		let dirName = path.join(settings.baseDir, year, month);
-		let fileName = monthName + ' ' + day.getDate() + settings.mdSuffix;
-		let filePath = path.join(dirName, fileName);
-
+function openFiles(files) {
+	Promise.all(files.map(file => {
+		var dir = path.dirname(file);
 		// Make sure the directory exists
-		try {
-			let stat = fs.statSync(dirName);
+		return fsStat(dir)
+		.then(stat => {
 			if (stat.isFile()) {
-				console.error('Found a file instead of a directory');
-				return;
+				throw new Error('Found a file instead of a directory');
 			}
-		} catch(e) {
-			try {
-				mkdir(dirName);
-			} catch(e2) {
-				console.error(e2.message);
-				return;
-			}
-		}
-
-		return filePath;
-	})
-	.filter(ignoreUndefined);
-
-	// Stop, if there are no files left
-	if (files.length === 0) {
-		return;
-	}
-
-	// Otherwise, open sublime text
-	console.log('Opening files...\n' + files.join('\n'));
-	let args = new Array(...settings.editorArgs, ...files);
-	child_process.spawn(settings.editor, args);
-}
-
-
-const dateRegex1 = /^([\d]{1,4})-([\d]{1,2})-([\d]{1,2})$/;
-const dateRegex2 = /^([\d]{1,2})-([\d]{1,2})$/;
-const dateRegex3 = /^([\d]{1,2})$/;
-function parseIsoDate(dateStr) {
-	let result = dateRegex1.exec(dateStr);
-	if (result) {
-		let y = result[1];
-		let m = result[2] - 1;
-		let d = result[3];
-		return new Date(y, m, d);
-	}
-	let date = new Date();
-	result = dateRegex2.exec(dateStr);
-	if (result) {
-		date.setMonth(result[1] - 1);
-		date.setDate(result[2]);
-		return date;
-	}
-	result = dateRegex3.exec(dateStr);
-	if (result) {
-		date.setDate(result[1]);
-		return date;
-	}
-}
-
-module.exports = function(args) {
-	if (args.length === 0) {
-		openFiles(new Date());
-	} else {
-		let days = [];
-		args.forEach(function(arg) {
-			// Try to parse each argument as a date
-			let day = parseIsoDate(arg);
-			if (day !== undefined) {
-				days.push(day);
-			} else {
-				console.log('could not parse date');
-			}
+		}, err => {
+			console.log(`Creating directory '${dir}'`);
+			// TODO: create recursively
+			return fsMkdir(dir);
 		});
-		openFiles(...days);
+	}))
+	.then(() => {
+		for (var file of files) {
+			console.log(`Opening '${file}'`);
+		}
+		// Open editor
+		child_process.spawn(cfg.editor, [...cfg.editorArgs, ...files]);
+	});
+}
+
+/**
+ * Well, this actually doesn't adhere to the standard at all, because
+ * it allows the omission of the year to mean the current year.
+ * (or the omission of the current year and month)
+ * It also doesn't check if the month and the day are within reasonable
+ * bounds.
+ */
+const dateRegex = /^(?:(?:([\d]{4})-)?(0?[1-9]|1[0-2])-)?(0?[1-9]|[12][0-9]|3[01])$/;
+function parseIso8601Date(dateStr) {
+	var result = dateRegex.exec(dateStr);
+	if (result) {
+		var date = new Date();
+		if (result[1]) { date.setFullYear(result[1]); }
+		if (result[2]) { date.setMonth(result[2] - 1); }
+		date.setDate(result[3]);
+		return date;
 	}
+}
+
+export function openDiary(days) {
+	// Collect Date objects
+	if (days.length === 0) {
+		days.push(new Date());
+	} else {
+		days = days.map(day => parseIso8601Date(day));
+		if (!days.every(isDefined)) {
+			throw new Error("Couldn't parse all dates");
+		}
+	}
+
+	// Convert to paths
+	let files = days.map(day => path.join(cfg.diaryBaseDir,
+		`${day.getFullYear()}`,
+		`${day.getMonth() + 1}`,
+		`${cfg.monthNames[day.getMonth()]} ${day.getDate()}${cfg.mdSuffix}`));
+
+	// Open the files in an editor
+	openFiles(files);
 }

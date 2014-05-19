@@ -1,6 +1,5 @@
 module util from 'util'
 module marked from 'marked'
-module hljs from 'highlight.js'
 
 module fs from 'fs'
 module denodeify from './denodeify'
@@ -8,25 +7,13 @@ let fsStat     = denodeify(fs, fs.stat);
 let fsReadDir  = denodeify(fs, fs.readdir);
 let fsReadFile = denodeify(fs, fs.readFile);
 
+module cfg from '../config.json'
 import { SegmentedPath } from './SegmentedPath'
 import { Directory } from './Directory'
 
-let settings = {
-	brandName: 'Notes',
-	root: '/Users/jannes/Dropbox/Notes', // __dirname
-	spaceChar: '-',
-	mdSuffix: '.md',
-	indexFile: 'index.md',
-	markedOptions: {
-		gfm: true,
-		breaks: true,
-		highlight: (code, lang) => lang ? hljs.highlight(lang, code).value : code
-	}
-};
-
 module.exports = function(req, res, next) {
 	let processedPath = decodeURIComponent(req.path);
-	let requestPath = new SegmentedPath(settings.root, processedPath);
+	let requestPath = new SegmentedPath(cfg.baseDir, processedPath);
 	if (!requestPath.verifyDescendance()) {
 	    next(mMakeError(400, 'Bad Request'));
 	    return;
@@ -34,7 +21,7 @@ module.exports = function(req, res, next) {
 
 	// Prepare data to render
 	let data = {
-		brandName: settings.brandName
+		brandName: cfg.brandName
 		// title
 		// breadcrumbs
 		// items
@@ -48,11 +35,11 @@ module.exports = function(req, res, next) {
 		.then(dir => {
 			data.breadcrumbs = requestPath.makeBreadcrumbs();
 			data.items = dir.filteredContents;
-			data.title = dir.path.name === '' ? settings.brandName : dir.path.name;
+			data.title = dir.path.name === '' ? cfg.brandName : dir.path.name;
 
 			// Include index file if available
-			if (dir.hasFile(settings.indexFile)) {
-				let indexPath = dir.path.makeDescendant(settings.indexFile);
+			if (dir.hasFile(cfg.indexFile)) {
+				let indexPath = dir.path.makeDescendant(cfg.indexFile);
 				return readFile(indexPath)
 				.then(content => {
 					data.content = convertToHtml(content);
@@ -66,7 +53,7 @@ module.exports = function(req, res, next) {
 	} else {
 		requestPath.makeFile();
 		let requestPathMd = requestPath.makeClone();
-		requestPathMd.leaf += settings.mdSuffix;
+		requestPathMd.leaf += cfg.mdSuffix;
 		requestPathMd.makeFile();
 		data.breadcrumbs = requestPathMd.makeBreadcrumbs();
 
@@ -138,7 +125,12 @@ function readFile(filePath) {
  * This function is used to convert the plain text to HTML
  * Read: https://github.com/chjj/marked/blob/master/README.md
  */
-marked.setOptions(settings.markedOptions);
+const hljs = require('highlight.js');
+marked.setOptions({
+		gfm: true,
+		breaks: true,
+		highlight: (code, lang) => lang ? hljs.highlight(lang, code).value : code
+	});
 function convertToHtml(content) {
 	let md = marked(content);
 	// TODO: Fix html
@@ -153,8 +145,8 @@ function convertToHtml(content) {
 function itemFilterFn(item) {
 	if (item.isHidden) { return false; }
 	if (!item.isDir) {
-		if (item.fullName === settings.indexFile) { return false; }
-		if (item.extension !== settings.mdSuffix) { return false; }
+		if (item.fullName === cfg.indexFile) { return false; }
+		if (item.extension !== cfg.mdSuffix) { return false; }
 	}
 	return true;
 }

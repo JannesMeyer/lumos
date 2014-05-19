@@ -1,5 +1,12 @@
 # TODO
 
+- Use __dirname instead of baseDir
+- Make settings external (json file)
+- Fix diary file opener with better JS
+- Build system for Sublime Text
+- Connect documents to the editor
+- Leverage browser caching for static assets
+- Remove the bootstrap dependency?
 - File opener that opens a diary file
 - Fix styling for http://notes:9000/GTD/Todo2
 - Script that automatically opens a file for the current day

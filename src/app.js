@@ -1,6 +1,6 @@
+module path from 'path'
 module express from 'express'
 module ejsLocals from 'ejs-locals'
-module path from 'path'
 module morgan from 'morgan'
 module serve from './serve'
 
@@ -15,7 +15,8 @@ app.set('view engine', 'ejs');
 app.use(morgan(':method :url :status (done after :response-time ms)'));
 
 // static routes
-app.use(express.static(path.join(__dirname, '../public')));
+const oneYear = 31557600000;
+app.use(express.static(path.join(__dirname, '../public'), { maxAge: oneYear }));
 
 // the app
 app.use(serve);
