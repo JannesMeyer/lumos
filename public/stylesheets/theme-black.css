@@ -1,9 +1,41 @@
 body {
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
 }
 #instantclick {
   display: none;
+}
+html,
+body {
+  height: 100%;
+}
+.m-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+.m-container > .breadcrumb {
+  flex: 0 0 auto;
+}
+.m-container > .m-container2 {
+  flex: 1 1 auto;
+  display: flex;
+}
+.m-container > .m-container2 > section[role=content] {
+  flex: 1 1 auto;
+}
+.m-container > .m-container2 > nav {
+  flex: 0 0 200px;
+}
+.m-container > .m-container2 > nav > ul > li.file > a {
+  padding-left: 32px;
+}
+section[role=content] > article > h1:first-child,
+section[role=content] > article > h2:first-child,
+section[role=content] > article > h3:first-child,
+section[role=content] > article > h4:first-child,
+section[role=content] > article > h5:first-child,
+section[role=content] > article > h6:first-child {
+  margin-top: 0 !important;
 }
 code,
 kbd,
@@ -26,26 +58,6 @@ code {
 .m-empty .glyphicon {
   top: 4px;
 }
-section[role=content] > article > h1:first-child,
-section[role=content] > article > h2:first-child,
-section[role=content] > article > h3:first-child,
-section[role=content] > article > h4:first-child,
-section[role=content] > article > h5:first-child,
-section[role=content] > article > h6:first-child {
-  margin-top: 0 !important;
-}
-.m-container {
-  margin-bottom: 20px;
-}
-.m-container > .row {
-  display: flex;
-}
-.m-navigation {
-  padding: 0;
-}
-.m-navigation > ul > li.file > a {
-  padding-left: 32px;
-}
 .nav-pills > li > a {
   border-radius: 0;
 }
@@ -57,7 +69,7 @@ section[role=content] > article > h6:first-child {
   margin-top: 0;
 }
 .breadcrumb {
-  margin: 0 -15px;
+  margin: 0;
 }
 .breadcrumb > li {
   white-space: pre;

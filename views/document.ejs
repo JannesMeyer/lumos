@@ -1,5 +1,5 @@
 <% layout('layout') -%>
-<div class="container m-container">
+<div class="m-container">
 
 <% if (typeof breadcrumbs !== 'undefined') { %>
 	<ol class="breadcrumb">
@@ -12,17 +12,18 @@
 	</ol>
 <% } %>
 
-	<div class="row">
-		<section role="content" class="col-xs-12 col-sm-9">
+	<div class="m-container2">
+		<section role="content">
 		<% if (typeof content !== 'undefined') { %>
 			<article>
 			<%- content %>
 			</article>
 		<% } else { %>
-		<h1 class="m-empty"><span class="glyphicon glyphicon-remove"></span> No index document</h1>
+			<h1 class="m-empty"><span class="glyphicon glyphicon-remove"></span> No index document</h1>
 		<% } %>
 		</section>
-		<nav class="m-navigation col-xs-12 col-sm-3">
+
+		<nav class="m-navigation">
 		<% if (typeof items !== 'undefined') { %>
 			<% include directory %>
 		<% } %>

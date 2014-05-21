@@ -9,45 +9,22 @@ $content-bg = #fff
  * THEME
  *==========================================*/
 
-a
-  color: $link-color
-
-  &:hover
-    color: $hover-link-color
-
-  &:active
-    outline: 2px solid $link-color
-    z-index: 10
-
-    &:hover
-      outline: 2px solid $hover-link-color
-
-.navbar
-  display: none
-
-.m-container
-  margin-bottom: 0
-  width: 100%
-
-  background: $content-bg
+body
+	background: $content-bg
 
 section[role=content]
-  padding: 30px 50px
-
-  > article
-    max-width: 650px
+	padding: 30px 50px
 
 /*==========================================
  * Breadcrumbs
  *==========================================*/
 
 .breadcrumb
+	border-bottom: 5px solid #aa90d3
+	border-radius: 0
 
-  border-bottom: 5px solid #aa90d3
-  border-radius: 0
-
-  > li:first-child
-    font-size: 1.9em
+	> li:first-child
+		font-size: 1.9em
 
 /*==========================================
  * File/Directory sidebar
@@ -62,96 +39,105 @@ $nav-active-link-color = #8967bd
 $nav-border = #d2c6e4
 
 .m-navigation
-  background: $nav-bg
-  border-left: 1px solid $nav-border
-  padding-top: 12px
-  padding-bottom: 12px
+	background: $nav-bg
+	border-left: 1px solid $nav-border
+	padding-top: 12px
+	padding-bottom: 12px
 
 .m-navigation > ul > li
-  border-top: 1px solid transparent
-  border-bottom: 1px solid transparent
+	&.active
+		box-shadow: -2px 0 0 -1px $content-bg;
 
-  &.active
-    border-top-color: $nav-border
-    border-bottom-color: $nav-border
-    position: relative
-    left: -1px
+		> a
+			border-top-color: $nav-border
+			border-bottom-color: $nav-border
 
-    > a
-      padding-left: 33px
+	> a
+		color: $nav-link-color
+		border-top: 1px solid transparent
+		border-bottom: 1px solid transparent
 
-  > a
-    color: $nav-link-color
+		&:hover,
+		&:focus
+			background: lighten($nav-bg, 2)
 
-    &:hover,
-    &:focus
-      background: lighten($nav-bg, 2)
+		&:active:hover
+			outline: 0
+			background: lighten($nav-bg, 4)
 
-    &:active:hover
-      outline: 0
-      background: lighten($nav-bg, 4)
+	&.active > a,
+	&.active > a:hover,
+	&.active > a:focus
+		background: $nav-active-bg
+		color: $nav-active-link-color
 
-  &.active > a,
-  &.active > a:hover,
-  &.active > a:focus
-    background: $nav-active-bg
-    color: $nav-active-link-color
+	// &.file > a::before,
+	// &.directory > a::before
+	//   display: inline
+	//   padding: .2em .6em .3em
+	//   font-size: 75%
+	//   font-weight: bold
+	//   line-height: 1
+	//   color: #fff
+	//   text-align: center
+	//   white-space: nowrap
+	//   vertical-align: baseline
+	//   border-radius: .25em
+	//   margin-right: 7px
 
-  // &.file > a::before,
-  // &.directory > a::before
-  //   display: inline
-  //   padding: .2em .6em .3em
-  //   font-size: 75%
-  //   font-weight: bold
-  //   line-height: 1
-  //   color: #fff
-  //   text-align: center
-  //   white-space: nowrap
-  //   vertical-align: baseline
-  //   border-radius: .25em
-  //   margin-right: 7px
+	// &.directory > a::before
+	//   content: "DIR"
+	//   background-color: #5cb85c
 
-  // &.directory > a::before
-  //   content: "DIR"
-  //   background-color: #5cb85c
-
-  // &.file > a::before
-  //   content: "MD"
-  //   background-color: #999
+	// &.file > a::before
+	//   content: "MD"
+	//   background-color: #999
 
 /*==========================================
  * Content
  *==========================================*/
 
 article
-  font-family: 'Inconsolata', monospace
-  line-height: 1.5
-  font-size: 16px
-  color: #333
+	font-family: 'Inconsolata', monospace
+	line-height: 1.5
+	font-size: 16px
+	color: #333
+	max-width: 650px
 
-  h1, h2, h3, h4, h5, h6
-    font-family: 'Avenir Next Condensed'
-    font-weight: bold
+	h1, h2, h3, h4, h5, h6
+		font-family: 'Avenir Next Condensed'
+		font-weight: bold
 
-  h1
-    font-size: 1.7em
+	h1
+		font-size: 1.7em
 
-  h2
-    font-size: 1.4em
+	h2
+		font-size: 1.4em
 
-  h3
-    font-size: 1.2em
-    font-style: oblique
+	h3
+		font-size: 1.2em
+		font-style: oblique
 
-  h4
-    font-size: 1em
+	h4
+		font-size: 1em
 
-  ul
-    list-style-type: disc
-    padding-left: 30px
+	ul
+		list-style-type: disc
+		padding-left: 30px
 
-  a
-    text-decoration: underline
+	a
+		color: $link-color
+		text-decoration: underline
+
+		&:hover
+			color: $hover-link-color
+
+		&:active
+			outline: 2px solid $link-color
+			z-index: 10
+
+			&:hover
+				outline: 2px solid $hover-link-color
 
 #instantclick-bar
-  background-color: $hover-link-color
+	background-color: $hover-link-color

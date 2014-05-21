@@ -1,29 +1,37 @@
 body
-  -webkit-font-smoothing: antialiased
-  text-rendering: optimizeLegibility
+	-webkit-font-smoothing: antialiased
+	// text-rendering: optimizeLegibility
 
 #instantclick
-  display: none
+	display: none
 
-code, kbd, pre, samp
-  font-family: Inconsolata, monospace
-  font-size: 1em
+html, body
+	height: 100%
 
-code
-	font-size: 100%
+.m-container
+	display: flex
+	flex-direction: column
+	min-height: 100%
 
-.m-empty
-  padding: .75em
-  margin: 1em 1.5em
+	> .breadcrumb
+		flex: 0 0 auto
 
-  color: #ddd
-  text-align: center
-  background: #f5f5f5
-  border-radius: 10px
+	> .m-container2
+		flex: 1 1 auto
+		display: flex
 
-  .glyphicon
-    top: 4px
+		> section[role=content]
+			flex: 1 1 auto
 
+		> nav
+			flex: 0 0 200px
+
+			> ul > li.file > a
+				padding-left: 32px
+
+/*==========================================
+ * Content
+ *==========================================*/
 section[role=content]
 	> article > h1:first-child,
 	> article > h2:first-child,
@@ -31,39 +39,46 @@ section[role=content]
 	> article > h4:first-child,
 	> article > h5:first-child,
 	> article > h6:first-child
-	  margin-top: 0 !important
+		margin-top: 0 !important
 
-.m-container
-  margin-bottom: 20px
+code, kbd, pre, samp
+	font-family: Inconsolata, monospace
+	font-size: 1em
 
-  > .row
-    display: flex
+code
+	font-size: 100%
 
-.m-navigation
-  padding: 0
+.m-empty
+	padding: .75em
+	margin: 1em 1.5em
 
-  & > ul > li.file > a
-    padding-left: 32px
+	color: #ddd
+	text-align: center
+	background: #f5f5f5
+	border-radius: 10px
+
+	.glyphicon
+		top: 4px
 
 /*==========================================
  * Bootstrap customizations
  *==========================================*/
 
 .nav-pills > li > a
-  border-radius: 0
+	border-radius: 0
 
 .nav > li > a:hover,
 .nav > li > a:focus
-  background-color: initial
+	background-color: initial
 
 .nav-stacked > li + li
-  margin-top: 0
+	margin-top: 0
 
 .breadcrumb
-  margin: 0 -15px
+	margin: 0
 
-  > li
-  	white-space: pre
+	> li
+		white-space: pre
 
 blockquote
 	font-size: 1em
@@ -73,21 +88,21 @@ blockquote
  *==========================================*/
 
 .callout
-  margin: 20px 0
-  padding: 20px
-  border-left: 3px solid #5bc0de
-  background-color: #f4f8fa
-  // border-left: 3px solid #f0ad4e
-  // background-color: #fcf8f2
+	margin: 20px 0
+	padding: 20px
+	border-left: 3px solid #5bc0de
+	background-color: #f4f8fa
+	// border-left: 3px solid #f0ad4e
+	// background-color: #fcf8f2
 
-  h4
-    margin-top: 0
-    margin-bottom: 5px
-    color: #5bc0de
-    // color: #f0ad4e
+	h4
+		margin-top: 0
+		margin-bottom: 5px
+		color: #5bc0de
+		// color: #f0ad4e
 
-  p:last-child
-    margin-bottom: 0
+	p:last-child
+		margin-bottom: 0
 
-  code
-    background-color: #fff
+	code
+		background-color: #fff

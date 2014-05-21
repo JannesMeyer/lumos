@@ -1,9 +1,41 @@
 body {
   -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
 }
 #instantclick {
   display: none;
+}
+html,
+body {
+  height: 100%;
+}
+.m-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+.m-container > .breadcrumb {
+  flex: 0 0 auto;
+}
+.m-container > .m-container2 {
+  flex: 1 1 auto;
+  display: flex;
+}
+.m-container > .m-container2 > section[role=content] {
+  flex: 1 1 auto;
+}
+.m-container > .m-container2 > nav {
+  flex: 0 0 200px;
+}
+.m-container > .m-container2 > nav > ul > li.file > a {
+  padding-left: 32px;
+}
+section[role=content] > article > h1:first-child,
+section[role=content] > article > h2:first-child,
+section[role=content] > article > h3:first-child,
+section[role=content] > article > h4:first-child,
+section[role=content] > article > h5:first-child,
+section[role=content] > article > h6:first-child {
+  margin-top: 0 !important;
 }
 code,
 kbd,
@@ -26,26 +58,6 @@ code {
 .m-empty .glyphicon {
   top: 4px;
 }
-section[role=content] > article > h1:first-child,
-section[role=content] > article > h2:first-child,
-section[role=content] > article > h3:first-child,
-section[role=content] > article > h4:first-child,
-section[role=content] > article > h5:first-child,
-section[role=content] > article > h6:first-child {
-  margin-top: 0 !important;
-}
-.m-container {
-  margin-bottom: 20px;
-}
-.m-container > .row {
-  display: flex;
-}
-.m-navigation {
-  padding: 0;
-}
-.m-navigation > ul > li.file > a {
-  padding-left: 32px;
-}
 .nav-pills > li > a {
   border-radius: 0;
 }
@@ -57,7 +69,7 @@ section[role=content] > article > h6:first-child {
   margin-top: 0;
 }
 .breadcrumb {
-  margin: 0 -15px;
+  margin: 0;
 }
 .breadcrumb > li {
   white-space: pre;
@@ -85,32 +97,11 @@ blockquote {
 /*==========================================
  * THEME
  *==========================================*/
-a {
-  color: #00a5e6;
-}
-a:hover {
-  color: #006897;
-}
-a:active {
-  outline: 2px solid #00a5e6;
-  z-index: 10;
-}
-a:active:hover {
-  outline: 2px solid #006897;
-}
-.navbar {
-  display: none;
-}
-.m-container {
-  margin-bottom: 0;
-  width: 100%;
+body {
   background: #fff;
 }
 section[role=content] {
   padding: 30px 50px;
-}
-section[role=content] > article {
-  max-width: 650px;
 }
 /*==========================================
  * Breadcrumbs
@@ -131,21 +122,17 @@ section[role=content] > article {
   padding-top: 12px;
   padding-bottom: 12px;
 }
-.m-navigation > ul > li {
-  border-top: 1px solid transparent;
-  border-bottom: 1px solid transparent;
-}
 .m-navigation > ul > li.active {
-  border-top-color: #d2c6e4;
-  border-bottom-color: #d2c6e4;
-  position: relative;
-  left: -1px;
+  box-shadow: -2px 0 0 -1px #fff;
 }
 .m-navigation > ul > li.active > a {
-  padding-left: 33px;
+  border-top-color: #d2c6e4;
+  border-bottom-color: #d2c6e4;
 }
 .m-navigation > ul > li > a {
   color: #583589;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
 }
 .m-navigation > ul > li > a:hover,
 .m-navigation > ul > li > a:focus {
@@ -169,6 +156,7 @@ article {
   line-height: 1.5;
   font-size: 16px;
   color: #333;
+  max-width: 650px;
 }
 article h1,
 article h2,
@@ -197,7 +185,18 @@ article ul {
   padding-left: 30px;
 }
 article a {
+  color: #00a5e6;
   text-decoration: underline;
+}
+article a:hover {
+  color: #006897;
+}
+article a:active {
+  outline: 2px solid #00a5e6;
+  z-index: 10;
+}
+article a:active:hover {
+  outline: 2px solid #006897;
 }
 #instantclick-bar {
   background-color: #006897;
