@@ -14,17 +14,17 @@ body {
   min-height: 100%;
 }
 .m-container > .breadcrumb {
-  flex: 0 0 auto;
+  flex-shrink: 0;
 }
 .m-container > .m-container2 {
-  flex: 1 1 auto;
+  flex: 1;
   display: flex;
 }
 .m-container > .m-container2 > section[role=content] {
-  flex: 1 1 auto;
+  flex: 1;
 }
 .m-container > .m-container2 > nav {
-  flex: 0 0 200px;
+  flex: 0 0 25%;
 }
 .m-container > .m-container2 > nav > ul > li.file > a {
   padding-left: 32px;
