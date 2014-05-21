@@ -85,9 +85,6 @@ blockquote {
 /*==========================================
  * THEME
  *==========================================*/
-body {
-  background: url("/images/ricepaper_v3.png");
-}
 a {
   color: #00a5e6;
 }
@@ -101,34 +98,68 @@ a:active {
 a:active:hover {
   outline: 2px solid #006897;
 }
+.navbar {
+  display: none;
+}
 .m-container {
-  background: #fcfcfc;
-  border-radius: 8px 8px 4px 4px;
+  margin-bottom: 0;
+  width: 100%;
+  background: #fff;
 }
 section[role=content] {
-  padding: 16px;
+  padding: 30px 50px;
+}
+section[role=content] > article {
+  max-width: 650px;
 }
 /*==========================================
- * Directory listing
+ * Breadcrumbs
+ *==========================================*/
+.breadcrumb {
+  border-bottom: 5px solid #aa90d3;
+  border-radius: 0;
+}
+.breadcrumb > li:first-child {
+  font-size: 1.9em;
+}
+/*==========================================
+ * File/Directory sidebar
  *==========================================*/
 .m-navigation {
-  background: #eee;
+  background: #ede9f5;
+  border-left: 1px solid #d2c6e4;
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+.m-navigation > ul > li {
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+}
+.m-navigation > ul > li.active {
+  border-top-color: #d2c6e4;
+  border-bottom-color: #d2c6e4;
+  position: relative;
+  left: -1px;
+}
+.m-navigation > ul > li.active > a {
+  padding-left: 33px;
 }
 .m-navigation > ul > li > a {
-  color: #888;
+  color: #583589;
 }
 .m-navigation > ul > li > a:hover,
 .m-navigation > ul > li > a:focus {
-  background: #fff;
+  background: #f3f0f8;
 }
 .m-navigation > ul > li > a:active:hover {
-  outline: 2px solid #b2f6a5;
+  outline: 0;
+  background: #f8f7fb;
 }
 .m-navigation > ul > li.active > a,
 .m-navigation > ul > li.active > a:hover,
 .m-navigation > ul > li.active > a:focus {
-  background: #b2f6a5;
-  color: #00920c;
+  background: #fff;
+  color: #8967bd;
 }
 /*==========================================
  * Content
