@@ -1,17 +1,19 @@
 #!/usr/bin/env node --harmony
 'use strict';
 
-var traceur = require('traceur');
-var path = require('path');
+/*
+ * Installation:
+ * ln -s ~/lumos/bin/www /usr/local/bin/lumos
+ */
 
-// ES6 files
+const path = require('path');
+const traceur = require('traceur');
 traceur.require.makeDefault(function(filename) {
-  return filename.startsWith(path.join(__dirname, '../dist'));
+	return filename.startsWith(path.join(__dirname, '../dist'));
 });
-
-var app = require('../dist/app');
+const app = require('../dist/app');
 
 app.set('port', process.env.PORT || 9000);
-var server = app.listen(app.get('port'), function() {
+let server = app.listen(app.get('port'), function() {
 	console.log('Express server listening on: ' + server.address().port);
 });

@@ -1,3 +1,5 @@
+// TODO: lazy-loading of denodified functions
+
 // Convert node.js async functions into Promises
 module.exports = function denodeify(thisArg, nodeFn) {
 	return function() {

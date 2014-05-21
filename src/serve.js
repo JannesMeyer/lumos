@@ -1,5 +1,6 @@
 module util from 'util'
 module marked from 'marked'
+module path from 'path'
 
 module fs from 'fs'
 module denodeify from './denodeify'
@@ -11,9 +12,12 @@ module cfg from '../config.json'
 import { SegmentedPath } from './SegmentedPath'
 import { Directory } from './Directory'
 
+const baseDir = process.env.LUMOSPATH || process.cwd(); // Default to current working directory
+const baseDirName = path.basename(baseDir);
+
 module.exports = function(req, res, next) {
 	let processedPath = decodeURIComponent(req.path);
-	let requestPath = new SegmentedPath(cfg.baseDir, processedPath);
+	let requestPath = new SegmentedPath(baseDir, processedPath);
 	if (!requestPath.verifyDescendance()) {
 	    next(mMakeError(400, 'Bad Request'));
 	    return;
@@ -21,7 +25,7 @@ module.exports = function(req, res, next) {
 
 	// Prepare data to render
 	let data = {
-		brandName: cfg.brandName
+		baseDirName: baseDirName
 		// title
 		// breadcrumbs
 		// items
@@ -35,7 +39,7 @@ module.exports = function(req, res, next) {
 		.then(dir => {
 			data.breadcrumbs = requestPath.makeBreadcrumbs();
 			data.items = dir.filteredContents;
-			data.title = dir.path.name === '' ? cfg.brandName : dir.path.name;
+			data.title = dir.path.name === '' ? baseDirName : dir.path.name;
 
 			// Include index file if available
 			if (dir.hasFile(cfg.indexFile)) {

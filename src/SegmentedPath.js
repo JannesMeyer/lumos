@@ -1,7 +1,5 @@
 module path from 'path'
 
-// TODO: allow settings.spaceChar instead of an actual space
-
 /**
  * Represents a path that is relative to a base path
  */
@@ -9,6 +7,7 @@ export class SegmentedPath {
 
 	constructor(basePath, ...segments) {
 		this.basePath = basePath;
+		this.baseDirName = path.basename(basePath);
 		this.segments = segments;
 		// this.name = String
 		// this.extension = String
@@ -87,7 +86,7 @@ export class SegmentedPath {
 		let pathSegments = this.relative.split('/').filter(s => s !== '');
 		// Home item
 		let item = {
-			name: 'Home',
+			name: this.baseDirName,
 			path: '/',
 			isActive: (pathSegments.length === 0)
 		};

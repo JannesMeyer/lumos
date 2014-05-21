@@ -3,8 +3,7 @@
 
 /*
  * Installation:
- * LUMOSPATH=~/lumos
- * ln -s $LUMOSPATH/bin/diary /usr/local/bin
+ * ln -s ~/lumos/bin/diary /usr/local/bin
  */
 
 const traceur = require('traceur');

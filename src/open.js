@@ -2,10 +2,10 @@ module child_process from 'child_process'
 module fs from 'fs'
 module path from 'path'
 
-module cfg from '../config.json'
 module denodeify from './denodeify';
 const fsStat = denodeify(fs, fs.stat);
 const fsMkdir = denodeify(fs, fs.mkdir);
+module cfg from '../config.json'
 
 function isDefined(value) {
 	return value !== undefined;
