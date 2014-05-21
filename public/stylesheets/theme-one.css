@@ -24,7 +24,7 @@ body {
   flex: 1;
 }
 .m-container > .m-container2 > nav {
-  flex: 0 0 25%;
+  flex: 0 0 250px;
 }
 .m-container > .m-container2 > nav > ul > li.file > a {
   padding-left: 32px;
