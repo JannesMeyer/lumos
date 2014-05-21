@@ -16,17 +16,17 @@ body {
 .m-container > .breadcrumb {
   flex-shrink: 0;
 }
-.m-container > .m-container2 {
+.m-container > div {
   flex: 1;
   display: flex;
 }
-.m-container > .m-container2 > section[role=content] {
+.m-container > div > section {
   flex: 1;
 }
-.m-container > .m-container2 > nav {
+.m-container > div > nav {
   flex: 0 0 250px;
 }
-.m-container > .m-container2 > nav > ul > li.file > a {
+.m-container > div > nav > ul > li.file > a {
   padding-left: 32px;
 }
 section[role=content] > article > h1:first-child,
@@ -36,6 +36,19 @@ section[role=content] > article > h4:first-child,
 section[role=content] > article > h5:first-child,
 section[role=content] > article > h6:first-child {
   margin-top: 0 !important;
+}
+section[role=content] ul > li > a[href]:first-child {
+  text-decoration: none;
+  font-weight: bold;
+}
+section[role=content] ul > li > a[href]:first-child::after {
+  content: attr(href);
+  display: table;
+  width: auto;
+  font-size: 0.8em;
+  line-height: 1;
+  color: #999;
+  font-weight: normal;
 }
 code,
 kbd,
@@ -109,6 +122,7 @@ section[role=content] {
 .breadcrumb {
   border-bottom: 5px solid #aa90d3;
   border-radius: 0;
+  padding-left: 50px;
 }
 .breadcrumb > li:first-child {
   font-size: 1.9em;
@@ -116,37 +130,171 @@ section[role=content] {
 /*==========================================
  * File/Directory sidebar
  *==========================================*/
+.m-breadcrumb {
+  border-bottom: 5px solid #a0a0a0;
+}
+.m-breadcrumb a {
+  color: #a0a0a0;
+}
+.m-breadcrumb a:hover {
+  text-decoration: none;
+}
+.m-breadcrumb a:active {
+  text-decoration: underline;
+}
 .m-navigation {
-  background: #ede9f5;
-  border-left: 1px solid #d2c6e4;
+  background: #ebebeb;
+  border-left: 1px solid #cdcdcd;
   padding-top: 12px;
   padding-bottom: 12px;
 }
-.m-navigation > ul > li.active {
-  box-shadow: -2px 0 0 -1px #fff;
-}
-.m-navigation > ul > li.active > a {
-  border-top-color: #d2c6e4;
-  border-bottom-color: #d2c6e4;
-}
 .m-navigation > ul > li > a {
-  color: #583589;
+  color: #4c4c4c;
   border-top: 1px solid transparent;
   border-bottom: 1px solid transparent;
 }
 .m-navigation > ul > li > a:hover,
 .m-navigation > ul > li > a:focus {
-  background: #f3f0f8;
+  background: #f0f0f0;
 }
 .m-navigation > ul > li > a:active:hover {
-  outline: 0;
-  background: #f8f7fb;
+  background: #f5f5f5;
+}
+.m-navigation > ul > li.active {
+  box-shadow: -2px 0 0 -1px #fff;
+}
+.m-navigation > ul > li.active > a {
+  border-top-color: #cdcdcd;
+  border-bottom-color: #cdcdcd;
 }
 .m-navigation > ul > li.active > a,
 .m-navigation > ul > li.active > a:hover,
 .m-navigation > ul > li.active > a:focus {
   background: #fff;
+  color: #7d7d7d;
+}
+/*==========================================
+ * Custom colors
+ *==========================================*/
+.s-purple-mist .m-breadcrumb {
+  border-bottom-color: #aa90d3;
+}
+.s-purple-mist .m-breadcrumb a {
+  color: #aa90d3;
+}
+.s-purple-mist .m-navigation {
+  background: #ede9f5;
+  border-left-color: #d2c6e4;
+}
+.s-purple-mist .m-navigation > ul > li > a {
+  color: #583589;
+}
+.s-purple-mist .m-navigation > ul > li > a:hover,
+.s-purple-mist .m-navigation > ul > li > a:focus {
+  background: #f3f0f8;
+}
+.s-purple-mist .m-navigation > ul > li > a:active:hover {
+  background: #f8f7fb;
+}
+.s-purple-mist .m-navigation > ul > li.active > a {
+  border-top-color: #d2c6e4;
+  border-bottom-color: #d2c6e4;
+}
+.s-purple-mist .m-navigation > ul > li.active > a,
+.s-purple-mist .m-navigation > ul > li.active > a:hover,
+.s-purple-mist .m-navigation > ul > li.active > a:focus {
+  background: #fff;
   color: #8967bd;
+}
+.s-orange .m-breadcrumb {
+  border-bottom-color: #ff9a29;
+}
+.s-orange .m-breadcrumb a {
+  color: #ff9a29;
+}
+.s-orange .m-navigation {
+  background: #fdebdc;
+  border-left-color: #facba3;
+}
+.s-orange .m-navigation > ul > li > a {
+  color: #ba3f00;
+}
+.s-orange .m-navigation > ul > li > a:hover,
+.s-orange .m-navigation > ul > li > a:focus {
+  background: #fef1e6;
+}
+.s-orange .m-navigation > ul > li > a:active:hover {
+  background: #fef6ef;
+}
+.s-orange .m-navigation > ul > li.active > a {
+  border-top-color: #facba3;
+  border-bottom-color: #facba3;
+}
+.s-orange .m-navigation > ul > li.active > a,
+.s-orange .m-navigation > ul > li.active > a:hover,
+.s-orange .m-navigation > ul > li.active > a:focus {
+  background: #fff;
+  color: #f27200;
+}
+.s-blue .m-breadcrumb {
+  border-bottom-color: #60aadf;
+}
+.s-blue .m-breadcrumb a {
+  color: #60aadf;
+}
+.s-blue .m-navigation {
+  background: #e2edf7;
+  border-left-color: #b3d2ea;
+}
+.s-blue .m-navigation > ul > li > a {
+  color: #005795;
+}
+.s-blue .m-navigation > ul > li > a:hover,
+.s-blue .m-navigation > ul > li > a:focus {
+  background: #eaf2f9;
+}
+.s-blue .m-navigation > ul > li > a:active:hover {
+  background: #f2f7fb;
+}
+.s-blue .m-navigation > ul > li.active > a {
+  border-top-color: #b3d2ea;
+  border-bottom-color: #b3d2ea;
+}
+.s-blue .m-navigation > ul > li.active > a,
+.s-blue .m-navigation > ul > li.active > a:hover,
+.s-blue .m-navigation > ul > li.active > a:focus {
+  background: #fff;
+  color: #1f8aca;
+}
+.s-apple .m-breadcrumb {
+  border-bottom-color: #7fbf60;
+}
+.s-apple .m-breadcrumb a {
+  color: #7fbf60;
+}
+.s-apple .m-navigation {
+  background: #e6f1e1;
+  border-left-color: #bfdbb2;
+}
+.s-apple .m-navigation > ul > li > a {
+  color: #146e00;
+}
+.s-apple .m-navigation > ul > li > a:hover,
+.s-apple .m-navigation > ul > li > a:focus {
+  background: #ecf4e8;
+}
+.s-apple .m-navigation > ul > li > a:active:hover {
+  background: #f2f7ef;
+}
+.s-apple .m-navigation > ul > li.active > a {
+  border-top-color: #bfdbb2;
+  border-bottom-color: #bfdbb2;
+}
+.s-apple .m-navigation > ul > li.active > a,
+.s-apple .m-navigation > ul > li.active > a:hover,
+.s-apple .m-navigation > ul > li.active > a:focus {
+  background: #fff;
+  color: #50a226;
 }
 /*==========================================
  * Content

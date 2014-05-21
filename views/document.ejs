@@ -1,8 +1,8 @@
 <% layout('layout') -%>
-<div class="m-container">
+<div class="m-container s-apple">
 
 <% if (typeof breadcrumbs !== 'undefined') { %>
-	<ol class="breadcrumb">
+	<ol class="breadcrumb m-breadcrumb">
 	<% breadcrumbs.forEach(function(item) { %>
 	<% if (!item.isActive) { %>
 	  <li><a href="<%- item.path %>"><%= item.name %></a></li>
@@ -12,7 +12,7 @@
 	</ol>
 <% } %>
 
-	<div class="m-container2">
+	<div>
 		<section role="content">
 		<% if (typeof content !== 'undefined') { %>
 			<article>

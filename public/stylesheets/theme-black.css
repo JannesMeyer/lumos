@@ -16,17 +16,17 @@ body {
 .m-container > .breadcrumb {
   flex-shrink: 0;
 }
-.m-container > .m-container2 {
+.m-container > div {
   flex: 1;
   display: flex;
 }
-.m-container > .m-container2 > section[role=content] {
+.m-container > div > section {
   flex: 1;
 }
-.m-container > .m-container2 > nav {
+.m-container > div > nav {
   flex: 0 0 250px;
 }
-.m-container > .m-container2 > nav > ul > li.file > a {
+.m-container > div > nav > ul > li.file > a {
   padding-left: 32px;
 }
 section[role=content] > article > h1:first-child,
@@ -36,6 +36,19 @@ section[role=content] > article > h4:first-child,
 section[role=content] > article > h5:first-child,
 section[role=content] > article > h6:first-child {
   margin-top: 0 !important;
+}
+section[role=content] ul > li > a[href]:first-child {
+  text-decoration: none;
+  font-weight: bold;
+}
+section[role=content] ul > li > a[href]:first-child::after {
+  content: attr(href);
+  display: table;
+  width: auto;
+  font-size: 0.8em;
+  line-height: 1;
+  color: #999;
+  font-weight: normal;
 }
 code,
 kbd,

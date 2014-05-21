@@ -22,6 +22,7 @@ section[role=content]
 .breadcrumb
 	border-bottom: 5px solid #aa90d3
 	border-radius: 0
+	padding-left: 50px
 
 	> li:first-child
 		font-size: 1.9em
@@ -30,13 +31,21 @@ section[role=content]
  * File/Directory sidebar
  *==========================================*/
 
-$nav-bg = #ede9f5
-$nav-link-color = #583589
+// None
+$stripe-color = hsl(0, 0, 62.75%) // #a0a0a0
+$nav-bg = hsl(0, 0, 92.16%) // #ebebeb
+$nav-border = hsl(0, 0, 80.39%) // #cdcdcd
+$nav-link-color = hsl(0, 0, 29.80%) // #4c4c4c
+$nav-link-color-active = hsl(0, 0, 49.02%) // #7d7d7d
 
-$nav-active-bg = #fff
-$nav-active-link-color = #8967bd
-
-$nav-border = #d2c6e4
+.m-breadcrumb
+	border-bottom: 5px solid $stripe-color
+	a
+		color: $stripe-color
+	a:hover
+		text-decoration: none
+	a:active
+		text-decoration: underline
 
 .m-navigation
 	background: $nav-bg
@@ -44,54 +53,103 @@ $nav-border = #d2c6e4
 	padding-top: 12px
 	padding-bottom: 12px
 
-.m-navigation > ul > li
-	&.active
-		box-shadow: -2px 0 0 -1px $content-bg;
-
+	> ul > li
 		> a
-			border-top-color: $nav-border
-			border-bottom-color: $nav-border
+			color: $nav-link-color
+			border-top: 1px solid transparent
+			border-bottom: 1px solid transparent
 
-	> a
-		color: $nav-link-color
-		border-top: 1px solid transparent
-		border-bottom: 1px solid transparent
+			&:hover,
+			&:focus
+				background: lighten($nav-bg, 2)
 
-		&:hover,
-		&:focus
-			background: lighten($nav-bg, 2)
+			&:active:hover
+				background: lighten($nav-bg, 4)
 
-		&:active:hover
-			outline: 0
-			background: lighten($nav-bg, 4)
+		&.active
+			box-shadow: -2px 0 0 -1px $content-bg
 
-	&.active > a,
-	&.active > a:hover,
-	&.active > a:focus
-		background: $nav-active-bg
-		color: $nav-active-link-color
+			> a
+				border-top-color: $nav-border
+				border-bottom-color: $nav-border
 
-	// &.file > a::before,
-	// &.directory > a::before
-	//   display: inline
-	//   padding: .2em .6em .3em
-	//   font-size: 75%
-	//   font-weight: bold
-	//   line-height: 1
-	//   color: #fff
-	//   text-align: center
-	//   white-space: nowrap
-	//   vertical-align: baseline
-	//   border-radius: .25em
-	//   margin-right: 7px
+			> a,
+			> a:hover,
+			> a:focus
+				background: $content-bg
+				color: $nav-link-color-active
 
-	// &.directory > a::before
-	//   content: "DIR"
-	//   background-color: #5cb85c
+/*==========================================
+ * Custom colors
+ *==========================================*/
 
-	// &.file > a::before
-	//   content: "MD"
-	//   background-color: #999
+custom-color()
+	.m-breadcrumb
+		border-bottom-color: $stripe-color
+		a
+			color: $stripe-color
+
+	.m-navigation
+		background: $nav-bg
+		border-left-color: $nav-border
+
+		> ul > li
+			> a
+				color: $nav-link-color
+
+				&:hover,
+				&:focus
+					background: lighten($nav-bg, 2)
+
+				&:active:hover
+					background: lighten($nav-bg, 4)
+
+			&.active
+				> a
+					border-top-color: $nav-border
+					border-bottom-color: $nav-border
+
+				> a,
+				> a:hover,
+				> a:focus
+					background: $content-bg
+					color: $nav-link-color-active
+
+// Purple
+$stripe-color = #aa90d3
+$nav-bg = #ede9f5
+$nav-border = #d2c6e4
+$nav-link-color = #583589
+$nav-link-color-active = #8967bd
+.s-purple-mist
+	custom-color()
+
+// Orange
+$stripe-color = #ff9a29
+$nav-bg = #fdebdc
+$nav-border = #facba3
+$nav-link-color = #ba3f00
+$nav-link-color-active = #f27200
+.s-orange
+	custom-color()
+
+// Blue
+$stripe-color = #60aadf
+$nav-bg = #e2edf7
+$nav-border = #b3d2ea
+$nav-link-color = #005795
+$nav-link-color-active = #1f8aca
+.s-blue
+	custom-color()
+
+// Apple
+$stripe-color = #7fbf60
+$nav-bg = #e6f1e1
+$nav-border = #bfdbb2
+$nav-link-color = #146e00
+$nav-link-color-active = #50a226
+.s-apple
+	custom-color()
 
 /*==========================================
  * Content
