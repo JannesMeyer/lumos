@@ -73,8 +73,8 @@ module.exports = function(req, res, next) {
 			data.content = fileContentToHtml(file.content);
 
 			let c = file.stat.birthtime;
-			data.creationDate = `${padZero(c.getDate())}.${padZero(c.getMonth() + 1)}.${c.getFullYear()}`;
-			// data.creationDate = `${cfg.monthNames[c.getMonth()]} ${c.getDate()}, ${c.getFullYear()}`;
+			// data.creationDate = `${padZero(c.getDate())}.${padZero(c.getMonth() + 1)}.${c.getFullYear()}`;
+			data.creationDate = `${cfg.monthNames[c.getMonth()]} ${c.getDate()}, ${c.getFullYear()}`;
 			data.creationTime = `${padZero(c.getHours())}:${padZero(c.getMinutes())}`;
 
 			// Read directory

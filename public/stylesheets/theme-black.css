@@ -77,20 +77,21 @@ article .callout code {
 article .callout > li {
   white-space: pre;
 }
-.m-navigation ul {
+.m-navigation > ul {
   padding-left: 0;
   list-style: none;
 }
-.m-navigation ul > li {
+.m-navigation > ul > li {
   display: block;
 }
-.m-navigation ul > li > a {
+.m-navigation > ul > li > a {
   display: block;
   padding: 10px 15px;
 }
-.m-navigation ul > li > a:hover,
-.m-navigation ul > li > a:focus {
+.m-navigation > ul > li > a:hover,
+.m-navigation > ul > li > a:focus {
   text-decoration: none;
+  outline: 0;
 }
 @media (max-width: 767px) {
   .m-navigation {

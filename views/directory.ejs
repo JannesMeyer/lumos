@@ -1,20 +1,7 @@
 <ul>
-	<li><a href="..">⤴ ..</a></li>
 <% items.forEach(function(item) { -%>
 	<li class="<% if (item.isDir) { %>directory<% } else { %>file<% } %><% if (item.isActive) { %> active<% } %>">
 	<a href="<%- item.link %>"><% if(item.isDir) { %>❍ <% } %><%= item.name %></a>
 	</li>
 <% }) -%>
 </ul>
-
-<!--
-▵
-▴
-↑
-⬆︎
-☝︎
-⇧
-⤴︎
-↪︎
-⤣
--->
