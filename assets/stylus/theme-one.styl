@@ -12,72 +12,50 @@ $content-bg = #fff
 body
 	background: $content-bg
 
-section[role=content]
-	padding: 30px 50px
-
 /*==========================================
  * Breadcrumbs
  *==========================================*/
 
-.breadcrumb
-	border-bottom: 5px solid #aa90d3
-	border-radius: 0
-	padding-left: 50px
+.m-breadcrumb
+	margin: 0
+	padding: 8px 50px 10px
+	list-style: square
+	background-color: hsl(0, 0%, 96%)
+	font-size: 1.1em
 
 	> li:first-child
-		font-size: 1.9em
+		display: block
+		font-size: 1.8em
+		line-height: 1.25
+		margin: 0
+	> li
+		margin-left: 20px
+
 
 /*==========================================
  * File/Directory sidebar
  *==========================================*/
 
-// None
-$stripe-color = hsl(0, 0, 62.75%) // #a0a0a0
-$nav-bg = hsl(0, 0, 92.16%) // #ebebeb
-$nav-border = hsl(0, 0, 80.39%) // #cdcdcd
-$nav-link-color = hsl(0, 0, 29.80%) // #4c4c4c
-$nav-link-color-active = hsl(0, 0, 49.02%) // #7d7d7d
-
 .m-breadcrumb
-	border-bottom: 5px solid $stripe-color
-	a
-		color: $stripe-color
+	border-bottom: 5px solid transparent // color later
 	a:hover
 		text-decoration: none
-	a:active
+	a:active, a:focus
 		text-decoration: underline
 
 .m-navigation
-	background: $nav-bg
-	border-left: 1px solid $nav-border
+	border-left: 1px solid transparent // color later
 	padding-top: 12px
 	padding-bottom: 12px
 
 	> ul > li
 		> a
-			color: $nav-link-color
 			border-top: 1px solid transparent
 			border-bottom: 1px solid transparent
-
-			&:hover,
-			&:focus
-				background: lighten($nav-bg, 2)
-
-			&:active:hover
-				background: lighten($nav-bg, 4)
+			cursor: default
 
 		&.active
 			box-shadow: -2px 0 0 -1px $content-bg
-
-			> a
-				border-top-color: $nav-border
-				border-bottom-color: $nav-border
-
-			> a,
-			> a:hover,
-			> a:focus
-				background: $content-bg
-				color: $nav-link-color-active
 
 /*==========================================
  * Custom colors
@@ -86,6 +64,7 @@ $nav-link-color-active = hsl(0, 0, 49.02%) // #7d7d7d
 custom-color()
 	.m-breadcrumb
 		border-bottom-color: $stripe-color
+		color: $stripe-color
 		a
 			color: $stripe-color
 
@@ -96,11 +75,9 @@ custom-color()
 		> ul > li
 			> a
 				color: $nav-link-color
-
 				&:hover,
 				&:focus
 					background: lighten($nav-bg, 2)
-
 				&:active:hover
 					background: lighten($nav-bg, 4)
 
@@ -108,12 +85,22 @@ custom-color()
 				> a
 					border-top-color: $nav-border
 					border-bottom-color: $nav-border
-
 				> a,
 				> a:hover,
 				> a:focus
 					background: $content-bg
 					color: $nav-link-color-active
+
+	section[role=content] > hgroup > h1
+		color: desaturate($stripe-color, 10)
+
+// None
+$stripe-color = hsl(0, 0, 62.75%) // #a0a0a0
+$nav-bg = hsl(0, 0, 92.16%) // #ebebeb
+$nav-border = hsl(0, 0, 80.39%) // #cdcdcd
+$nav-link-color = hsl(0, 0, 29.80%) // #4c4c4c
+$nav-link-color-active = hsl(0, 0, 49.02%) // #7d7d7d
+custom-color()
 
 // Purple
 $stripe-color = #aa90d3
@@ -151,9 +138,45 @@ $nav-link-color-active = #50a226
 .s-apple
 	custom-color()
 
+// cyan
+$stripe-color = #17b7cf
+$nav-bg = #dcf0f4
+$nav-border = #a2d8e3
+$nav-link-color = #006582
+$nav-link-color-active = #0099b7
+.s-cyan
+	custom-color()
+
 /*==========================================
  * Content
  *==========================================*/
+
+section[role=content]
+	padding: 30px 50px
+
+	> hgroup
+		margin-bottom: 22px
+
+		> h1
+			margin: 0
+			margin-bottom: 2px
+			font-size: 2.15em
+			font-family: 'Avenir Next Condensed'
+			font-weight: bold
+
+		> p
+			display: inline-block
+			font-size: 0.85em
+			opacity: 0.2
+			color: #aaa
+			transition: opacity 0.2s ease
+
+			> .date
+				margin-right: 4px
+
+		&:hover > p
+			opacity: 1
+
 
 article
 	font-family: 'Inconsolata', monospace
@@ -167,10 +190,10 @@ article
 		font-weight: bold
 
 	h1
-		font-size: 1.7em
+		font-size: 1.5em
 
 	h2
-		font-size: 1.4em
+		font-size: 1.3em
 
 	h3
 		font-size: 1.2em
@@ -185,17 +208,12 @@ article
 
 	a
 		color: $link-color
-		text-decoration: underline
 
 		&:hover
 			color: $hover-link-color
+			text-decoration: underline
 
 		&:active
 			outline: 2px solid $link-color
-			z-index: 10
-
 			&:hover
 				outline: 2px solid $hover-link-color
-
-#instantclick-bar
-	background-color: $hover-link-color

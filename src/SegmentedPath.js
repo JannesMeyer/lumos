@@ -88,21 +88,24 @@ export class SegmentedPath {
 		let item = {
 			name: this.baseDirName,
 			path: '/',
-			isActive: (pathSegments.length === 0)
+			isActive: false
 		};
 		breadcrumbs.push(item);
 		// The rest of the path
 		pathSegments.forEach((segment, i) => {
 			let isLast = (i === pathSegments.length - 1);
-			let isFile = (isLast && !this.isDir);
 
-			let name = isFile ? this.removeExtension(segment) : segment;
+			if (isLast && !this.isDir) {
+				return;
+			}
+
 			item = {
-				name: name,
-				path: item.path + name + (isFile ? '' : '/'),
-				isActive: isLast
+				name: segment,
+				path: item.path + segment + '/',
+				isActive: false
 			};
 			breadcrumbs.push(item);
+
 		});
 		return breadcrumbs;
 	}

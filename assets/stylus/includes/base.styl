@@ -1,19 +1,19 @@
 body
-	-webkit-font-smoothing: antialiased
+	// -webkit-font-smoothing: antialiased
 	// text-rendering: optimizeLegibility
-
-#instantclick
-	display: none
 
 html, body
 	height: 100%
+
+#instantclick
+	display: none
 
 .m-container
 	display: flex
 	flex-direction: column
 	min-height: 100%
 
-	> .breadcrumb
+	> .m-breadcrumb
 		flex-shrink: 0
 
 	> div
@@ -32,15 +32,17 @@ html, body
 /*==========================================
  * Content
  *==========================================*/
-section[role=content]
-	> article > h1:first-child,
-	> article > h2:first-child,
-	> article > h3:first-child,
-	> article > h4:first-child,
-	> article > h5:first-child,
-	> article > h6:first-child
-		margin-top: 0 !important
 
+article
+	> h1:first-child,
+	> h2:first-child,
+	> h3:first-child,
+	> h4:first-child,
+	> h5:first-child,
+	> h6:first-child
+		margin-top: 0
+
+	// Link URL in lists
 	ul > li > a[href]:first-child
 		text-decoration: none
 		font-weight: bold
@@ -53,68 +55,54 @@ section[role=content]
 			color: #999
 			font-weight: normal
 
-code, kbd, pre, samp
-	font-family: Inconsolata, monospace
-	font-size: 1em
+	code, kbd, pre, samp
+		font-family: Inconsolata, monospace
+		font-size: 1em
 
-code
-	font-size: 100%
+	blockquote
+		font-size: 1em
 
-.m-empty
-	padding: .75em
-	margin: 1em 1.5em
+	// Callout boxes
+	.callout
+		margin: 20px 0
+		padding: 20px
+		border-left: 3px solid #5bc0de // #f0ad4e
+		background-color: #f4f8fa // #fcf8f2
 
-	color: #ddd
-	text-align: center
-	background: #f5f5f5
-	border-radius: 10px
+		h4
+			margin-top: 0
+			margin-bottom: 5px
+			color: #5bc0de // #f0ad4e
 
-	.glyphicon
-		top: 4px
+		p:last-child
+			margin-bottom: 0
+
+		code
+			background-color: #fff
+
+		> li
+			white-space: pre
 
 /*==========================================
- * Bootstrap customizations
+ * Navigation
  *==========================================*/
 
-.nav-pills > li > a
-	border-radius: 0
-
-.nav > li > a:hover,
-.nav > li > a:focus
-	background-color: initial
-
-.nav-stacked > li + li
-	margin-top: 0
-
-.breadcrumb
-	margin: 0
+.m-navigation ul
+	padding-left: 0
+	list-style: none
 
 	> li
-		white-space: pre
+		display: block
 
-blockquote
-	font-size: 1em
+		> a
+			display: block
+			padding: 10px 15px
 
-/*==========================================
- * Callout boxes
- *==========================================*/
+		// Overriding bootstrap
+		> a:hover,
+		> a:focus
+			text-decoration: none
 
-.callout
-	margin: 20px 0
-	padding: 20px
-	border-left: 3px solid #5bc0de
-	background-color: #f4f8fa
-	// border-left: 3px solid #f0ad4e
-	// background-color: #fcf8f2
-
-	h4
-		margin-top: 0
-		margin-bottom: 5px
-		color: #5bc0de
-		// color: #f0ad4e
-
-	p:last-child
-		margin-bottom: 0
-
-	code
-		background-color: #fff
+@media (max-width: 767px)
+	.m-navigation
+		display: none

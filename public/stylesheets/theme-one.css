@@ -1,19 +1,16 @@
-body {
-  -webkit-font-smoothing: antialiased;
-}
-#instantclick {
-  display: none;
-}
 html,
 body {
   height: 100%;
+}
+#instantclick {
+  display: none;
 }
 .m-container {
   display: flex;
   flex-direction: column;
   min-height: 100%;
 }
-.m-container > .breadcrumb {
+.m-container > .m-breadcrumb {
   flex-shrink: 0;
 }
 .m-container > div {
@@ -29,19 +26,19 @@ body {
 .m-container > div > nav > ul > li.file > a {
   padding-left: 32px;
 }
-section[role=content] > article > h1:first-child,
-section[role=content] > article > h2:first-child,
-section[role=content] > article > h3:first-child,
-section[role=content] > article > h4:first-child,
-section[role=content] > article > h5:first-child,
-section[role=content] > article > h6:first-child {
-  margin-top: 0 !important;
+article > h1:first-child,
+article > h2:first-child,
+article > h3:first-child,
+article > h4:first-child,
+article > h5:first-child,
+article > h6:first-child {
+  margin-top: 0;
 }
-section[role=content] ul > li > a[href]:first-child {
+article ul > li > a[href]:first-child {
   text-decoration: none;
   font-weight: bold;
 }
-section[role=content] ul > li > a[href]:first-child::after {
+article ul > li > a[href]:first-child::after {
   content: attr(href);
   display: table;
   width: auto;
@@ -50,62 +47,55 @@ section[role=content] ul > li > a[href]:first-child::after {
   color: #999;
   font-weight: normal;
 }
-code,
-kbd,
-pre,
-samp {
+article code,
+article kbd,
+article pre,
+article samp {
   font-family: Inconsolata, monospace;
   font-size: 1em;
 }
-code {
-  font-size: 100%;
-}
-.m-empty {
-  padding: 0.75em;
-  margin: 1em 1.5em;
-  color: #ddd;
-  text-align: center;
-  background: #f5f5f5;
-  border-radius: 10px;
-}
-.m-empty .glyphicon {
-  top: 4px;
-}
-.nav-pills > li > a {
-  border-radius: 0;
-}
-.nav > li > a:hover,
-.nav > li > a:focus {
-  background-color: initial;
-}
-.nav-stacked > li + li {
-  margin-top: 0;
-}
-.breadcrumb {
-  margin: 0;
-}
-.breadcrumb > li {
-  white-space: pre;
-}
-blockquote {
+article blockquote {
   font-size: 1em;
 }
-.callout {
+article .callout {
   margin: 20px 0;
   padding: 20px;
   border-left: 3px solid #5bc0de;
   background-color: #f4f8fa;
 }
-.callout h4 {
+article .callout h4 {
   margin-top: 0;
   margin-bottom: 5px;
   color: #5bc0de;
 }
-.callout p:last-child {
+article .callout p:last-child {
   margin-bottom: 0;
 }
-.callout code {
+article .callout code {
   background-color: #fff;
+}
+article .callout > li {
+  white-space: pre;
+}
+.m-navigation ul {
+  padding-left: 0;
+  list-style: none;
+}
+.m-navigation ul > li {
+  display: block;
+}
+.m-navigation ul > li > a {
+  display: block;
+  padding: 10px 15px;
+}
+.m-navigation ul > li > a:hover,
+.m-navigation ul > li > a:focus {
+  text-decoration: none;
+}
+@media (max-width: 767px) {
+  .m-navigation {
+    display: none;
+  }
 }
 /*==========================================
  * THEME
@@ -113,45 +103,67 @@ blockquote {
 body {
   background: #fff;
 }
-section[role=content] {
-  padding: 30px 50px;
-}
 /*==========================================
  * Breadcrumbs
  *==========================================*/
-.breadcrumb {
-  border-bottom: 5px solid #aa90d3;
-  border-radius: 0;
-  padding-left: 50px;
+.m-breadcrumb {
+  margin: 0;
+  padding: 8px 50px 10px;
+  list-style: square;
+  background-color: #f5f5f5;
+  font-size: 1.1em;
 }
-.breadcrumb > li:first-child {
-  font-size: 1.9em;
+.m-breadcrumb > li:first-child {
+  display: block;
+  font-size: 1.8em;
+  line-height: 1.25;
+  margin: 0;
+}
+.m-breadcrumb > li {
+  margin-left: 20px;
 }
 /*==========================================
  * File/Directory sidebar
  *==========================================*/
 .m-breadcrumb {
-  border-bottom: 5px solid #a0a0a0;
-}
-.m-breadcrumb a {
-  color: #a0a0a0;
+  border-bottom: 5px solid transparent;
 }
 .m-breadcrumb a:hover {
   text-decoration: none;
 }
-.m-breadcrumb a:active {
+.m-breadcrumb a:active,
+.m-breadcrumb a:focus {
   text-decoration: underline;
 }
 .m-navigation {
-  background: #ebebeb;
-  border-left: 1px solid #cdcdcd;
+  border-left: 1px solid transparent;
   padding-top: 12px;
   padding-bottom: 12px;
 }
 .m-navigation > ul > li > a {
-  color: #4c4c4c;
   border-top: 1px solid transparent;
   border-bottom: 1px solid transparent;
+  cursor: default;
+}
+.m-navigation > ul > li.active {
+  box-shadow: -2px 0 0 -1px #fff;
+}
+/*==========================================
+ * Custom colors
+ *==========================================*/
+.m-breadcrumb {
+  border-bottom-color: #a0a0a0;
+  color: #a0a0a0;
+}
+.m-breadcrumb a {
+  color: #a0a0a0;
+}
+.m-navigation {
+  background: #ebebeb;
+  border-left-color: #cdcdcd;
+}
+.m-navigation > ul > li > a {
+  color: #4c4c4c;
 }
 .m-navigation > ul > li > a:hover,
 .m-navigation > ul > li > a:focus {
@@ -159,9 +171,6 @@ section[role=content] {
 }
 .m-navigation > ul > li > a:active:hover {
   background: #f5f5f5;
-}
-.m-navigation > ul > li.active {
-  box-shadow: -2px 0 0 -1px #fff;
 }
 .m-navigation > ul > li.active > a {
   border-top-color: #cdcdcd;
@@ -173,11 +182,12 @@ section[role=content] {
   background: #fff;
   color: #7d7d7d;
 }
-/*==========================================
- * Custom colors
- *==========================================*/
+section[role=content] > hgroup > h1 {
+  color: #97aaaa;
+}
 .s-purple-mist .m-breadcrumb {
   border-bottom-color: #aa90d3;
+  color: #aa90d3;
 }
 .s-purple-mist .m-breadcrumb a {
   color: #aa90d3;
@@ -206,8 +216,12 @@ section[role=content] {
   background: #fff;
   color: #8967bd;
 }
+.s-purple-mist section[role=content] > hgroup > h1 {
+  color: #ac98cb;
+}
 .s-orange .m-breadcrumb {
   border-bottom-color: #ff9a29;
+  color: #ff9a29;
 }
 .s-orange .m-breadcrumb a {
   color: #ff9a29;
@@ -236,8 +250,12 @@ section[role=content] {
   background: #fff;
   color: #f27200;
 }
+.s-orange section[role=content] > hgroup > h1 {
+  color: #f49934;
+}
 .s-blue .m-breadcrumb {
   border-bottom-color: #60aadf;
+  color: #60aadf;
 }
 .s-blue .m-breadcrumb a {
   color: #60aadf;
@@ -266,8 +284,12 @@ section[role=content] {
   background: #fff;
   color: #1f8aca;
 }
+.s-blue section[role=content] > hgroup > h1 {
+  color: #6aa8d5;
+}
 .s-apple .m-breadcrumb {
   border-bottom-color: #7fbf60;
+  color: #7fbf60;
 }
 .s-apple .m-breadcrumb a {
   color: #7fbf60;
@@ -296,9 +318,72 @@ section[role=content] {
   background: #fff;
   color: #50a226;
 }
+.s-apple section[role=content] > hgroup > h1 {
+  color: #83b46b;
+}
+.s-cyan .m-breadcrumb {
+  border-bottom-color: #17b7cf;
+  color: #17b7cf;
+}
+.s-cyan .m-breadcrumb a {
+  color: #17b7cf;
+}
+.s-cyan .m-navigation {
+  background: #dcf0f4;
+  border-left-color: #a2d8e3;
+}
+.s-cyan .m-navigation > ul > li > a {
+  color: #006582;
+}
+.s-cyan .m-navigation > ul > li > a:hover,
+.s-cyan .m-navigation > ul > li > a:focus {
+  background: #e4f3f6;
+}
+.s-cyan .m-navigation > ul > li > a:active:hover {
+  background: #ecf7f9;
+}
+.s-cyan .m-navigation > ul > li.active > a {
+  border-top-color: #a2d8e3;
+  border-bottom-color: #a2d8e3;
+}
+.s-cyan .m-navigation > ul > li.active > a,
+.s-cyan .m-navigation > ul > li.active > a:hover,
+.s-cyan .m-navigation > ul > li.active > a:focus {
+  background: #fff;
+  color: #0099b7;
+}
+.s-cyan section[role=content] > hgroup > h1 {
+  color: #23aec3;
+}
 /*==========================================
  * Content
  *==========================================*/
+section[role=content] {
+  padding: 30px 50px;
+}
+section[role=content] > hgroup {
+  margin-bottom: 22px;
+}
+section[role=content] > hgroup > h1 {
+  margin: 0;
+  margin-bottom: 2px;
+  font-size: 2.15em;
+  font-family: 'Avenir Next Condensed';
+  font-weight: bold;
+}
+section[role=content] > hgroup > p {
+  display: inline-block;
+  font-size: 0.85em;
+  opacity: 0.2;
+  color: #aaa;
+  transition: opacity 0.2s ease;
+}
+section[role=content] > hgroup > p > .date {
+  margin-right: 4px;
+}
+section[role=content] > hgroup:hover > p {
+  opacity: 1;
+}
 article {
   font-family: 'Inconsolata', monospace;
   line-height: 1.5;
@@ -316,10 +401,10 @@ article h6 {
   font-weight: bold;
 }
 article h1 {
-  font-size: 1.7em;
+  font-size: 1.5em;
 }
 article h2 {
-  font-size: 1.4em;
+  font-size: 1.3em;
 }
 article h3 {
   font-size: 1.2em;
@@ -334,18 +419,14 @@ article ul {
 }
 article a {
   color: #00a5e6;
-  text-decoration: underline;
 }
 article a:hover {
   color: #006897;
+  text-decoration: underline;
 }
 article a:active {
   outline: 2px solid #00a5e6;
-  z-index: 10;
 }
 article a:active:hover {
   outline: 2px solid #006897;
-}
-#instantclick-bar {
-  background-color: #006897;
 }

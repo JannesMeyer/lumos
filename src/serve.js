@@ -15,6 +15,11 @@ import { Directory } from './Directory'
 const baseDir = process.env.LUMOSPATH || process.cwd(); // Default to current working directory
 const baseDirName = path.basename(baseDir);
 
+function padZero(number) {
+	let str = number.toString();
+	return str.length < 2 ? '0' + str : str;
+}
+
 module.exports = function(req, res, next) {
 	let processedPath = decodeURIComponent(req.path);
 	let requestPath = new SegmentedPath(baseDir, processedPath);
@@ -45,8 +50,8 @@ module.exports = function(req, res, next) {
 			if (dir.hasFile(cfg.indexFile)) {
 				let indexPath = dir.path.makeDescendant(cfg.indexFile);
 				return readFile(indexPath)
-				.then(content => {
-					data.content = convertToHtml(content);
+				.then(file => {
+					data.content = fileContentToHtml(file.content);
 				});
 			}
 		}, err => {
@@ -63,9 +68,14 @@ module.exports = function(req, res, next) {
 
 		// Read file
 		return readFile(requestPathMd)
-		.then(content => {
-			data.content = convertToHtml(content);
+		.then(file => {
 			data.title = requestPathMd.name;
+			data.content = fileContentToHtml(file.content);
+
+			let c = file.stat.birthtime;
+			data.creationDate = `${padZero(c.getDate())}.${padZero(c.getMonth() + 1)}.${c.getFullYear()}`;
+			// data.creationDate = `${cfg.monthNames[c.getMonth()]} ${c.getDate()}, ${c.getFullYear()}`;
+			data.creationTime = `${padZero(c.getHours())}:${padZero(c.getMinutes())}`;
 
 			// Read directory
 			return readDir(requestPathMd.makeParent())
@@ -78,7 +88,6 @@ module.exports = function(req, res, next) {
 					// so that there can be no mistake between
 					// folders and files
 					item.isActive = !item.isDir && item.absolute === requestPathMd.absolute;
-					// TODO: re-implement path
 					if (item.isActive) {
 						// strip filename
 						let path = require('path');
@@ -89,12 +98,14 @@ module.exports = function(req, res, next) {
 			.then(() => res.render('document', data))
 			.catch(err => next(err));
 		}, err => {
+			console.error(err);
 			// Document not found, try to deliver the file at the original path
-			let send = denodeify(res, res.sendfile);
-			return send(requestPath.absolute);
+			return denodeify(res, res.sendfile)(requestPath.absolute);
 		})
-		// TODO: don't swallow errors in file rendering
-		.catch(err => mHTTPError(404, 'File Not Found'));
+		.catch(err => {
+			console.error(err);
+			next(mHTTPError(404, 'File Not Found'));
+		});
 	}
 }
 
@@ -121,7 +132,8 @@ function readFile(filePath) {
 		if (stat.isDirectory()) {
 			throw new Error('Is a directory');
 		}
-		return fsReadFile(filePath.absolute, { encoding: 'utf-8' });
+		return fsReadFile(filePath.absolute, { encoding: 'utf-8' })
+		.then(content => ({ stat, content }));
 	});
 }
 
@@ -135,7 +147,7 @@ marked.setOptions({
 		breaks: true,
 		highlight: (code, lang) => lang ? hljs.highlight(lang, code).value : code
 	});
-function convertToHtml(content) {
+function fileContentToHtml(content) {
 	let md = marked(content);
 	// TODO: Fix html
 	md = md.replace(/(<table>)/g, '<div class="table-responsive"><table class="table table-hover"></div>');
