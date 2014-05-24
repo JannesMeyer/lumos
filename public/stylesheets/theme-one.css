@@ -115,6 +115,10 @@ body {
   margin: 0;
   padding: 0;
 }
+.m-header a:hover,
+.m-header a:focus {
+  text-decoration: none;
+}
 .m-header > ol {
   list-style: none;
   font-size: 1.1em;
@@ -134,26 +138,27 @@ body {
 .m-header > ol > li > ol > li {
   display: inline-block;
 }
-.m-header > ol > li > ol > li > a::after {
+.m-header > ol > li > ol > li::after {
   content: "•";
-  padding: 0 15px;
   color: #ccc;
 }
-.m-header > ol > li > ol > li:last-child > a::after {
+.m-header > ol > li > ol > li:last-child::after {
   display: none;
+}
+.m-header > ol > li > ol > li > a {
+  padding: 0 15px;
+}
+.m-header > ol > li > ol > li:first-child > a {
+  padding-left: 0;
+}
+.m-header > ol > li > ol > li:last-child > a {
+  padding-right: 0;
 }
 /*==========================================
  * File/Directory sidebar
  *==========================================*/
 .m-header {
   border-bottom: 5px solid transparent;
-}
-.m-header a:hover {
-  text-decoration: none;
-}
-.m-header a:active,
-.m-header a:focus {
-  text-decoration: underline;
 }
 .m-navigation {
   border-left: 1px solid transparent;
@@ -175,6 +180,11 @@ body {
   border-bottom-color: #a0a0a0;
 }
 .m-header a {
+  color: #a0a0a0;
+  transition: color 0.1s;
+}
+.m-header a:hover,
+.m-header a:focus {
   color: #a0a0a0;
 }
 .m-navigation {
@@ -209,6 +219,11 @@ section[role=content] > hgroup > h1 {
 }
 .s-purple-mist .m-header a {
   color: #a0a0a0;
+  transition: color 0.1s;
+}
+.s-purple-mist .m-header a:hover,
+.s-purple-mist .m-header a:focus {
+  color: #aa90d3;
 }
 .s-purple-mist .m-navigation {
   background: #ede9f5;
@@ -242,6 +257,11 @@ section[role=content] > hgroup > h1 {
 }
 .s-orange .m-header a {
   color: #a0a0a0;
+  transition: color 0.1s;
+}
+.s-orange .m-header a:hover,
+.s-orange .m-header a:focus {
+  color: #ff9a29;
 }
 .s-orange .m-navigation {
   background: #fdebdc;
@@ -275,6 +295,11 @@ section[role=content] > hgroup > h1 {
 }
 .s-blue .m-header a {
   color: #a0a0a0;
+  transition: color 0.1s;
+}
+.s-blue .m-header a:hover,
+.s-blue .m-header a:focus {
+  color: #60aadf;
 }
 .s-blue .m-navigation {
   background: #e2edf7;
@@ -308,6 +333,11 @@ section[role=content] > hgroup > h1 {
 }
 .s-apple .m-header a {
   color: #a0a0a0;
+  transition: color 0.1s;
+}
+.s-apple .m-header a:hover,
+.s-apple .m-header a:focus {
+  color: #7fbf60;
 }
 .s-apple .m-navigation {
   background: #e6f1e1;
@@ -341,6 +371,11 @@ section[role=content] > hgroup > h1 {
 }
 .s-cyan .m-header a {
   color: #a0a0a0;
+  transition: color 0.1s;
+}
+.s-cyan .m-header a:hover,
+.s-cyan .m-header a:focus {
+  color: #17b7cf;
 }
 .s-cyan .m-navigation {
   background: #dcf0f4;

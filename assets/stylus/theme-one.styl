@@ -24,6 +24,10 @@ body
 		margin: 0
 		padding: 0
 
+	a:hover,
+	a:focus
+		text-decoration: none
+
 	> ol
 		list-style: none
 		font-size: 1.1em
@@ -39,12 +43,17 @@ body
 				font-size: 1.2em
 				> li
 					display: inline-block
-					> a::after
+					&::after
 						content: "•"
-						padding: 0 15px
 						color: #ccc
-				> li:last-child > a::after
-					display: none
+					&:last-child::after
+						display: none
+					> a
+						padding: 0 15px
+					&:first-child > a
+						padding-left: 0
+					&:last-child > a
+						padding-right: 0
 
 /*==========================================
  * File/Directory sidebar
@@ -52,10 +61,6 @@ body
 
 .m-header
 	border-bottom: 5px solid transparent // color later
-	a:hover
-		text-decoration: none
-	a:active, a:focus
-		text-decoration: underline
 
 .m-navigation
 	border-left: 1px solid transparent // color later
@@ -80,6 +85,10 @@ custom-color()
 		border-bottom-color: $stripe-color
 		a
 			color: #a0a0a0
+			transition: color 0.1s
+		a:hover,
+		a:focus
+			color: $stripe-color
 
 	.m-navigation
 		background: $nav-bg
