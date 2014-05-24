@@ -116,12 +116,32 @@ body {
 }
 .m-breadcrumb > li:first-child {
   display: block;
+  margin: 0;
   font-size: 1.8em;
   line-height: 1.25;
-  margin: 0;
 }
 .m-breadcrumb > li {
   margin-left: 20px;
+}
+.m-breadcrumb > li.more {
+  display: block;
+  margin: 10px 0 0;
+}
+.m-breadcrumb > li.more > ol {
+  list-style-type: none;
+  padding: 0;
+  font-size: 1.2em;
+}
+.m-breadcrumb > li.more > ol > li {
+  display: inline-block;
+}
+.m-breadcrumb > li.more > ol > li > a::after {
+  content: "•";
+  padding: 0 15px;
+  color: #ccc;
+}
+.m-breadcrumb > li.more > ol > li:last-child > a::after {
+  display: none;
 }
 /*==========================================
  * File/Directory sidebar
@@ -369,8 +389,7 @@ section[role=content] > hgroup > h1 {
   margin: 0;
   margin-bottom: 2px;
   font-size: 2.15em;
-  font-family: 'Avenir Next Condensed';
-  font-weight: bold;
+  font-family: 'Avenir Next';
 }
 section[role=content] > hgroup > p {
   display: inline-block;
@@ -398,14 +417,13 @@ article h3,
 article h4,
 article h5,
 article h6 {
-  font-family: 'Avenir Next Condensed';
-  font-weight: bold;
+  font-family: 'Avenir Next', sans-serif;
 }
 article h1 {
   font-size: 1.5em;
 }
 article h2 {
-  font-size: 1.25em;
+  font-size: 1.3em;
 }
 article h3 {
   font-size: 1.1em;

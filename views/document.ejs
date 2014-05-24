@@ -1,15 +1,20 @@
 <% layout('layout') -%>
 <div class="m-container s-orange">
 
-<% if (typeof breadcrumbs !== 'undefined') { %>
-	<ol class="m-breadcrumb">
-	<% breadcrumbs.forEach(function(item) { %>
-	<% if (!item.isActive) { %>
-	  <li><a href="<%- item.path %>"><%= item.name %></a></li>
-	<% } else { %>
-	  <li class="active"><%= item.name %></li>
-	<% }}) %>
-	</ol>
+	<header>
+		<ol class="m-breadcrumb">
+			<% breadcrumbs.forEach(function(item) { %>
+			<li><a href="<%- item.path %>"><%= item.name %></a></li>
+			<% }) %>
+			<% if (dirs.length > 0) { %>
+			<li class="more">
+			<ol>
+				<% dirs.forEach(function(dir) { %><li><a href="<%- dir.link %>"><%= dir.name %></a></li><% }) %>
+			</ol>
+			</li>
+			<% } %>
+		</ol>
+	</header>
 <!--
 <a href="..">⤴ ..</a>
 ▵
@@ -22,29 +27,24 @@
 ↪︎
 ⤣
 -->
-<% } %>
 
 	<div>
 		<section role="content">
-		<% if (typeof creationDate !== 'undefined') { %>
+			<% if (typeof creationDate !== 'undefined') { %>
 			<hgroup>
 				<h1 class="title"><%- title %></h1>
 				<p><span class="date"><%- creationDate %></span><span class="time"><%- creationTime %></span></p>
 			</hgroup>
-		<% } %>
-		<% if (typeof content !== 'undefined') { %>
-			<article>
-			<%- content %>
-			</article>
-		<% } else { %>
+			<% } %>
+			<% if (typeof content !== 'undefined') { %>
+			<article><%- content %></article>
+			<% } else { %>
 			<p style="color: #999">+++ empty +++</p>
-		<% } %>
+			<% } %>
 		</section>
 
 		<nav class="m-navigation">
-		<% if (typeof items !== 'undefined') { %>
-			<% include directory %>
-		<% } %>
+		<% include directory %>
 		</nav>
 	</div>
 </div>

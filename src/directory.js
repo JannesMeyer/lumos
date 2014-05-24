@@ -3,6 +3,7 @@ module path from 'path'
 module fs from 'fs'
 module crypto from 'crypto'
 module denodeify from './denodeify'
+module cfg from '../config.json'
 let fsStat     = denodeify(fs, fs.stat);
 let fsReadDir  = denodeify(fs, fs.readdir);
 
@@ -52,8 +53,8 @@ export class Directory {
 
 	constructor(path) {
 		this.path = path;
-		// this.contents = [SegmentedPath, ...]
-		// this.filteredContents = [SegmentedPath, ...];
+		// this.dirs = [SegmentedPath, ...]
+		// this.files = [SegmentedPath, ...]
 	}
 
 	readContents() {
@@ -81,19 +82,25 @@ export class Directory {
 
 			// sort
 			contents.sort(itemSort);
+			contents = contents.filter(itemFilterFn);
 
-			this.contents = contents;
-			return contents;
+			// split
+			let i;
+			for (i = 0; i < contents.length; ++i) {
+				if (!contents[i].isDir) {
+					break;
+				}
+			}
+
+			this.dirs = contents.slice(0, i);
+			this.files = contents.slice(i);
+			return this;
 		});
-	}
-
-	filter(filterFn) {
-		this.filteredContents = this.contents.filter(filterFn);
 	}
 
 	hasFile(name) {
 		if (typeof name !== 'string') { return; }
-		if (this.contents === undefined) { return; }
+		if (typeof this.contents === 'undefined') { return; }
 
 		for(let item of this.contents) {
 			if (!item.isDir && item.fullName === name) {
@@ -115,4 +122,16 @@ function itemSort(a, b) {
 	// And sort by name
 	// TODO: use Intl.Collator
 	return a.sortStr.localeCompare(b.sortStr, undefined, { numeric: true });
+}
+
+/**
+ * Filter function for SegmentedPath objects
+ */
+function itemFilterFn(item) {
+	if (item.isHidden) { return false; }
+	if (!item.isDir) {
+		if (item.fullName === cfg.indexFile) { return false; }
+		if (item.extension !== cfg.mdSuffix) { return false; }
+	}
+	return true;
 }

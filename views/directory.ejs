@@ -1,7 +1,7 @@
 <ul>
 <% items.forEach(function(item) { -%>
 	<li class="<% if (item.isDir) { %>directory<% } else { %>file<% } %><% if (item.isActive) { %> active<% } %>">
-	<a href="<%- item.link %>"><% if(item.isDir) { %>❍ <% } %><%= item.name %></a>
+	<a href="<%- item.link %>"><%= item.name %></a>
 	</li>
 <% }) -%>
 </ul>

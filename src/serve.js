@@ -43,7 +43,8 @@ module.exports = function(req, res, next) {
 		return readDir(requestPath)
 		.then(dir => {
 			data.breadcrumbs = requestPath.makeBreadcrumbs();
-			data.items = dir.filteredContents;
+			data.items = dir.files;
+			data.dirs = dir.dirs;
 			data.title = dir.path.name === '' ? baseDirName : dir.path.name;
 
 			// Include index file if available
@@ -80,7 +81,8 @@ module.exports = function(req, res, next) {
 			// Read directory
 			return readDir(requestPathMd.makeParent())
 			.then(dir => {
-				data.items = dir.filteredContents;
+				data.items = dir.files;
+				data.dirs = dir.dirs;
 
 				// Find active file
 				for (let item of data.items) {
@@ -119,10 +121,6 @@ function readDir(dirPath) {
 		}
 		// TODO: make readContents a lazy-loading getter
 		return dir.readContents();
-	})
-	.then(content => {
-		dir.filter(itemFilterFn);
-		return dir;
 	});
 }
 
@@ -153,18 +151,6 @@ function fileContentToHtml(content) {
 	md = md.replace(/(<table>)/g, '<div class="table-responsive"><table class="table table-hover"></div>');
 	// md = md.replace(/(<pre>)/g, '<pre class="hljs">');
 	return md;
-}
-
-/**
- * Filter function for SegmentedPath objects
- */
-function itemFilterFn(item) {
-	if (item.isHidden) { return false; }
-	if (!item.isDir) {
-		if (item.fullName === cfg.indexFile) { return false; }
-		if (item.extension !== cfg.mdSuffix) { return false; }
-	}
-	return true;
 }
 
 /**
