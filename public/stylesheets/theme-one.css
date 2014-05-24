@@ -34,19 +34,6 @@ article > h5:first-child,
 article > h6:first-child {
   margin-top: 0;
 }
-article ul > li > a[href]:first-child {
-  text-decoration: none;
-  font-weight: bold;
-}
-article ul > li > a[href]:first-child::after {
-  content: attr(href);
-  display: table;
-  width: auto;
-  font-size: 0.8em;
-  line-height: 1;
-  color: #999;
-  font-weight: normal;
-}
 article code,
 article kbd,
 article pre,
@@ -133,7 +120,6 @@ body {
 }
 .m-header > ol > li > ol {
   list-style-type: none;
-  font-size: 1.2em;
 }
 .m-header > ol > li > ol > li {
   display: inline-block;
@@ -146,7 +132,7 @@ body {
   display: none;
 }
 .m-header > ol > li > ol > li > a {
-  padding: 0 15px;
+  padding: 0 10px;
 }
 .m-header > ol > li > ol > li:first-child > a {
   padding-left: 0;
@@ -411,7 +397,7 @@ section[role=content] {
   padding: 30px 50px;
 }
 section[role=content] > hgroup {
-  margin-bottom: 22px;
+  margin-bottom: 12px;
 }
 section[role=content] > hgroup > h1 {
   margin: 0;
@@ -433,9 +419,9 @@ section[role=content] > hgroup:hover > p {
   opacity: 1;
 }
 article {
-  font-family: 'Inconsolata', monospace;
+  font-family: sans-serif;
   line-height: 1.5;
-  font-size: 16px;
+  font-size: 14px;
   color: #333;
   max-width: 650px;
 }

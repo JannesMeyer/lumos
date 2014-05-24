@@ -34,19 +34,6 @@ article > h5:first-child,
 article > h6:first-child {
   margin-top: 0;
 }
-article ul > li > a[href]:first-child {
-  text-decoration: none;
-  font-weight: bold;
-}
-article ul > li > a[href]:first-child::after {
-  content: attr(href);
-  display: table;
-  width: auto;
-  font-size: 0.8em;
-  line-height: 1;
-  color: #999;
-  font-weight: normal;
-}
 article code,
 article kbd,
 article pre,
