@@ -46,7 +46,9 @@ module.exports = function(req, res, next) {
 			data.items = dir.files;
 			data.dirs = dir.dirs;
 			data.title = dir.path.name === '' ? baseDirName : dir.path.name;
-
+			if (dir.files.length > 0) {
+				data.nextItem = dir.files[0];
+			}
 			// Include index file if available
 			if (dir.hasFile(cfg.indexFile)) {
 				dir.removeFile(cfg.indexFile);
@@ -87,16 +89,25 @@ module.exports = function(req, res, next) {
 				data.dirs = dir.dirs;
 
 				// Find active file
-				for (let item of data.items) {
+				let activeItem;
+				for (let i = 0; i < data.items.length; ++i) {
+					let item = data.items[i];
 					// TODO: make this a normalized representation,
 					// so that there can be no mistake between
 					// folders and files
-					item.isActive = !item.isDir && item.absolute === requestPathMd.absolute;
+					item.isActive = item.absolute === requestPathMd.absolute;
 					if (item.isActive) {
-						// strip filename
-						let path = require('path');
+						activeItem = i;
 						item.link = path.dirname(item.link);
 					}
+				}
+				let prevItem = activeItem - 1;
+				if (prevItem >= 0) {
+					data.prevItem = data.items[prevItem];
+				}
+				let nextItem = activeItem + 1;
+				if (nextItem < data.items.length) {
+					data.nextItem = data.items[nextItem];
 				}
 			})
 			.then(() => res.render('document', data))

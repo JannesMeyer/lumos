@@ -9,6 +9,8 @@
   <link rel="stylesheet" href="/stylesheets/theme-one.css">
   <link rel="stylesheet" href="/stylesheets/hljs/github.css">
   <link rel="icon" href="/images/favicon.png">
+  <% if (typeof prevItem !== 'undefined') { %><link rel="prev" href="<%- prevItem.link %>"><% } %>
+  <% if (typeof nextItem !== 'undefined') { %><link rel="next" href="<%- nextItem.link %>"><% } %>
 </head>
 <body>
 <%- body %>
@@ -18,6 +20,7 @@
 <!-- <script src="/javascripts/zepto.js"></script> -->
 <!-- <script src="/javascripts/jquery.js"></script> -->
 <!-- <script src="/javascripts/main.js"></script> -->
+<script src="/javascripts/main2.js"></script>
 <!-- Bootstrap
 <script src="/javascripts/bootstrap.min.js"></script>
 -->

@@ -40,6 +40,7 @@ article pre,
 article samp {
   font-family: Inconsolata, monospace;
   font-size: 1em;
+  color: inherit;
 }
 article blockquote {
   font-size: 1em;
