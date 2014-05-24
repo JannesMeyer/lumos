@@ -1,8 +1,8 @@
 <% layout('layout') -%>
 <div class="m-container s-orange">
 
-	<header>
-		<ol class="m-breadcrumb">
+	<header class="m-header">
+		<ol>
 			<% breadcrumbs.forEach(function(item) { %>
 			<li><a href="<%- item.path %>"><%= item.name %></a></li>
 			<% }) %>

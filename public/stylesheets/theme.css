@@ -10,7 +10,7 @@ body {
   flex-direction: column;
   min-height: 100%;
 }
-.m-container > .m-breadcrumb {
+.m-container > .m-header {
   flex-shrink: 0;
 }
 .m-container > div {

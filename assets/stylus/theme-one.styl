@@ -16,41 +16,41 @@ body
  * Breadcrumbs
  *==========================================*/
 
-.m-breadcrumb
-	margin: 0
+.m-header
 	padding: 8px 50px 10px
-	list-style: square
 	background-color: hsl(0, 0%, 96%)
-	font-size: 1.1em
 
-	> li:first-child
-		display: block
+	ol
 		margin: 0
-		font-size: 1.8em
-		line-height: 1.25
-	> li
-		margin-left: 20px
-	> li.more
-		display: block
-		margin: 10px 0 0
-		> ol
-			list-style-type: none
-			padding: 0
-			font-size: 1.2em
-			> li
-				display: inline-block
-				> a::after
-					content: "•"
-					padding: 0 15px
-					color: #ccc
-			> li:last-child > a::after
-				display: none
+		padding: 0
+
+	> ol
+		list-style: none
+		font-size: 1.1em
+
+		> li:first-child
+			margin: 0
+			font-size: 1.8em
+			line-height: 1.25
+		> li
+			margin: 10px 0 0
+			> ol
+				list-style-type: none
+				font-size: 1.2em
+				> li
+					display: inline-block
+					> a::after
+						content: "•"
+						padding: 0 15px
+						color: #ccc
+				> li:last-child > a::after
+					display: none
 
 /*==========================================
  * File/Directory sidebar
  *==========================================*/
 
-.m-breadcrumb
+.m-header
 	border-bottom: 5px solid transparent // color later
 	a:hover
 		text-decoration: none
@@ -76,11 +76,10 @@ body
  *==========================================*/
 
 custom-color()
-	.m-breadcrumb
+	.m-header
 		border-bottom-color: $stripe-color
-		color: $stripe-color
 		a
-			color: $stripe-color
+			color: #a0a0a0
 
 	.m-navigation
 		background: $nav-bg
