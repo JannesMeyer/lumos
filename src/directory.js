@@ -99,15 +99,22 @@ export class Directory {
 	}
 
 	hasFile(name) {
-		if (typeof name !== 'string') { return; }
-		if (typeof this.contents === 'undefined') { return; }
-
-		for(let item of this.contents) {
-			if (!item.isDir && item.fullName === name) {
+		for(let file of this.files) {
+			if (file.fullName === name) {
 				return true;
 			}
 		}
 		return false;
+	}
+
+	removeFile(name) {
+		let i;
+		for(i = 0; i < this.files.length; ++i) {
+			if (this.files[i].fullName === name) {
+				break;
+			}
+		}
+		this.files.splice(i, 1);
 	}
 }
 
@@ -130,7 +137,7 @@ function itemSort(a, b) {
 function itemFilterFn(item) {
 	if (item.isHidden) { return false; }
 	if (!item.isDir) {
-		if (item.fullName === cfg.indexFile) { return false; }
+		// if (item.fullName === cfg.indexFile) { return false; }
 		if (item.extension !== cfg.mdSuffix) { return false; }
 	}
 	return true;

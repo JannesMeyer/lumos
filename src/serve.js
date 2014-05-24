@@ -49,6 +49,7 @@ module.exports = function(req, res, next) {
 
 			// Include index file if available
 			if (dir.hasFile(cfg.indexFile)) {
+				dir.removeFile(cfg.indexFile);
 				let indexPath = dir.path.makeDescendant(cfg.indexFile);
 				return readFile(indexPath)
 				.then(file => {
@@ -81,6 +82,7 @@ module.exports = function(req, res, next) {
 			// Read directory
 			return readDir(requestPathMd.makeParent())
 			.then(dir => {
+				dir.removeFile(cfg.indexFile);
 				data.items = dir.files;
 				data.dirs = dir.dirs;
 
