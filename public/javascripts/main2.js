@@ -1,10 +1,11 @@
 'use strict';
 
 addEventListener('DOMContentLoaded', function() {
-	let prevUrl, nextUrl;
-	let links = document.getElementsByTagName('link');
-	for (let i = 0; i < links.length; ++i) {
-		let link = links[i];
+	var prevUrl, nextUrl;
+	var links = document.getElementsByTagName('link');
+	var i, link;
+	for (i = 0; i < links.length; ++i) {
+		link = links[i];
 		if (link.rel === 'prev') {
 			prevUrl = link.href;
 		} else if (link.rel === 'next') {

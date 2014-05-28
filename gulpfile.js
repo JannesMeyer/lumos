@@ -11,8 +11,6 @@ var stylus = require('gulp-stylus');
 var traceur = require('gulp-traceur');
 
 var paths = {
-	nodeScript: './bin/www',
-
 	stylus: 'assets/stylus/*.styl',
 	stylusTarget: 'public/stylesheets',
 
@@ -78,7 +76,7 @@ function killNodeServer() {
 gulp.task('node-server', function() {
 	killNodeServer();
 	process.env.LUMOSPATH = '/Users/jannes/Dropbox/Notes';
-	nodeServer = child_process.spawn('node', ['--harmony'/*, '--debug'*/, paths.nodeScript], { env: process.env });
+	nodeServer = child_process.spawn('node', ['--harmony'/*, '--debug'*/, './bin/lumos', 'serve'], { env: process.env });
 	nodeServer.stdout.setEncoding('utf8');
 	nodeServer.stdout.on('data', function (data) {
 		gutil.log(gutil.colors.cyan('node') + ':', data.trim());

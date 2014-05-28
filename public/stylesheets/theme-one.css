@@ -1,3 +1,6 @@
+body {
+  -webkit-font-smoothing: antialiased;
+}
 html,
 body {
   height: 100%;
@@ -117,7 +120,8 @@ body {
   line-height: 1.25;
 }
 .m-header > ol > li {
-  margin: 10px 0 0;
+  margin: 0;
+  margin-top: 6px;
 }
 .m-header > ol > li > ol {
   list-style-type: none;
