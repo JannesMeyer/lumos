@@ -1,5 +1,5 @@
 <% layout('layout') -%>
-<div class="m-container s-purple-mist">
+<div class="m-container s-apple">
 
 	<header class="m-header">
 		<ol>
@@ -14,35 +14,15 @@
 			</li>
 			<% } %>
 		</ol>
+		<form method="get">
+		<input type="text" name="q" class="m-search" autocomplete="off" spellcheck="false" dir="auto">
+		</form>
 	</header>
-<!--
-<a href="..">⤴ ..</a>
-▵
-▴
-↑
-⬆︎
-☝︎
-⇧
-⤴︎
-↪︎
-⤣
--->
 
 	<div>
-		<section role="content">
-			<% if (typeof creationDate !== 'undefined') { %>
-			<hgroup>
-				<h1 class="title"><%- title %></h1>
-				<p><span class="date"><%- creationDate %></span><span class="time"><%- creationTime %></span></p>
-			</hgroup>
-			<% } %>
-			<% if (typeof content !== 'undefined') { %>
-			<article><%- content %></article>
-			<% } else { %>
-			<p style="color: #999">+++ empty +++</p>
-			<% } %>
+		<section role="content" class="m-page">
+		<% include page %>
 		</section>
-
 		<nav class="m-navigation">
 		<% include directory %>
 		</nav>

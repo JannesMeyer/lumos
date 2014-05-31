@@ -1,7 +1,6 @@
 module util from 'util'
 module marked from 'marked'
 module path from 'path'
-
 module fs from 'fs'
 module denodeify from './denodeify'
 let fsStat     = denodeify(fs, fs.stat);

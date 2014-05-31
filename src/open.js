@@ -23,6 +23,7 @@ function openFiles(files) {
 		}, err => {
 			console.log(`Creating directory '${dir}'`);
 			// TODO: create recursively
+			// https://www.npmjs.org/package/mkdirp
 			return fsMkdir(dir);
 		});
 	}))

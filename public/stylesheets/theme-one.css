@@ -9,21 +9,42 @@ body {
   display: none;
 }
 .m-container {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
   min-height: 100%;
 }
 .m-container > .m-header {
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
   flex-shrink: 0;
 }
 .m-container > div {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
   flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
 }
 .m-container > div > section {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
   flex: 1;
 }
 .m-container > div > nav {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 250px;
+  -ms-flex: 0 0 250px;
   flex: 0 0 250px;
 }
 .m-container > div > nav > ul > li.file > a {
@@ -164,6 +185,17 @@ body {
 .m-navigation > ul > li.active {
   box-shadow: -2px 0 0 -1px #fff;
 }
+.m-search {
+  position: absolute;
+  top: 11px;
+  right: 15px;
+  width: 300px;
+  border: none;
+  outline: none;
+  padding: 4px;
+  padding-left: 5px;
+  color: #666;
+}
 /*==========================================
  * Custom colors
  *==========================================*/
@@ -172,11 +204,16 @@ body {
 }
 .m-header a {
   color: #a0a0a0;
+  -webkit-transition: color 0.1s;
   transition: color 0.1s;
 }
 .m-header a:hover,
 .m-header a:focus {
   color: #a0a0a0;
+}
+.m-search:focus {
+  box-shadow: 0 0 2px 2px rgba(160,160,160,0.75);
+  background: #fcfcfc;
 }
 .m-navigation {
   background: #ebebeb;
@@ -202,7 +239,7 @@ body {
   background: #fff;
   color: #7d7d7d;
 }
-section[role=content] > hgroup > h1 {
+.m-page-title > h1 {
   color: #7d7d7d;
 }
 .s-purple-mist .m-header {
@@ -210,11 +247,16 @@ section[role=content] > hgroup > h1 {
 }
 .s-purple-mist .m-header a {
   color: #a0a0a0;
+  -webkit-transition: color 0.1s;
   transition: color 0.1s;
 }
 .s-purple-mist .m-header a:hover,
 .s-purple-mist .m-header a:focus {
   color: #aa90d3;
+}
+.s-purple-mist .m-search:focus {
+  box-shadow: 0 0 2px 2px rgba(170,144,211,0.75);
+  background: #fcfcfc;
 }
 .s-purple-mist .m-navigation {
   background: #ede9f5;
@@ -240,7 +282,7 @@ section[role=content] > hgroup > h1 {
   background: #fff;
   color: #8967bd;
 }
-.s-purple-mist section[role=content] > hgroup > h1 {
+.s-purple-mist .m-page-title > h1 {
   color: #8967bd;
 }
 .s-orange .m-header {
@@ -248,11 +290,16 @@ section[role=content] > hgroup > h1 {
 }
 .s-orange .m-header a {
   color: #a0a0a0;
+  -webkit-transition: color 0.1s;
   transition: color 0.1s;
 }
 .s-orange .m-header a:hover,
 .s-orange .m-header a:focus {
   color: #ff9a29;
+}
+.s-orange .m-search:focus {
+  box-shadow: 0 0 2px 2px rgba(255,154,41,0.75);
+  background: #fcfcfc;
 }
 .s-orange .m-navigation {
   background: #fdebdc;
@@ -278,7 +325,7 @@ section[role=content] > hgroup > h1 {
   background: #fff;
   color: #f27200;
 }
-.s-orange section[role=content] > hgroup > h1 {
+.s-orange .m-page-title > h1 {
   color: #f27200;
 }
 .s-blue .m-header {
@@ -286,11 +333,16 @@ section[role=content] > hgroup > h1 {
 }
 .s-blue .m-header a {
   color: #a0a0a0;
+  -webkit-transition: color 0.1s;
   transition: color 0.1s;
 }
 .s-blue .m-header a:hover,
 .s-blue .m-header a:focus {
   color: #60aadf;
+}
+.s-blue .m-search:focus {
+  box-shadow: 0 0 2px 2px rgba(96,170,223,0.75);
+  background: #fcfcfc;
 }
 .s-blue .m-navigation {
   background: #e2edf7;
@@ -316,7 +368,7 @@ section[role=content] > hgroup > h1 {
   background: #fff;
   color: #1f8aca;
 }
-.s-blue section[role=content] > hgroup > h1 {
+.s-blue .m-page-title > h1 {
   color: #1f8aca;
 }
 .s-apple .m-header {
@@ -324,11 +376,16 @@ section[role=content] > hgroup > h1 {
 }
 .s-apple .m-header a {
   color: #a0a0a0;
+  -webkit-transition: color 0.1s;
   transition: color 0.1s;
 }
 .s-apple .m-header a:hover,
 .s-apple .m-header a:focus {
   color: #7fbf60;
+}
+.s-apple .m-search:focus {
+  box-shadow: 0 0 2px 2px rgba(127,191,96,0.75);
+  background: #fcfcfc;
 }
 .s-apple .m-navigation {
   background: #e6f1e1;
@@ -354,7 +411,7 @@ section[role=content] > hgroup > h1 {
   background: #fff;
   color: #50a226;
 }
-.s-apple section[role=content] > hgroup > h1 {
+.s-apple .m-page-title > h1 {
   color: #50a226;
 }
 .s-cyan .m-header {
@@ -362,11 +419,16 @@ section[role=content] > hgroup > h1 {
 }
 .s-cyan .m-header a {
   color: #a0a0a0;
+  -webkit-transition: color 0.1s;
   transition: color 0.1s;
 }
 .s-cyan .m-header a:hover,
 .s-cyan .m-header a:focus {
   color: #17b7cf;
+}
+.s-cyan .m-search:focus {
+  box-shadow: 0 0 2px 2px rgba(23,183,207,0.75);
+  background: #fcfcfc;
 }
 .s-cyan .m-navigation {
   background: #dcf0f4;
@@ -392,36 +454,70 @@ section[role=content] > hgroup > h1 {
   background: #fff;
   color: #0099b7;
 }
-.s-cyan section[role=content] > hgroup > h1 {
+.s-cyan .m-page-title > h1 {
   color: #0099b7;
 }
 /*==========================================
  * Content
  *==========================================*/
-section[role=content] {
+.m-page {
   padding: 30px 50px;
+  position: relative;
+  background: #fff;
 }
-section[role=content] > hgroup {
+.m-page > .m-page-buttons {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+.m-page > .m-page-buttons > a {
+  display: inline-block;
+  width: 2.75em;
+  height: 2.5em;
+  text-align: center;
+  line-height: 2.5em;
+  font-size: 1.5em;
+  color: #fcfcfc;
+}
+.m-page > .m-page-buttons > a:hover,
+.m-page > .m-page-buttons > a:focus {
+  color: #b3b3b3;
+  background: #fcfcfc;
+}
+.m-page > .m-page-title {
   margin-bottom: 12px;
 }
-section[role=content] > hgroup > h1 {
+.m-page > .m-page-title > h1 {
   margin: 0;
   margin-bottom: 2px;
   font-size: 2.15em;
   font-family: 'Avenir Next';
 }
-section[role=content] > hgroup > p {
+.m-page > .m-page-title > p {
   display: inline-block;
   font-size: 0.85em;
   opacity: 0.2;
   color: #aaa;
+  -webkit-transition: opacity 0.2s ease;
   transition: opacity 0.2s ease;
 }
-section[role=content] > hgroup > p > .date {
+.m-page > .m-page-title > p > .date {
   margin-right: 4px;
 }
-section[role=content] > hgroup:hover > p {
+.m-page > .m-page-title:hover > p {
   opacity: 1;
+}
+.m-page:-webkit-full-screen {
+  background: #f00 !important;
+}
+.m-page:-moz-full-screen {
+  background: #f00 !important;
+}
+.m-page:-ms-fullscreen {
+  background: #f00 !important;
+}
+.m-page:fullscreen {
+  background: #f00 !important;
 }
 article {
   font-family: sans-serif;
@@ -446,7 +542,6 @@ article h2 {
 }
 article h3 {
   font-size: 1.1em;
-  font-style: oblique;
 }
 article h4 {
   font-size: 1em;

@@ -76,6 +76,17 @@ body
 		&.active
 			box-shadow: -2px 0 0 -1px $content-bg
 
+.m-search
+	position: absolute
+	top: 11px
+	right: 15px
+	width: 300px
+	border: none
+	outline: none
+	padding: 4px
+	padding-left: 5px
+	color: #666
+
 /*==========================================
  * Custom colors
  *==========================================*/
@@ -89,6 +100,10 @@ custom-color()
 		a:hover,
 		a:focus
 			color: $stripe-color
+
+	.m-search:focus
+		box-shadow: 0 0 2px 2px rgba($stripe-color, 0.75)
+		background: darken(#fff, 1)
 
 	.m-navigation
 		background: $nav-bg
@@ -113,7 +128,7 @@ custom-color()
 					background: $content-bg
 					color: $nav-link-color-active
 
-	section[role=content] > hgroup > h1
+	.m-page-title > h1
 		color: $nav-link-color-active
 
 // None
@@ -173,10 +188,31 @@ $nav-link-color-active = #0099b7
  * Content
  *==========================================*/
 
-section[role=content]
+.m-page
 	padding: 30px 50px
+	position: relative
+	background: $content-bg
 
-	> hgroup
+	> .m-page-buttons
+		position: absolute
+		top: 0
+		right: 0
+
+		> a
+			display: inline-block
+			width: 2.75em
+			height: 2.5em
+			text-align: center
+			line-height: 2.5em
+			font-size: 1.5em
+			color: darken(#fff, 1)
+
+		> a:hover,
+		> a:focus
+			color: darken(white, 30)
+			background: darken(white, 1)
+
+	> .m-page-title
 		margin-bottom: 12px
 
 		> h1
@@ -199,6 +235,8 @@ section[role=content]
 		&:hover > p
 			opacity: 1
 
+.m-page:fullscreen
+	background: red !important
 
 article
 	font-family: sans-serif
@@ -219,7 +257,6 @@ article
 
 	h3
 		font-size: 1.1em
-		font-style: oblique
 
 	h4
 		font-size: 1em

@@ -9,21 +9,42 @@ body {
   display: none;
 }
 .m-container {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
   flex-direction: column;
   min-height: 100%;
 }
 .m-container > .m-header {
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
   flex-shrink: 0;
 }
 .m-container > div {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
   flex: 1;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
 }
 .m-container > div > section {
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+  -ms-flex: 1;
   flex: 1;
 }
 .m-container > div > nav {
+  -webkit-box-flex: 0;
+  -webkit-flex: 0 0 250px;
+  -ms-flex: 0 0 250px;
   flex: 0 0 250px;
 }
 .m-container > div > nav > ul > li.file > a {

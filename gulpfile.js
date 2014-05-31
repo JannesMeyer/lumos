@@ -1,109 +1,105 @@
 'use strict';
 
-// sudo PORT=80 gulp node-server
-// gulp dev
-
-var child_process = require('child_process');
-
 var gulp = require('gulp');
 var gutil = require('gulp-util');
+var rename = require('gulp-rename');
+// var changed = require('gulp-changed');
 var stylus = require('gulp-stylus');
+var autoprefixer = require('gulp-autoprefixer');
+var minifycss = require('gulp-minify-css');
 var traceur = require('gulp-traceur');
+// var concat = require('gulp-concat');
+// var uglify = require('gulp-uglify');
+var livereload = require('gulp-livereload');
+var spawn = require('child_process').spawn;
 
-var paths = {
-	stylus: 'assets/stylus/*.styl',
-	stylusTarget: 'public/stylesheets',
 
-	serverJs: 'src/**/*.js',
-	serverJsTarget: 'dist',
+// Config: source files
+var srcStyles = './assets/stylus/*.styl';
+var srcStylesAll = './assets/stylus/**/*.styl';
+var srcJavaScripts = './src/**/*.js';
 
-	publicFiles: 'public/**',
-	viewFiles: 'views/**',
+// Config: destination files
+var destStyles = './public/stylesheets';
+var destJavaScripts = './dist';
 
-	markdownFiles: '/Users/jannes/Dropbox/Notes/**/*.md'
-};
+// Config: watch files
+var watchPublic = './public/';
 
-// Default task
-gulp.task('default', ['stylesheets', 'javascripts']);
 
-// Compile Stylus
-gulp.task('stylesheets', function() {
-	gulp.src(paths.stylus)
-		.pipe(stylus({ errors: true }))
-		.pipe(gulp.dest(paths.stylusTarget));
-});
+/********************************
+   Helper functions
+ ********************************/
 
-// Compile server-side JavaScript
-gulp.task('javascripts', function() {
-	gulp.src(paths.serverJs)
-		.pipe(traceur({ sourceMap: true, experimental: true }))
-		.pipe(gulp.dest(paths.serverJsTarget));
-});
-
-// Run dev environment
-gulp.task('dev', ['default', 'node-server', 'livereload-server'], function() {
-	gulp.watch('assets/stylus/**/*.styl', ['stylesheets']);
-	gulp.watch(paths.serverJs, ['javascripts', 'node-server']);
-});
-
-// Run debug environment
-gulp.task('debug', ['default', 'node-server', 'livereload-server', 'node-inspector'], function() {
-	gulp.watch('assets/stylus/**/*.styl', ['stylesheets']);
-	gulp.watch(paths.serverJs, ['javascripts', 'node-server']);
-});
-
-// Node inspector
-var nodeInspector;
-gulp.task('node-inspector', function() {
-	nodeInspector = child_process.spawn('node-inspector');
-	nodeInspector.stdout.setEncoding('utf8');
-	nodeInspector.stdout.on('data', function (data) {
-		gutil.log(gutil.colors.cyan('node') + ':', data.trim());
-	});
-	nodeInspector.stderr.setEncoding('utf8');
-	nodeInspector.stderr.on('data', function (data) {
-		gutil.log(gutil.colors.cyan('node') + ':', gutil.colors.red(data.trim()));
-	});
-});
-
-// Node server
-var nodeServer;
-function killNodeServer() {
-	if (nodeServer) {
-		nodeServer.kill();
+function startNode() {
+	process.env.LUMOSPATH = '/Users/jannes/Dropbox/Notes';
+	var options = {
+		env: process.env,
+		stdio: 'inherit'
+	};
+	childs.node = spawn('./bin/lumos', ['serve'], options);
+}
+function stopNode() {
+	if (childs.node) {
+		childs.node.kill();
 	}
 }
-gulp.task('node-server', function() {
-	killNodeServer();
-	process.env.LUMOSPATH = '/Users/jannes/Dropbox/Notes';
-	nodeServer = child_process.spawn('node', ['--harmony'/*, '--debug'*/, './bin/lumos', 'serve'], { env: process.env });
-	nodeServer.stdout.setEncoding('utf8');
-	nodeServer.stdout.on('data', function (data) {
-		gutil.log(gutil.colors.cyan('node') + ':', data.trim());
-	});
-	nodeServer.stderr.setEncoding('utf8');
-	nodeServer.stderr.on('data', function (data) {
-		gutil.log(gutil.colors.cyan('node') + ':', gutil.colors.red(data.trim()));
-	});
-});
-process.on('exit', killNodeServer);
+function gulpLog(chunk) {
+	gutil.log(chunk.toString().trim());
+}
+function gulpLogError(chunk) {
+	gutil.log(gutil.colors.red(chunk.toString().trim()));
+}
 
-// LiveReload server
-gulp.task('livereload-server', function() {
-	var livereload = require('gulp-livereload');
-	var server = livereload();
+/********************************
+   Tasks
+ ********************************/
 
-	gulp.watch([paths.publicFiles, paths.viewFiles]).on('change', function(file) {
-		server.changed(file.path);
+var childs = {};
+
+gulp.task('default', function() {
+	gutil.log('Available tasks:');
+	Object.keys(gulp.tasks).forEach(function(task) {
+		if (task === 'default') return;
+		gutil.log('• ' + gutil.colors.cyan(task));
 	});
 });
 
-// Writing
-gulp.task('writing', ['node-server'], function() {
-	var livereload = require('gulp-livereload');
-	var server = livereload();
+gulp.task('stylesheets', function() {
+	gulp.src(srcStyles)
+	    .pipe(stylus({ errors: true }))
+	    .pipe(autoprefixer('last 2 versions'))
+	    .pipe(gulp.dest(destStyles))
+	    .pipe(rename({ suffix: '.min' }))
+	    .pipe(minifycss())
+	    .pipe(gulp.dest(destStyles));
+});
 
-	gulp.watch([paths.markdownFiles]).on('change', function(file) {
-		server.changed(file.path);
+gulp.task('javascripts', function() {
+	gulp.src(srcJavaScripts)
+	    .pipe(traceur({ sourceMap: true, experimental: true }))
+	    .pipe(gulp.dest(destJavaScripts));
+});
+
+gulp.task('dev', ['stylesheets', 'javascripts', 'node', 'livereload'], function() {
+	gulp.watch(srcStylesAll, ['stylesheets']);
+	gulp.watch(srcJavaScripts, ['javascripts', 'node']);
+});
+
+// gulp.task('node-inspector', function() {
+// 	childs.node = spawn('node', ['--harmony', '--debug', './bin/lumos', 'serve'], options);
+// 	childs.inspector = spawn('node-inspector', { stdio: 'inherit' });
+// });
+
+gulp.task('node', function() {
+	stopNode();
+	startNode();
+});
+process.on('exit', stopNode);
+
+gulp.task('livereload', function() {
+	childs.livereload = livereload();
+	gulp.watch(watchPublic).on('change', function(file) {
+		childs.livereload.changed(file.path);
 	});
-})
+});
