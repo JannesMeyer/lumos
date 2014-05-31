@@ -54,6 +54,7 @@ module.exports = function(req, res, next) {
 				let indexPath = dir.path.makeDescendant(cfg.indexFile);
 				return readFile(indexPath)
 				.then(file => {
+					data.filePath = indexPath.absolute;
 					data.content = fileContentToHtml(file.content);
 				});
 			}
@@ -73,6 +74,7 @@ module.exports = function(req, res, next) {
 		return readFile(requestPathMd)
 		.then(file => {
 			data.title = requestPathMd.name;
+			data.filePath = requestPathMd.absolute;
 			data.content = fileContentToHtml(file.content);
 
 			let c = file.stat.birthtime;

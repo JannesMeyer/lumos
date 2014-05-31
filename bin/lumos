@@ -57,13 +57,23 @@ var commands = {
 	},
 
 	edit: function(args) {
-		console.log('Open the respective files in an editor');
+		var argv = require('minimist')(args);
+		if (argv._.length === 0) {
+			throw new Error('Not enough arguments');
+		}
+		var filePath = argv._[0];
+		if (argv['decode-url']) {
+			filePath = decodeURI(filePath);
+		}
+		console.log(filePath);
+
+		require('traceur');
+		require('../dist/open').openExistingFile(filePath);
 	},
 
 	diary: function(days) {
-		var traceur = require('traceur');
-		var open = require('../dist/open');
-		open.openDiary(days);
+		require('traceur');
+		require('../dist/open').openDiary(days);
 	}
 };
 

@@ -75,6 +75,7 @@ addEventListener('DOMContentLoaded', function() {
 		38: 'up',
 		39: 'right',
 		40: 'down',
+		66: 'b',
 		69: 'e',
 		70: 'f',
 		74: 'j',
@@ -106,27 +107,27 @@ addEventListener('DOMContentLoaded', function() {
 		var shift = e.shiftKey;
 		var alt = e.altKey;
 		var meta = e.metaKey;
-		var modifier = ctrl || shift || alt || meta;
+		var modifiers = ctrl + shift + alt + meta;
 
-		if (char === '/' && !modifier) {
+		if (char === '/' && modifiers === 0) {
 			searchBox.focus();
 			e.preventDefault();
 			return;
 		}
-		if (char === 'j' && !modifier && nextUrl) {
+		if (char === 'j' && modifiers === 0 && nextUrl) {
 			location.href = nextUrl;
 			return;
 		}
-		if (char === 'k' && !modifier && prevUrl) {
+		if (char === 'k' && modifiers === 0 && prevUrl) {
 			location.href = prevUrl;
 			return;
 		}
-		if (char === 'e' && !modifier) {
+		if (char === 'b' && meta && modifiers === 1) {
 			var editButton = getFirstOfClass('edit-button');
 			location.href= editButton.href;
 			return;
 		}
-		if (char === 'f' && !modifier) {
+		if (char === 'f' && modifiers === 0) {
 			toggleFullscreen(document.documentElement);
 			e.preventDefault();
 		}

@@ -122,14 +122,6 @@ Execute these commands:
 
 Make sure that you whitelist the domain that this server is running on in your AdBlock Plus (ABP) settings to improve page load speeds. ABP injects 20.000 CSS rules into every page that's loaded.
 
-# Inspired by
-
-- [Luminos](https://menteslibres.net/luminos/)
-- [werc](http://werc.cat-v.org/)
-- [Tagspaces](http://www.tagspaces.org/)
-- [Laverna](https://laverna.cc/)
-- [nodewiki](https://www.npmjs.org/package/nodewiki)
-
 # Tools
 
 - OS X services
@@ -142,3 +134,45 @@ Make sure that you whitelist the domain that this server is running on in your A
 	- [Convert inline links to references](https://gist.github.com/ttscoff/1207337)
 - Apps
 	- [TextExpander](http://smilesoftware.com/TextExpander/)
+
+# Design guidelines
+
+- Don't repeat yourself
+
+- Alternative to note-taking tools like Evernote, OneNote, Simplenote, Google Keep, Apple Notes, OSX Stickies, etc.
+
+- Powerful enhancement possibilites (replaceable Markdown parser and search provider)
+
+- Built for speed
+
+- Zero JavaScript (on the client side), just HTML
+
+- No configuration necessary
+
+- Use the file system (synchronization between devices, versioning, search, ...)
+
+- Use system-provided search features like Apple's Spotlight. It's just text.
+
+- In the directory listing you just see other directories and markdown files, but you can link to anything
+
+# Known problems
+
+- It does not have the notion of multiple users, or authentication. It's just an extension of the file system.
+
+- No good solution for mobile access, since this is a locally-hosted server (how does the node process run? who provides the search and the syncing?)
+
+	- In theory it's possible to have the server run on the network (instead of locally) and to provide an app that connects to that server's API for editing, but that's a little more complicated
+
+# Inspired by
+
+- Theme
+	- OneNote
+	- [maxvoltar](http://maxvoltar.com/)
+	- [warpedvisions](http://warpedvisions.org/)
+- Functionality
+	- OneNote
+	- [Luminos](https://menteslibres.net/luminos/)
+	- [werc](http://werc.cat-v.org/)
+	- [Tagspaces](http://www.tagspaces.org/)
+	- [Laverna](https://laverna.cc/)
+	- [nodewiki](https://www.npmjs.org/package/nodewiki)

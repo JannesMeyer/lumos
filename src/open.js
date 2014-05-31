@@ -1,6 +1,6 @@
-module child_process from 'child_process'
 module fs from 'fs'
 module path from 'path'
+import { spawn } from 'child_process'
 
 module denodeify from './denodeify';
 const fsStat = denodeify(fs, fs.stat);
@@ -32,7 +32,7 @@ function openFiles(files) {
 			console.log(`Opening '${file}'`);
 		}
 		// Open editor
-		child_process.spawn(cfg.editor, [...cfg.editorArgs, ...files]);
+		spawn(cfg.editor, [...cfg.editorArgs, ...files], { stdio: 'inherit' });
 	});
 }
 
@@ -74,4 +74,15 @@ export function openDiary(days) {
 
 	// Open the files in an editor
 	openFiles(files);
+}
+
+export function openExistingFile(file) {
+	fsStat(file)
+	.then(stat => {
+		// Open editor
+		spawn(cfg.editor, [file], { stdio: 'inherit' });
+	})
+	.catch(err => {
+		console.error('File not found');
+	});
 }

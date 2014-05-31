@@ -1,5 +1,8 @@
 // TODO: Add api routes
 // TODO: don't use an api subdirectory, use the 'accepts' http header instead
+
+// Accept: application/json
+
 // Also use this for search:
 // http://notes/?q=test
 // http://expressjs.com/api.html
