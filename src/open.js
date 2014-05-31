@@ -80,7 +80,7 @@ export function openExistingFile(file) {
 	fsStat(file)
 	.then(stat => {
 		// Open editor
-		spawn(cfg.editor, [file], { stdio: 'inherit' });
+		spawn(cfg.editor, [...cfg.editorArgs, file], { stdio: 'inherit' });
 	})
 	.catch(err => {
 		console.error('File not found');
