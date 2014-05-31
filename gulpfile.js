@@ -8,8 +8,8 @@ var stylus = require('gulp-stylus');
 var autoprefixer = require('gulp-autoprefixer');
 var minifycss = require('gulp-minify-css');
 var traceur = require('gulp-traceur');
-// var concat = require('gulp-concat');
-// var uglify = require('gulp-uglify');
+var concat = require('gulp-concat');
+var uglify = require('gulp-uglify');
 var livereload = require('gulp-livereload');
 var spawn = require('child_process').spawn;
 
@@ -17,11 +17,13 @@ var spawn = require('child_process').spawn;
 // Config: source files
 var srcStyles = './assets/stylus/*.styl';
 var srcStylesAll = './assets/stylus/**/*.styl';
-var srcJavaScripts = './src/**/*.js';
+var srcScriptsClient = './assets/javascripts/*.js';
+var srcScriptsServer = './src/**/*.js';
 
 // Config: destination files
 var destStyles = './public/stylesheets';
-var destJavaScripts = './dist';
+var destScriptsClient = './public/javascripts';
+var destScriptsServer = './dist';
 
 // Config: watch files
 var watchPublic = './public/';
@@ -59,10 +61,12 @@ var childs = {};
 
 gulp.task('default', function() {
 	gutil.log('Available tasks:');
-	Object.keys(gulp.tasks).forEach(function(task) {
-		if (task === 'default') return;
+	for (var task in gulp.tasks) {
+		if (task === 'default') {
+			continue;
+		}
 		gutil.log('• ' + gutil.colors.cyan(task));
-	});
+	}
 });
 
 gulp.task('stylesheets', function() {
@@ -75,15 +79,26 @@ gulp.task('stylesheets', function() {
 	    .pipe(gulp.dest(destStyles));
 });
 
-gulp.task('javascripts', function() {
-	gulp.src(srcJavaScripts)
-	    .pipe(traceur({ sourceMap: true, experimental: true }))
-	    .pipe(gulp.dest(destJavaScripts));
+gulp.task('scripts-client', function() {
+	gulp.src(srcScriptsClient)
+		.pipe(concat('main.js'))
+	    // .pipe(traceur({ sourceMap: true, experimental: true }))
+	    .pipe(gulp.dest(destScriptsClient))
+	    .pipe(rename({ suffix: '.min' }))
+		.pipe(uglify())
+		.pipe(gulp.dest(destScriptsClient));
 });
 
-gulp.task('dev', ['stylesheets', 'javascripts', 'node', 'livereload'], function() {
+gulp.task('scripts-server', function() {
+	gulp.src(srcScriptsServer)
+	    .pipe(traceur({ sourceMap: true, experimental: true }))
+	    .pipe(gulp.dest(destScriptsServer));
+});
+
+gulp.task('dev', ['stylesheets', 'scripts-client', 'scripts-server', 'node', 'livereload'], function() {
 	gulp.watch(srcStylesAll, ['stylesheets']);
-	gulp.watch(srcJavaScripts, ['javascripts', 'node']);
+	gulp.watch(srcScriptsClient, ['scripts-client']);
+	gulp.watch(srcScriptsServer, ['scripts-server', 'node']);
 });
 
 // gulp.task('node-inspector', function() {
