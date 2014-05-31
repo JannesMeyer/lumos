@@ -461,9 +461,9 @@ body {
  * Content
  *==========================================*/
 .m-page {
-  padding: 30px 50px;
+  font-size: 14px;
+  padding: 2em 3.5em;
   position: relative;
-  background: #fff;
 }
 .m-page > .m-page-buttons {
   position: absolute;
@@ -472,12 +472,13 @@ body {
 }
 .m-page > .m-page-buttons > a {
   display: inline-block;
-  width: 2.75em;
-  height: 2.5em;
+  vertical-align: top;
+  height: 50px;
+  width: 55.00000000000001px;
   text-align: center;
-  line-height: 2.5em;
-  font-size: 1.5em;
-  color: #fcfcfc;
+  line-height: 50px;
+  font-size: 22px;
+  color: rgba(0,0,0,0.02);
 }
 .m-page > .m-page-buttons > a:hover,
 .m-page > .m-page-buttons > a:focus {
@@ -485,7 +486,7 @@ body {
   background: #fcfcfc;
 }
 .m-page > .m-page-title {
-  margin-bottom: 12px;
+  margin-bottom: 1.5em;
 }
 .m-page > .m-page-title > h1 {
   margin: 0;
@@ -494,6 +495,7 @@ body {
   font-family: 'Avenir Next';
 }
 .m-page > .m-page-title > p {
+  margin: 0;
   display: inline-block;
   font-size: 0.85em;
   opacity: 0.2;
@@ -502,29 +504,48 @@ body {
   transition: opacity 0.2s ease;
 }
 .m-page > .m-page-title > p > .date {
-  margin-right: 4px;
+  margin-right: 0.28em;
 }
 .m-page > .m-page-title:hover > p {
   opacity: 1;
 }
-.m-page:-webkit-full-screen {
-  background: #f00 !important;
+:root:-webkit-full-screen .m-page {
+  font-size: 36px;
 }
-.m-page:-moz-full-screen {
-  background: #f00 !important;
+:root:-moz-full-screen .m-page {
+  font-size: 36px;
 }
-.m-page:-ms-fullscreen {
-  background: #f00 !important;
+:root:-ms-fullscreen .m-page {
+  font-size: 36px;
 }
-.m-page:fullscreen {
-  background: #f00 !important;
+:root:fullscreen .m-page {
+  font-size: 36px;
+}
+:root:-webkit-full-screen .m-header,
+:root:-webkit-full-screen .m-navigation,
+:root:-webkit-full-screen .m-page-title > p {
+  display: none;
+}
+:root:-moz-full-screen .m-header,
+:root:-moz-full-screen .m-navigation,
+:root:-moz-full-screen .m-page-title > p {
+  display: none;
+}
+:root:-ms-fullscreen .m-header,
+:root:-ms-fullscreen .m-navigation,
+:root:-ms-fullscreen .m-page-title > p {
+  display: none;
+}
+:root:fullscreen .m-header,
+:root:fullscreen .m-navigation,
+:root:fullscreen .m-page-title > p {
+  display: none;
 }
 article {
   font-family: sans-serif;
   line-height: 1.5;
-  font-size: 14px;
   color: #333;
-  max-width: 650px;
+  max-width: 46em;
 }
 article h1,
 article h2,
@@ -533,6 +554,13 @@ article h4,
 article h5,
 article h6 {
   font-family: 'Avenir Next', sans-serif;
+  font-weight: bold;
+}
+article h1,
+article h2,
+article h3 {
+  margin-top: 1.2em;
+  margin-bottom: 0.8em;
 }
 article h1 {
   font-size: 1.5em;
@@ -548,7 +576,7 @@ article h4 {
 }
 article ul {
   list-style-type: disc;
-  padding-left: 30px;
+  padding-left: 2.15em;
 }
 article a {
   color: #00a5e6;

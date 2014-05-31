@@ -189,9 +189,9 @@ $nav-link-color-active = #0099b7
  *==========================================*/
 
 .m-page
-	padding: 30px 50px
+	font-size: 14px
+	padding: 2em 3.5em
 	position: relative
-	background: $content-bg
 
 	> .m-page-buttons
 		position: absolute
@@ -200,12 +200,13 @@ $nav-link-color-active = #0099b7
 
 		> a
 			display: inline-block
-			width: 2.75em
-			height: 2.5em
+			vertical-align: top
+			height: 50px
+			width: @height * 1.1
 			text-align: center
-			line-height: 2.5em
-			font-size: 1.5em
-			color: darken(#fff, 1)
+			line-height: @height
+			font-size: 22px
+			color: rgba(0, 0, 0, 0.02)
 
 		> a:hover,
 		> a:focus
@@ -213,7 +214,7 @@ $nav-link-color-active = #0099b7
 			background: darken(white, 1)
 
 	> .m-page-title
-		margin-bottom: 12px
+		margin-bottom: 1.5em
 
 		> h1
 			margin: 0
@@ -223,6 +224,7 @@ $nav-link-color-active = #0099b7
 			// font-weight: bold
 
 		> p
+			margin: 0
 			display: inline-block
 			font-size: 0.85em
 			opacity: 0.2
@@ -230,24 +232,43 @@ $nav-link-color-active = #0099b7
 			transition: opacity 0.2s ease
 
 			> .date
-				margin-right: 4px
+				margin-right: 0.28em
 
 		&:hover > p
 			opacity: 1
 
-.m-page:fullscreen
-	background: red !important
+:root:fullscreen
+	.m-page
+		font-size: 36px
+
+	.m-header,
+	.m-navigation,
+	.m-page-title > p
+		display: none
+
+// Can't use this as long as browser vendors don't allow
+// scrolling of the element
+// .m-page:fullscreen
+// 	font-size: 36px
+// 	width: 100%
+// 	overflow: auto
+// 	background: $content-bg
+// 	.m-page-title > p
+// 		display: none
 
 article
 	font-family: sans-serif
 	line-height: 1.5
-	font-size: 14px
 	color: #333
-	max-width: 650px
+	max-width: 46em
 
 	h1, h2, h3, h4, h5, h6
 		font-family: 'Avenir Next', sans-serif
-		// font-weight: bold
+		font-weight: bold
+
+	h1, h2, h3
+		margin-top: 1.2em
+		margin-bottom: 0.8em
 
 	h1
 		font-size: 1.5em
@@ -263,7 +284,7 @@ article
 
 	ul
 		list-style-type: disc
-		padding-left: 30px
+		padding-left: 2.15em
 
 	a
 		color: $link-color

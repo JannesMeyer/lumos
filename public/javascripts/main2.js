@@ -12,9 +12,36 @@ addEventListener('DOMContentLoaded', function() {
 	var fullscreenButton = getFirstOfClass('button-fullscreen');
 	var searchBox = getFirstOfClass('m-search');
 
-	function startFullscreen(el) {
-		var requestFullscreen = el.requestFullscreen || el.mozRequestFullScreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
-		requestFullscreen.call(el);
+	function toggleFullscreen(el) {
+		var fullscreenEnabled =
+			document.fullscreenEnabled ||
+			document.mozFullScreenEnabled ||
+			document.webkitFullscreenEnabled ||
+			document.msFullscreenEnabled;
+		if (!fullscreenEnabled) {
+			return;
+		}
+
+		var fullscreenElement =
+			document.fullscreenElement ||
+			document.mozFullScreenElement ||
+			document.webkitFullscreenElement ||
+			document.msFullscreenElement;
+		var exitFullscreen =
+			document.exitFullscreen ||
+			document.mozCancelFullScreen ||
+			document.webkitExitFullscreen ||
+			document.msExitFullscreen;
+		var requestFullscreen =
+			el.requestFullscreen ||
+			el.mozRequestFullScreen ||
+			el.webkitRequestFullscreen ||
+			el.msRequestFullscreen;
+		if (fullscreenElement === el) {
+			exitFullscreen.call(document);
+		} else {
+			requestFullscreen.call(el);
+		}
 	}
 
 	// document.addEventListener("fullscreenerror", FSerrorhandler);
@@ -22,14 +49,12 @@ addEventListener('DOMContentLoaded', function() {
 	// document.addEventListener("mozfullscreenerror", FSerrorhandler);
 	// document.addEventListener("MSFullscreenError", FSerrorhandler);
 
-	var fullscreenEnabled = document.fullscreenEnabled || document.mozFullScreenEnabled || document.webkitFullscreenEnabled || document.msFullscreenEnabled;
-	if (fullscreenEnabled) {
-		fullscreenButton.addEventListener('click', function(e) {
-			startFullscreen(page);
-			fullscreenButton.blur();
-			e.preventDefault();
-		});
-	}
+
+	fullscreenButton.addEventListener('click', function(e) {
+		toggleFullscreen(document.documentElement);
+		fullscreenButton.blur();
+		e.preventDefault();
+	});
 
 	var prevUrl, nextUrl;
 	var links = document.getElementsByTagName('link');
@@ -51,14 +76,15 @@ addEventListener('DOMContentLoaded', function() {
 		39: 'right',
 		40: 'down',
 		69: 'e',
+		70: 'f',
 		74: 'j',
 		75: 'k',
 		191: '/'
 	};
 	addEventListener('keydown', function(e) {
-		var character;
+		var char;
 		if (KEYMAP[e.keyCode]) {
-			character = KEYMAP[e.keyCode];
+			char = KEYMAP[e.keyCode];
 		} else {
 			// console.log('Unrecognized key:', e.keyCode);
 			return;
@@ -70,28 +96,39 @@ addEventListener('DOMContentLoaded', function() {
 			element.tagName === 'TEXTAREA' ||
 			element.tagName === 'SELECT' ||
 			element.isContentEditable) {
-			if (character === 'esc' && element.blur) {
+			if (char === 'esc' && element.blur) {
 				element.blur();
 			}
 			return;
 		}
 
-		if (character === '/') {
+		var ctrl = e.ctrlKey;
+		var shift = e.shiftKey;
+		var alt = e.altKey;
+		var meta = e.metaKey;
+		var modifier = ctrl || shift || alt || meta;
+
+		if (char === '/' && !modifier) {
 			searchBox.focus();
 			e.preventDefault();
 			return;
 		}
-		if (character === 'j' && nextUrl) {
+		if (char === 'j' && !modifier && nextUrl) {
 			location.href = nextUrl;
 			return;
 		}
-		if (character === 'k' && prevUrl) {
+		if (char === 'k' && !modifier && prevUrl) {
 			location.href = prevUrl;
 			return;
 		}
-		if (character === 'e') {
-			location.href= test.attr('href');
+		if (char === 'e' && !modifier) {
+			var editButton = getFirstOfClass('edit-button');
+			location.href= editButton.href;
 			return;
+		}
+		if (char === 'f' && !modifier) {
+			toggleFullscreen(document.documentElement);
+			e.preventDefault();
 		}
 	});
 
