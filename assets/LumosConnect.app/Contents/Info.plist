@@ -2,8 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleAllowMixedLocalizations</key>
-	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleExecutable</key>
@@ -26,18 +24,19 @@
 	<array>
 		<dict>
 			<key>CFBundleURLName</key>
-			<string>Opens local file in your favorite editor</string>
+			<string>Opens local files in your editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>lumos-connect</string>
 			</array>
 		</dict>
 	</array>
-	<key>LSMinimumSystemVersionByArchitecture</key>
-	<dict>
-		<key>x86_64</key>
-		<string>10.6</string>
-	</dict>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.utilities</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>10.7.4</string>
+	<key>LSUIElement</key>
+	<true/>
 	<key>WindowState</key>
 	<dict>
 		<key>dividerCollapsed</key>
@@ -49,7 +48,7 @@
 		<key>positionOfDivider</key>
 		<real>333</real>
 		<key>savedFrame</key>
-		<string>363 240 602 597 0 0 1440 878 </string>
+		<string>24 258 602 597 0 0 1440 878 </string>
 		<key>selectedTabView</key>
 		<string>result</string>
 	</dict>

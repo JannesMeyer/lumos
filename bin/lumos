@@ -63,6 +63,10 @@ var commands = {
 		}
 		var filePath = argv._[0];
 		if (argv['decode-url']) {
+			// escape() will not encode: @*/+
+			// (encodes Unicode characters to Unicode escape sequences, too)
+			// encodeURI() will not encode: ~!@#$&*()=:/,;?+'
+			// encodeURIComponent() will not encode: ~!*()'
 			filePath = decodeURI(filePath);
 		}
 		console.log(filePath);
