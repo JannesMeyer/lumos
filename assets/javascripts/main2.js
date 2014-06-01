@@ -10,6 +10,7 @@ addEventListener('DOMContentLoaded', function() {
 
 	var page = getFirstOfClass('m-page');
 	var fullscreenButton = getFirstOfClass('button-fullscreen');
+	var editButton = getFirstOfClass('edit-button');
 	var searchBox = getFirstOfClass('m-search');
 
 	function toggleFullscreen(el) {
@@ -75,7 +76,6 @@ addEventListener('DOMContentLoaded', function() {
 		38: 'up',
 		39: 'right',
 		40: 'down',
-		66: 'b',
 		69: 'e',
 		70: 'f',
 		74: 'j',
@@ -122,8 +122,7 @@ addEventListener('DOMContentLoaded', function() {
 			location.href = prevUrl;
 			return;
 		}
-		if (char === 'b' && meta && modifiers === 1) {
-			var editButton = getFirstOfClass('edit-button');
+		if (char === 'e' && modifiers === 0) {
 			location.href= editButton.href;
 			return;
 		}
