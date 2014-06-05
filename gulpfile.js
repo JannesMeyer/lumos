@@ -69,7 +69,9 @@ gulp.task('default', function() {
 	}
 });
 
-gulp.task('stylesheets', function() {
+gulp.task('build', ['build-stylesheets', 'build-client-scripts', 'build-server-scripts']);
+
+gulp.task('build-stylesheets', function() {
 	gulp.src(srcStyles)
 	    .pipe(stylus({ errors: true }))
 	    .pipe(autoprefixer('last 2 versions'))
@@ -79,7 +81,7 @@ gulp.task('stylesheets', function() {
 	    .pipe(gulp.dest(destStyles));
 });
 
-gulp.task('scripts-client', function() {
+gulp.task('build-client-scripts', function() {
 	gulp.src(srcScriptsClient)
 		.pipe(concat('main.js'))
 	    // .pipe(traceur({ sourceMap: true, experimental: true }))
@@ -89,16 +91,16 @@ gulp.task('scripts-client', function() {
 		.pipe(gulp.dest(destScriptsClient));
 });
 
-gulp.task('scripts-server', function() {
+gulp.task('build-server-scripts', function() {
 	gulp.src(srcScriptsServer)
 	    .pipe(traceur({ sourceMap: true, experimental: true }))
 	    .pipe(gulp.dest(destScriptsServer));
 });
 
-gulp.task('dev', ['stylesheets', 'scripts-client', 'scripts-server', 'node', 'livereload'], function() {
-	gulp.watch(srcStylesAll, ['stylesheets']);
-	gulp.watch(srcScriptsClient, ['scripts-client']);
-	gulp.watch(srcScriptsServer, ['scripts-server', 'node']);
+gulp.task('dev', ['build-stylesheets', 'build-client-scripts', 'build-server-scripts', 'node', 'livereload'], function() {
+	gulp.watch(srcStylesAll, ['build-stylesheets']);
+	gulp.watch(srcScriptsClient, ['build-client-scripts']);
+	gulp.watch(srcScriptsServer, ['build-server-scripts', 'node']);
 });
 
 // gulp.task('node-inspector', function() {

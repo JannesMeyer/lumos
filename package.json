@@ -1,22 +1,20 @@
 {
   "name": "lumos",
   "version": "1.0.0",
+  "author": "Jannes Meyer <jannes.meyer+npm@gmail.com>",
   "engine": "node 0.11.13",
   "private": true,
   "bin": "./bin/lumos",
   "scripts": {
-    "start": "./bin/lumos serve"
+    "start": "./bin/lumos serve",
+    "prepublish": "gulp build"
   },
   "config": {
-    "port" : "9000"
-  },
-  "x-lumos": {
+    "defaultPort" : 9000,
     "mdSuffix": ".md",
     "indexFile": "index.md",
     "editor": "subl",
-    "editorArgs": ["--project", "/Users/jannes/Dropbox/Notes/notes.sublime-project"],
-    "diaryDir": "Tagebuch",
-    "monthNames": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    "editorArgs": ["--project", "/Users/jannes/Dropbox/Notes/notes.sublime-project"]
   },
   "dependencies": {
     "body-parser": "1.x",

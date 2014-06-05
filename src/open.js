@@ -5,7 +5,7 @@ import { spawn } from 'child_process'
 module denodeify from './denodeify';
 const fsStat = denodeify(fs, fs.stat);
 const fsMkdir = denodeify(fs, fs.mkdir);
-module cfg from '../config.json'
+import { config } from '../package.json'
 
 function isDefined(value) {
 	return value !== undefined;
@@ -32,7 +32,7 @@ function openFiles(files) {
 			console.log(`Opening '${file}'`);
 		}
 		// Open editor
-		spawn(cfg.editor, [...cfg.editorArgs, ...files], { stdio: 'inherit' });
+		spawn(config.editor, [...config.editorArgs, ...files], { stdio: 'inherit' });
 	});
 }
 
@@ -67,10 +67,12 @@ export function openDiary(days) {
 	}
 
 	// Convert to paths
-	let files = days.map(day => path.join(cfg.diaryBaseDir,
+	var diaryBaseDir = "/Users/jannes/Dropbox/Notes/Tagebuch";
+	var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+	var files = days.map(day => path.join(diaryBaseDir,
 		`${day.getFullYear()}`,
 		`${day.getMonth() + 1}`,
-		`${cfg.monthNames[day.getMonth()]} ${day.getDate()}${cfg.mdSuffix}`));
+		`${monthNames[day.getMonth()]} ${day.getDate()}${config.mdSuffix}`));
 
 	// Open the files in an editor
 	openFiles(files);
@@ -83,18 +85,18 @@ export function openEditor(file) {
 		argPromise = fsStat(file)
 		.then(stat => {
 			console.log('Opening...', file);
-			return [...cfg.editorArgs, file];
+			return [...config.editorArgs, file];
 		})
 		.catch(err => {
 			console.error('File not found');
 			throw err;
 		});
 	} else {
-		argPromise = Promise.resolve(cfg.editorArgs);
+		argPromise = Promise.resolve(config.editorArgs);
 	}
 
 	// Open editor
 	argPromise.then(args => {
-		spawn(cfg.editor, args, { stdio: 'inherit' });
+		spawn(config.editor, args, { stdio: 'inherit' });
 	});
 }

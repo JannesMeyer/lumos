@@ -3,10 +3,9 @@ module path from 'path'
 module fs from 'fs'
 module crypto from 'crypto'
 module denodeify from './denodeify'
-module cfg from '../config.json'
 let fsStat     = denodeify(fs, fs.stat);
 let fsReadDir  = denodeify(fs, fs.readdir);
-
+import { config } from '../package.json'
 import { SegmentedPath } from './SegmentedPath'
 
 /* accepts parameters
@@ -137,8 +136,8 @@ function itemSort(a, b) {
 function itemFilterFn(item) {
 	if (item.isHidden) { return false; }
 	if (!item.isDir) {
-		// if (item.fullName === cfg.indexFile) { return false; }
-		if (item.extension !== cfg.mdSuffix) { return false; }
+		// if (item.fullName === config.indexFile) { return false; }
+		if (item.extension !== config.mdSuffix) { return false; }
 	}
 	return true;
 }

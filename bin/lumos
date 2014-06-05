@@ -1,9 +1,10 @@
 #!/usr/bin/env node --harmony
 'use strict';
 
-var cfg = require('../config.json');
+var config = require('../package.json').config;
 var baseUrl = 'http://notes';
 
+console.log(process.env);
 // Understand command line arguments
 var commands = {
 	serve: function(args) {
@@ -11,7 +12,7 @@ var commands = {
 		var app = require('../dist/app');
 
 		// TODO: make the port a command line argument
-		var port = process.env.PORT || 9000;
+		var port = process.env.PORT || config.defaultPort;
 		app.listen(port, 'localhost', function() {
 			console.log('Listening on port', port);
 		});
@@ -42,10 +43,10 @@ var commands = {
 		}
 
 		// Strip "(index).md" from the end
-		if (pathname.endsWith(cfg.indexFile)) {
-			pathname = pathname.slice(0, -cfg.indexFile.length);
-		} else if (pathname.endsWith(cfg.mdSuffix)) {
-			pathname = pathname.slice(0, -cfg.mdSuffix.length);
+		if (pathname.endsWith(config.indexFile)) {
+			pathname = pathname.slice(0, -config.indexFile.length);
+		} else if (pathname.endsWith(config.mdSuffix)) {
+			pathname = pathname.slice(0, -config.mdSuffix.length);
 		}
 
 		// Open URL in browser

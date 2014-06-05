@@ -7,7 +7,7 @@ let fsStat     = denodeify(fs, fs.stat);
 let fsReadDir  = denodeify(fs, fs.readdir);
 let fsReadFile = denodeify(fs, fs.readFile);
 
-module cfg from '../config.json'
+import { config } from '../package.json'
 import { SegmentedPath } from './SegmentedPath'
 import { Directory } from './Directory'
 
@@ -49,9 +49,9 @@ module.exports = function(req, res, next) {
 				data.nextItem = dir.files[0];
 			}
 			// Include index file if available
-			if (dir.hasFile(cfg.indexFile)) {
-				dir.removeFile(cfg.indexFile);
-				let indexPath = dir.path.makeDescendant(cfg.indexFile);
+			if (dir.hasFile(config.indexFile)) {
+				dir.removeFile(config.indexFile);
+				let indexPath = dir.path.makeDescendant(config.indexFile);
 				return readFile(indexPath)
 				.then(file => {
 					data.filePath = indexPath.absolute;
@@ -66,7 +66,7 @@ module.exports = function(req, res, next) {
 	} else {
 		requestPath.makeFile();
 		let requestPathMd = requestPath.makeClone();
-		requestPathMd.leaf += cfg.mdSuffix;
+		requestPathMd.leaf += config.mdSuffix;
 		requestPathMd.makeFile();
 		data.breadcrumbs = requestPathMd.makeBreadcrumbs();
 
@@ -79,13 +79,13 @@ module.exports = function(req, res, next) {
 
 			let c = file.stat.birthtime;
 			// data.creationDate = `${padZero(c.getDate())}.${padZero(c.getMonth() + 1)}.${c.getFullYear()}`;
-			data.creationDate = `${cfg.monthNames[c.getMonth()]} ${c.getDate()}, ${c.getFullYear()}`;
+			data.creationDate = `${config.monthNames[c.getMonth()]} ${c.getDate()}, ${c.getFullYear()}`;
 			data.creationTime = `${padZero(c.getHours())}:${padZero(c.getMinutes())}`;
 
 			// Read directory
 			return readDir(requestPathMd.makeParent())
 			.then(dir => {
-				dir.removeFile(cfg.indexFile);
+				dir.removeFile(config.indexFile);
 				data.items = dir.files;
 				data.dirs = dir.dirs;
 
