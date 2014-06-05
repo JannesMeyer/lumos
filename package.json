@@ -1,40 +1,58 @@
 {
-  "name": "application-name",
-  "version": "0.0.1",
+  "name": "lumos",
+  "version": "1.0.0",
+  "engine": "node 0.11.13",
   "private": true,
+  "bin": "./bin/lumos",
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "./bin/lumos serve"
+  },
+  "config": {
+    "port" : "9000"
+  },
+  "x-lumos": {
+    "mdSuffix": ".md",
+    "indexFile": "index.md",
+    "editor": "subl",
+    "editorArgs": ["--project", "/Users/jannes/Dropbox/Notes/notes.sublime-project"],
+    "diaryDir": "Tagebuch",
+    "monthNames": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
   },
   "dependencies": {
-    "body-parser": "~1.0.0",
-    "cookie-parser": "~1.0.1",
-    "debug": "~0.7.4",
-    "ejs": "~0.8.5",
-    "ejs-locals": "^1.0.2",
-    "express": "~4.0.0",
-    "express-helpers": "^1.3.1",
-    "highlight.js": "^8.0.0",
-    "marked": "^0.3.2",
-    "minimist": "^0.1.0",
-    "morgan": "~1.0.0",
-    "static-favicon": "~1.0.0",
-    "stylus": "0.42.3",
-    "traceur": "0.0.39"
+    "body-parser": "1.x",
+    "cookie-parser": "1.x",
+    "debug": "0.x",
+    "ejs": "0.x",
+    "ejs-locals": "1.x",
+    "express": "4.x",
+    "express-helpers": "1.x",
+    "highlight.js": "8.x",
+    "marked": "0.x",
+    "minimist": "0.x",
+    "morgan": "1.x",
+    "static-favicon": "1.x",
+    "stylus": "0.x",
+    "traceur": "0.x"
   },
   "devDependencies": {
-    "commander": "^2.2.0",
-    "connect-livereload": "^0.4.0",
-    "gulp": "^3.6.2",
-    "gulp-autoprefixer": "0.0.7",
-    "gulp-changed": "^0.3.0",
-    "gulp-concat": "^2.2.0",
-    "gulp-livereload": "^1.3.1",
-    "gulp-minify-css": "^0.3.4",
-    "gulp-rename": "^1.2.0",
-    "gulp-stylus": "^1.0.0",
-    "gulp-traceur": "^0.4.0",
-    "gulp-uglify": "^0.3.0",
-    "gulp-util": "^2.2.14",
-    "tiny-lr-fork": "0.0.5"
-  }
+    "commander": "2.x",
+    "connect-livereload": "0.x",
+    "gulp": "3.x",
+    "gulp-autoprefixer": "0.x",
+    "gulp-changed": "0.x",
+    "gulp-concat": "2.x",
+    "gulp-livereload": "1.x",
+    "gulp-minify-css": "0.x",
+    "gulp-rename": "1.x",
+    "gulp-stylus": "1.x",
+    "gulp-traceur": "0.x",
+    "gulp-uglify": "0.x",
+    "gulp-util": "2.x",
+    "tiny-lr-fork": "0.x"
+  },
+  "engines": {
+    "node": "^0.11.13"
+  },
+  "os": [ "darwin" ],
+  "preferGlobal": true
 }

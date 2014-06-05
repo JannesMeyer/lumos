@@ -81,6 +81,7 @@ addEventListener('DOMContentLoaded', function() {
 		70: 'f',
 		74: 'j',
 		75: 'k',
+		82: 'r',
 		191: '/'
 	};
 	addEventListener('keydown', function(e) {
@@ -88,7 +89,7 @@ addEventListener('DOMContentLoaded', function() {
 		if (KEYMAP[e.keyCode]) {
 			char = KEYMAP[e.keyCode];
 		} else {
-			// console.log('Unrecognized key:', e.keyCode);
+			console.log('Unrecognized key:', e.keyCode);
 			return;
 		}
 
@@ -129,7 +130,15 @@ addEventListener('DOMContentLoaded', function() {
 		}
 		if (char === 'f' && modifiers === 0) {
 			toggleFullscreen(document.documentElement);
-			e.preventDefault();
+			return;
+		}
+		if (char === 'r' && modifiers === 0) {
+			location.href = '/';
+			return;
+		}
+		if (char === 'up' && meta && modifiers === 1) {
+			location.href = '..';
+			return;
 		}
 	});
 

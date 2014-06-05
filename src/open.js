@@ -76,13 +76,25 @@ export function openDiary(days) {
 	openFiles(files);
 }
 
-export function openExistingFile(file) {
-	fsStat(file)
-	.then(stat => {
-		// Open editor
-		spawn(cfg.editor, [...cfg.editorArgs, file], { stdio: 'inherit' });
-	})
-	.catch(err => {
-		console.error('File not found');
+export function openEditor(file) {
+	// A promise that returns the arguments for the editor
+	let argPromise;
+	if (file) {
+		argPromise = fsStat(file)
+		.then(stat => {
+			console.log('Opening...', file);
+			return [...cfg.editorArgs, file];
+		})
+		.catch(err => {
+			console.error('File not found');
+			throw err;
+		});
+	} else {
+		argPromise = Promise.resolve(cfg.editorArgs);
+	}
+
+	// Open editor
+	argPromise.then(args => {
+		spawn(cfg.editor, args, { stdio: 'inherit' });
 	});
 }

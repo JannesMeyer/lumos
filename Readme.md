@@ -20,7 +20,11 @@ The `make install` installs files to these locations:
 
 Make sure that you have the `lumos` command and that `/usr/local/bin` is in your PATH.
 
-	ln -s $(pwd)/bin/lumos /usr/local/bin/
+	ln -s $(pwd)/bin/lumos /usr/local/bin
+
+~/.zshrc
+
+	alias lm=lumos
 
 /etc/launchd.conf
 
@@ -51,10 +55,13 @@ Make sure that you have a `subl` command:
 		],
 		"settings":
 		{
-			"draw_indent_guides": false,
+			"draw_indent_guides": true,
 			"save_on_focus_lost": true,
 			"tab_completion": false,
-			"show_panel_on_build": false
+			"show_panel_on_build": false,
+			"translate_tabs_to_spaces": false,
+			"trim_trailing_white_space_on_save": false,
+			"gutter": false
 		}
 	}
 

@@ -12,14 +12,14 @@ var commands = {
 
 		// TODO: make the port a command line argument
 		var port = process.env.PORT || 9000;
-		app.listen(port, function() {
+		app.listen(port, 'localhost', function() {
 			console.log('Listening on port', port);
 		});
 	},
 
 	view: function(args) {
 		var argv = require('minimist')(args);
-		var childProcess = require('child_process');
+		var spawn = require('child_process').spawn;
 
 		if (argv._.length === 0) {
 			throw new Error('Not enough arguments');
@@ -53,26 +53,28 @@ var commands = {
 		console.log('Opening...', url);
 		// TODO: make this cross-platform, but without exec()
 		// https://www.npmjs.org/package/open
-		childProcess.spawn('open', [url], {stdio: 'inherit'});
+		spawn('open', [url], {stdio: 'inherit'});
 	},
 
 	edit: function(args) {
+		require('traceur');
+		var open = require('../dist/open');
 		var argv = require('minimist')(args);
+
 		if (argv._.length === 0) {
-			throw new Error('Not enough arguments');
-		}
-		var filePath = argv._[0];
-		if (argv['decode-url']) {
+			open.openEditor();
+		} else {
+			var filePath = argv._[0];
 			// escape() will not encode: @*/+
 			// (encodes Unicode characters to Unicode escape sequences, too)
 			// encodeURI() will not encode: ~!@#$&*()=:/,;?+'
 			// encodeURIComponent() will not encode: ~!*()'
-			filePath = decodeURI(filePath);
-		}
-		console.log(filePath);
+			if (argv['decode-url']) {
+				filePath = decodeURI(filePath);
+			}
 
-		require('traceur');
-		require('../dist/open').openExistingFile(filePath);
+			open.openEditor(filePath);
+		}
 	},
 
 	diary: function(days) {
