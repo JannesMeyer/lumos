@@ -1,0 +1,18 @@
+{
+	"src": {
+		"styles":        "./assets/stylus/*.styl",
+		"clientJS": "./src/client/index.js",
+		"serverJS": "./src/*.js",
+		"components":    "./components-jsx/*.jsx"
+	},
+	"dest": {
+		"styles":        "./public/stylesheets/",
+		"clientJS": "./public/javascripts/",
+		"serverJS": "./dist/",
+		"components":    "./components-js/"
+	},
+	"watch": {
+		"styles": "./assets/stylus/",
+		"public": "./public/"
+	}
+}
