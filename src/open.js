@@ -3,8 +3,8 @@ module path from 'path'
 import { spawn } from 'child_process'
 
 module denodeify from './denodeify';
-const fsStat = denodeify(fs, fs.stat);
-const fsMkdir = denodeify(fs, fs.mkdir);
+var fsStat = denodeify(fs, fs.stat);
+var fsMkdir = denodeify(fs, fs.mkdir);
 import { config } from '../package.json'
 
 function isDefined(value) {
@@ -43,7 +43,7 @@ function openFiles(files) {
  * It also doesn't check if the month and the day are within reasonable
  * bounds.
  */
-const dateRegex = /^(?:(?:([\d]{4})-)?(0?[1-9]|1[0-2])-)?(0?[1-9]|[12][0-9]|3[01])$/;
+var dateRegex = /^(?:(?:([\d]{4})-)?(0?[1-9]|1[0-2])-)?(0?[1-9]|[12][0-9]|3[01])$/;
 function parseIso8601Date(dateStr) {
 	var result = dateRegex.exec(dateStr);
 	if (result) {
@@ -80,7 +80,7 @@ export function openDiary(days) {
 
 export function openEditor(file) {
 	// A promise that returns the arguments for the editor
-	let argPromise;
+	var argPromise;
 	if (file) {
 		argPromise = fsStat(file)
 		.then(stat => {

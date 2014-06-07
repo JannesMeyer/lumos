@@ -97,15 +97,17 @@ gulp.task('build-js-server', function() {
 	// var changed = require('gulp-changed');
 
 	gulp.src(srcScriptsServer)
-		.pipe(traceur({ sourceMap: true, experimental: true }))
+		.pipe(traceur({ sourceMap: true }))
 		.pipe(gulp.dest(destScriptsServer));
 });
 
 gulp.task('build-jsx', function() {
 	var react = require('gulp-react');
+	var traceur = require('gulp-traceur');
 
 	gulp.src(srcComponents)
 		.pipe(react({ harmony: true }))
+		.pipe(traceur())
 		.pipe(gulp.dest(destComponents));
 });
 

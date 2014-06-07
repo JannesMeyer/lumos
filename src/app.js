@@ -5,7 +5,7 @@ module morgan from 'morgan'
 module serve from './serve'
 module api from './api'
 
-let app = express();
+var app = express();
 
 // view engine setup
 app.engine('ejs', ejsLocals);
@@ -16,11 +16,8 @@ app.set('view engine', 'ejs');
 app.use(morgan(':method :url :status (done after :response-time ms)'));
 
 // static routes
-const oneYear = 31557600000;
+var oneYear = 31557600000;
 app.use(express.static(path.join(__dirname, '../public'), { maxAge: oneYear }));
-
-// the api
-// app.use(api);
 
 // the app
 app.use(serve);

@@ -1,6 +1,6 @@
 import { spawn } from 'child_process'
 
-let mdfind_process;
+var mdfind_process;
 
 export function search() {
 	return 'test';

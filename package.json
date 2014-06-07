@@ -42,6 +42,7 @@
     "chokidar": "^0.8.2",
     "commander": "2.x",
     "connect-livereload": "0.x",
+    "es6ify": "^1.1.0",
     "gulp": "3.x",
     "gulp-autoprefixer": "0.x",
     "gulp-changed": "0.x",

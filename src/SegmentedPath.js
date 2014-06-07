@@ -55,14 +55,14 @@ export class SegmentedPath {
 		if (this.isDir) {
 
 		} else {
-			let segmentsJoined = path.join(...this.segments_);
+			var segmentsJoined = path.join(...this.segments_);
 			return new SegmentedPath(this.basePath, path.dirname(segmentsJoined));
 		}
 	}
 
 	makeDescendant(name) {
 		// Clone segments
-		let segments = this.segments_.slice();
+		var segments = this.segments_.slice();
 		// Add descendant
 		segments.push(name);
 		return new SegmentedPath(this.basePath, ...segments);
@@ -70,12 +70,12 @@ export class SegmentedPath {
 
 	makeClone() {
 		// Clone segments
-		let segments = this.segments_.slice();
+		var segments = this.segments_.slice();
 		return new SegmentedPath(this.basePath, ...segments);
 	}
 
 	makeBreadcrumbs() {
-		let breadcrumbs = [];
+		var breadcrumbs = [];
 		/*{
 			name
 			path
@@ -83,9 +83,9 @@ export class SegmentedPath {
 		}*/
 
 		// Split path and remove all empty segments
-		let pathSegments = this.relative.split('/').filter(s => s !== '');
+		var pathSegments = this.relative.split('/').filter(s => s !== '');
 		// Home item
-		let item = {
+		var item = {
 			name: this.baseDirName,
 			path: '/',
 			isActive: false
@@ -93,7 +93,7 @@ export class SegmentedPath {
 		breadcrumbs.push(item);
 		// The rest of the path
 		pathSegments.forEach((segment, i) => {
-			let isLast = (i === pathSegments.length - 1);
+			var isLast = (i === pathSegments.length - 1);
 
 			if (isLast && !this.isDir) {
 				return;
@@ -118,12 +118,12 @@ export class SegmentedPath {
 	}
 
 	get leaf() {
-		let segments = this.segments_;
+		var segments = this.segments_;
 		return segments[segments.length - 1];
 	}
 
 	set leaf(value) {
-		let segments = this.segments_;
+		var segments = this.segments_;
 		segments[segments.length - 1] = value;
 		this.update();
 	}

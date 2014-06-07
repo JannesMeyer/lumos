@@ -3,8 +3,8 @@ module path from 'path'
 module fs from 'fs'
 module crypto from 'crypto'
 module denodeify from './denodeify'
-let fsStat     = denodeify(fs, fs.stat);
-let fsReadDir  = denodeify(fs, fs.readdir);
+var fsStat     = denodeify(fs, fs.stat);
+var fsReadDir  = denodeify(fs, fs.readdir);
 import { config } from '../package.json'
 import { SegmentedPath } from './SegmentedPath'
 
@@ -57,12 +57,12 @@ export class Directory {
 	}
 
 	readContents() {
-		let contents;
+		var contents;
 		return fsReadDir(this.path.absolute)
 		.then(names => {
 			contents = names.map(name => new SegmentedPath(this.path.absolute, name));
 			// Find out whether these are directories or files
-			let promises = contents.map(item => fsStat(item.absolute));
+			var promises = contents.map(item => fsStat(item.absolute));
 			return Promise.all(promises);
 		})
 		.then(stats => {
@@ -84,8 +84,7 @@ export class Directory {
 			contents = contents.filter(itemFilterFn);
 
 			// split
-			let i;
-			for (i = 0; i < contents.length; ++i) {
+			for (var i = 0; i < contents.length; ++i) {
 				if (!contents[i].isDir) {
 					break;
 				}
@@ -98,7 +97,7 @@ export class Directory {
 	}
 
 	hasFile(name) {
-		for(let file of this.files) {
+		for(var file of this.files) {
 			if (file.fullName === name) {
 				return true;
 			}
@@ -107,8 +106,7 @@ export class Directory {
 	}
 
 	removeFile(name) {
-		let i;
-		for(i = 0; i < this.files.length; ++i) {
+		for(var i = 0; i < this.files.length; ++i) {
 			if (this.files[i].fullName === name) {
 				break;
 			}

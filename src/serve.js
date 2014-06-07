@@ -3,32 +3,32 @@ module marked from 'marked'
 module path from 'path'
 module fs from 'fs'
 module denodeify from './denodeify'
-let fsStat     = denodeify(fs, fs.stat);
-let fsReadDir  = denodeify(fs, fs.readdir);
-let fsReadFile = denodeify(fs, fs.readFile);
+var fsStat     = denodeify(fs, fs.stat);
+var fsReadDir  = denodeify(fs, fs.readdir);
+var fsReadFile = denodeify(fs, fs.readFile);
 
 import { config } from '../package.json'
 import { SegmentedPath } from './SegmentedPath'
 import { Directory } from './Directory'
 
-const baseDir = process.env.LUMOSPATH || process.cwd(); // Default to current working directory
-const baseDirName = path.basename(baseDir);
+var baseDir = process.env.LUMOSPATH || process.cwd(); // Default to current working directory
+var baseDirName = path.basename(baseDir);
 
 function padZero(number) {
-	let str = number.toString();
+	var str = number.toString();
 	return str.length < 2 ? '0' + str : str;
 }
 
 module.exports = function(req, res, next) {
-	let processedPath = decodeURIComponent(req.path);
-	let requestPath = new SegmentedPath(baseDir, processedPath);
+	var processedPath = decodeURIComponent(req.path);
+	var requestPath = new SegmentedPath(baseDir, processedPath);
 	if (!requestPath.verifyDescendance()) {
 	    next(mMakeError(400, 'Bad Request'));
 	    return;
 	}
 
 	// Prepare data to render
-	let data = {
+	var data = {
 		baseDirName: baseDirName
 		// title
 		// breadcrumbs
@@ -51,7 +51,7 @@ module.exports = function(req, res, next) {
 			// Include index file if available
 			if (dir.hasFile(config.indexFile)) {
 				dir.removeFile(config.indexFile);
-				let indexPath = dir.path.makeDescendant(config.indexFile);
+				var indexPath = dir.path.makeDescendant(config.indexFile);
 				return readFile(indexPath)
 				.then(file => {
 					data.filePath = indexPath.absolute;
@@ -65,7 +65,7 @@ module.exports = function(req, res, next) {
 		.catch(err => next(err));
 	} else {
 		requestPath.makeFile();
-		let requestPathMd = requestPath.makeClone();
+		var requestPathMd = requestPath.makeClone();
 		requestPathMd.leaf += config.mdSuffix;
 		requestPathMd.makeFile();
 		data.breadcrumbs = requestPathMd.makeBreadcrumbs();
@@ -77,7 +77,7 @@ module.exports = function(req, res, next) {
 			data.filePath = requestPathMd.absolute;
 			data.content = fileContentToHtml(file.content);
 
-			let c = file.stat.birthtime;
+			var c = file.stat.birthtime;
 			// data.creationDate = `${padZero(c.getDate())}.${padZero(c.getMonth() + 1)}.${c.getFullYear()}`;
 			data.creationDate = `${config.monthNames[c.getMonth()]} ${c.getDate()}, ${c.getFullYear()}`;
 			data.creationTime = `${padZero(c.getHours())}:${padZero(c.getMinutes())}`;
@@ -90,9 +90,9 @@ module.exports = function(req, res, next) {
 				data.dirs = dir.dirs;
 
 				// Find active file
-				let activeItem;
-				for (let i = 0; i < data.items.length; ++i) {
-					let item = data.items[i];
+				var activeItem;
+				for (var i = 0; i < data.items.length; ++i) {
+					var item = data.items[i];
 					// TODO: make this a normalized representation,
 					// so that there can be no mistake between
 					// folders and files
@@ -102,11 +102,11 @@ module.exports = function(req, res, next) {
 						item.link = path.dirname(item.link);
 					}
 				}
-				let prevItem = activeItem - 1;
+				var prevItem = activeItem - 1;
 				if (prevItem >= 0) {
 					data.prevItem = data.items[prevItem];
 				}
-				let nextItem = activeItem + 1;
+				var nextItem = activeItem + 1;
 				if (nextItem < data.items.length) {
 					data.nextItem = data.items[nextItem];
 				}
@@ -126,7 +126,7 @@ module.exports = function(req, res, next) {
 }
 
 function readDir(dirPath) {
-	let dir = new Directory(dirPath);
+	var dir = new Directory(dirPath);
 
 	return fsStat(dirPath.absolute)
 	.then(stat => {
@@ -153,14 +153,14 @@ function readFile(filePath) {
  * This function is used to convert the plain text to HTML
  * Read: https://github.com/chjj/marked/blob/master/README.md
  */
-const hljs = require('highlight.js');
+var hljs = require('highlight.js');
 marked.setOptions({
 		gfm: true,
 		breaks: true,
 		highlight: (code, lang) => lang ? hljs.highlight(lang, code).value : code
 	});
 function fileContentToHtml(content) {
-	let md = marked(content);
+	var md = marked(content);
 	// TODO: Fix html
 	md = md.replace(/(<table>)/g, '<div class="table-responsive"><table class="table table-hover"></div>');
 	// md = md.replace(/(<pre>)/g, '<pre class="hljs">');
@@ -171,7 +171,7 @@ function fileContentToHtml(content) {
  * Shorthand to create an Error object with a status code
  */
 function mHTTPError(status, message) {
-	let error = new Error(message);
+	var error = new Error(message);
 	error.status = status;
 	return error;
 }
