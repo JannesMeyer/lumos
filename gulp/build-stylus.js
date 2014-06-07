@@ -12,5 +12,9 @@ module.exports.fn = function() {
 		.pipe(gulp.dest(paths.dest.styles))
 		.pipe(rename({ suffix: '.min' }))
 		.pipe(minifycss())
-		.pipe(gulp.dest(paths.dest.styles));
+		.pipe(gulp.dest(paths.dest.styles))
+		.on('error', function() {
+			var args = Array.prototype.slice.call(arguments);
+			console.log('error: ', args);
+		});
 };

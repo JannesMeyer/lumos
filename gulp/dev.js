@@ -3,6 +3,8 @@ module.exports.fn = function() {
 	var gulp = require('gulp');
 	var paths = require('./paths.json');
 
+	// console.log(paths.watch.styles);
+
 	gulp.watch(paths.watch.styles, ['build-stylus']);
 	gulp.watch(paths.src.clientJS, ['build-js-client']);
 	gulp.watch(paths.src.serverJS, ['build-js-server', 'node']);

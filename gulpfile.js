@@ -13,7 +13,7 @@ var fs = require('fs');
 var path = require('path');
 var gulp = require('gulp');
 
-// Load tasks from files
+// Load tasks from files in `gulpDir`
 fs.readdirSync(path.join(__dirname, gulpDir))
 .filter(function(filename) {
     return path.extname(filename) === '.js';
