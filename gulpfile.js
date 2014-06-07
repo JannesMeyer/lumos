@@ -2,31 +2,23 @@
 
 var gulp = require('gulp');
 var gutil = require('gulp-util');
-var rename = require('gulp-rename');
-// var changed = require('gulp-changed');
-var stylus = require('gulp-stylus');
-var autoprefixer = require('gulp-autoprefixer');
-var minifycss = require('gulp-minify-css');
-var traceur = require('gulp-traceur');
-var concat = require('gulp-concat');
-var uglify = require('gulp-uglify');
-var livereload = require('gulp-livereload');
 var spawn = require('child_process').spawn;
 
-
 // Config: source files
-var srcStyles = './assets/stylus/*.styl';
-var srcStylesAll = './assets/stylus/**/*.styl';
-var srcScriptsClient = './assets/javascripts/*.js';
-var srcScriptsServer = './src/**/*.js';
+var srcStyles = 'assets/stylus/*.styl';
+var srcScriptsClient = './src/client/index.js';
+var srcScriptsServer = 'src/*.js';
+var srcComponents = 'components-jsx/*.jsx';
 
 // Config: destination files
-var destStyles = './public/stylesheets';
-var destScriptsClient = './public/javascripts';
-var destScriptsServer = './dist';
+var destStyles = 'public/stylesheets';
+var destScriptsClient = 'public/javascripts';
+var destScriptsServer = 'dist';
+var destComponents = 'components-js';
 
 // Config: watch files
-var watchPublic = './public/';
+var watchStyles = 'assets/stylus';
+var watchPublic = 'public';
 
 
 /********************************
@@ -62,45 +54,66 @@ var childs = {};
 gulp.task('default', function() {
 	gutil.log('Available tasks:');
 	for (var task in gulp.tasks) {
-		if (task === 'default') {
-			continue;
-		}
+		if (task === 'default') { continue; }
 		gutil.log('• ' + gutil.colors.cyan(task));
 	}
 });
 
-gulp.task('build', ['build-stylesheets', 'build-client-scripts', 'build-server-scripts']);
+gulp.task('build', ['build-stylus', 'build-js-client', 'build-js-server', 'build-jsx']);
 
-gulp.task('build-stylesheets', function() {
+gulp.task('build-stylus', function() {
+	var stylus = require('gulp-stylus');
+	var autoprefixer = require('gulp-autoprefixer');
+	var minifycss = require('gulp-minify-css');
+	var rename = require('gulp-rename');
+
 	gulp.src(srcStyles)
-	    .pipe(stylus({ errors: true }))
-	    .pipe(autoprefixer('last 2 versions'))
-	    .pipe(gulp.dest(destStyles))
-	    .pipe(rename({ suffix: '.min' }))
-	    .pipe(minifycss())
-	    .pipe(gulp.dest(destStyles));
+		.pipe(stylus({ errors: true }))
+		.pipe(autoprefixer('last 2 versions'))
+		.pipe(gulp.dest(destStyles))
+		.pipe(rename({ suffix: '.min' }))
+		.pipe(minifycss())
+		.pipe(gulp.dest(destStyles));
 });
 
-gulp.task('build-client-scripts', function() {
-	gulp.src(srcScriptsClient)
-		.pipe(concat('main.js'))
-	    // .pipe(traceur({ sourceMap: true, experimental: true }))
-	    .pipe(gulp.dest(destScriptsClient))
-	    .pipe(rename({ suffix: '.min' }))
-		.pipe(uglify())
-		.pipe(gulp.dest(destScriptsClient));
+gulp.task('build-js-client', function() {
+	var browserify = require('browserify');
+	var sourceStream = require('vinyl-source-stream');
+	var uglify = require('gulp-uglify');
+	var streamify = require('gulp-streamify');
+	var rename = require('gulp-rename');
+
+	browserify(srcScriptsClient)
+	    .bundle()
+	    .pipe(sourceStream('client.js'))
+	    .pipe(gulp.dest(destScriptsClient));
+	    // .pipe(rename({ suffix: '.min' }))
+	    // .pipe(streamify(uglify()))
+	    // .pipe(gulp.dest(destScriptsClient));
 });
 
-gulp.task('build-server-scripts', function() {
+gulp.task('build-js-server', function() {
+	var traceur = require('gulp-traceur');
+	// var changed = require('gulp-changed');
+
 	gulp.src(srcScriptsServer)
-	    .pipe(traceur({ sourceMap: true, experimental: true }))
-	    .pipe(gulp.dest(destScriptsServer));
+		.pipe(traceur({ sourceMap: true, experimental: true }))
+		.pipe(gulp.dest(destScriptsServer));
 });
 
-gulp.task('dev', ['build-stylesheets', 'build-client-scripts', 'build-server-scripts', 'node', 'livereload'], function() {
-	gulp.watch(srcStylesAll, ['build-stylesheets']);
-	gulp.watch(srcScriptsClient, ['build-client-scripts']);
-	gulp.watch(srcScriptsServer, ['build-server-scripts', 'node']);
+gulp.task('build-jsx', function() {
+	var react = require('gulp-react');
+
+	gulp.src(srcComponents)
+		.pipe(react({ harmony: true }))
+		.pipe(gulp.dest(destComponents));
+});
+
+gulp.task('dev', ['build', 'node'], function() {
+	gulp.watch(watchStyles, ['build-stylus']);
+	gulp.watch(srcScriptsClient, ['build-js-client']);
+	gulp.watch(srcScriptsServer, ['build-js-server', 'node']);
+	gulp.watch(srcComponents, ['build-jsx']);
 });
 
 // gulp.task('node-inspector', function() {
@@ -115,6 +128,8 @@ gulp.task('node', function() {
 process.on('exit', stopNode);
 
 gulp.task('livereload', function() {
+	var livereload = require('gulp-livereload');
+
 	childs.livereload = livereload();
 	gulp.watch(watchPublic).on('change', function(file) {
 		childs.livereload.changed(file.path);

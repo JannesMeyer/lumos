@@ -4,7 +4,6 @@
 var config = require('../package.json').config;
 var baseUrl = 'http://notes';
 
-console.log(process.env);
 // Understand command line arguments
 var commands = {
 	serve: function(args) {

@@ -4,8 +4,12 @@
 
 If you want your file lists to sort correctly you have to compile Node.js with libicu i18n support.
 
-- <https://github.com/joyent/node/issues/6371>
-- <https://github.com/joyent/node/issues/4689>
+	./configure --with-icu-path=deps/v8/third_party/icu46/icu.gyp
+	make
+	make install
+
+<https://github.com/joyent/node/issues/6371>
+<https://github.com/joyent/node/issues/4689>
 
 The `make install` installs files to these locations:
 
@@ -15,6 +19,8 @@ The `make install` installs files to these locations:
 	/usr/local/share/man/man1/node.1
 	/usr/local/include/node/*
 	/usr/local/lib/node_modules/*
+
+Keep the source directory, as you could need it later for node-gyp.
 
 # Installation of the lumos command 
 
@@ -128,6 +134,11 @@ Execute these commands:
 # Advice
 
 Make sure that you whitelist the domain that this server is running on in your AdBlock Plus (ABP) settings to improve page load speeds. ABP injects 20.000 CSS rules into every page that's loaded.
+
+When installing chokidar/fsevents:
+[Error: "pre" versions of node cannot be installed](https://github.com/TooTallNate/node-gyp/wiki/Error%3A-%22pre%22-versions-of-node-cannot-be-installed)
+
+	npm install chokidar --nodedir=~/node
 
 # Tools
 
