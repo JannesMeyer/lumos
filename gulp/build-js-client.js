@@ -1,5 +1,7 @@
+module.exports.dep = ['build-js-server'];
 module.exports.fn = function() {
 	var gulp = require('gulp');
+	var notify = require('gulp-notify');
 	var browserify = require('browserify');
 	var sourceStream = require('vinyl-source-stream');
 	// var uglify = require('gulp-uglify');
@@ -7,11 +9,12 @@ module.exports.fn = function() {
 	// var rename = require('gulp-rename');
 	var config = require('./gulpconfig.json');
 
-	browserify(config.src.clientJS)
-	    .bundle()
-	    .pipe(sourceStream('client.js'))
-	    .pipe(gulp.dest(config.dest.clientJS));
-	    // .pipe(rename({ suffix: '.min' }))
-	    // .pipe(streamify(uglify()))
-	    // .pipe(gulp.dest(config.dest.clientJS));
+	return browserify(config.src.clientJS)
+		.bundle()
+		.on('error', notify.onError(config.errorTemplate))
+		.pipe(sourceStream('client.js'))
+		.pipe(gulp.dest(config.dest.clientJS));
+		// .pipe(rename({ suffix: '.min' }))
+		// .pipe(streamify(uglify()))
+		// .pipe(gulp.dest(config.dest.clientJS));
 };

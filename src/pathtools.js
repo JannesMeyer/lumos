@@ -5,3 +5,4 @@ module.exports.name = function(filename) {
 	return path.basename(basename, path.extname(basename));
 };
 
+// asd

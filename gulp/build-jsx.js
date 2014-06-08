@@ -4,8 +4,8 @@ module.exports.fn = function() {
 	var traceur = require('gulp-traceur');
 	var config = require('./gulpconfig.json');
 
-	gulp.src(config.src.components)
+	return gulp.src(config.src.components)
 		.pipe(react({ harmony: true }))
-		.pipe(traceur())
+		// .pipe(traceur())
 		.pipe(gulp.dest(config.dest.components));
 };

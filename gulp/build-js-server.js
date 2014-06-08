@@ -5,7 +5,7 @@ module.exports.fn = function() {
 	// var changed = require('gulp-changed');
 	var config = require('./gulpconfig.json');
 
-	gulp.src(config.src.serverJS)
+	return gulp.src(config.src.serverJS)
 		.pipe(traceur({ sourceMap: true }))
 		.on('error', notify.onError(config.errorTemplate))
 		.pipe(gulp.dest(config.dest.serverJS));
