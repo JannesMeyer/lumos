@@ -4,7 +4,7 @@ module.exports.fn = function() {
 	var config = require('./gulpconfig.json');
 
 	gulp.watch(config.watch.styles, ['build-stylus']);
-	gulp.watch(config.src.clientJS, ['build-js-client']);
+	// gulp.watch(config.src.clientJS, ['build-js-client']);
 	gulp.watch(config.src.serverJS, ['node']);
 	gulp.watch(config.src.components, ['build-jsx']);
 };

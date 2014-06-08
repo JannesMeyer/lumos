@@ -14,11 +14,6 @@ import { Directory } from './Directory'
 var baseDir = process.env.LUMOSPATH || process.cwd(); // Default to current working directory
 var baseDirName = path.basename(baseDir);
 
-function padZero(number) {
-	var str = number.toString();
-	return str.length < 2 ? '0' + str : str;
-}
-
 module.exports = function(req, res, next) {
 	var processedPath = decodeURIComponent(req.path);
 	var requestPath = new SegmentedPath(baseDir, processedPath);
@@ -77,10 +72,10 @@ module.exports = function(req, res, next) {
 			data.filePath = requestPathMd.absolute;
 			data.content = fileContentToHtml(file.content);
 
-			// var c = file.stat.birthtime;
-			// data.creationDate = `${padZero(c.getDate())}.${padZero(c.getMonth() + 1)}.${c.getFullYear()}`;
-			// data.creationDate = `${config.monthNames[c.getMonth()]} ${c.getDate()}, ${c.getFullYear()}`;
-			// data.creationTime = `${padZero(c.getHours())}:${padZero(c.getMinutes())}`;
+			var datetool = require('./lib/date-tool');
+			var creationDate = datetool.dateInCustomFormat(file.stat.birthtime);
+			data.creationDate = datetool.dayAsString(creationDate);
+			data.creationTime = '';
 
 			// Read directory
 			return readDir(requestPathMd.makeParent())
@@ -114,13 +109,16 @@ module.exports = function(req, res, next) {
 			.then(() => res.render('document', data))
 			.catch(err => next(err));
 		}, err => {
+			// console.log('message:', err.message);
+			// console.log('stack:', err.stack);
 			console.error(err);
 			// Document not found, try to deliver the file at the original path
 			return denodeify(res, res.sendfile)(requestPath.absolute);
 		})
 		.catch(err => {
-			// throw err;
 			next(err);
+			// console.log(err.getOwnPropertyNames());
+
 			// console.error(err);
 			// next(mHTTPError(404, 'File Not Found'));
 		});
