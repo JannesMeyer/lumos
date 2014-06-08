@@ -52,8 +52,8 @@ document.addEventListener('MSFullscreenError', fullscreenErrorHandler);
 
 addEventListener('DOMContentLoaded', function() {
 
-	var fullscreenButton = getFirstOfClass('button-fullscreen');
-	var editButton = getFirstOfClass('edit-button');
+	// var fullscreenButton = getFirstOfClass('button-fullscreen');
+	// var editButton = getFirstOfClass('button-edit');
 	var searchBox = getFirstOfClass('m-search');
 
 	// fullscreenButton.addEventListener('click', function(e) {

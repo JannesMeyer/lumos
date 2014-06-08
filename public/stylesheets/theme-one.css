@@ -503,9 +503,6 @@ body {
   -webkit-transition: opacity 0.2s ease;
   transition: opacity 0.2s ease;
 }
-.m-page > .m-page-title > p > .date {
-  margin-right: 0.28em;
-}
 .m-page > .m-page-title:hover > p {
   opacity: 1;
 }
