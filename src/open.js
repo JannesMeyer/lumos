@@ -6,6 +6,7 @@ module denodeify from './denodeify';
 var fsStat = denodeify(fs, fs.stat);
 var fsMkdir = denodeify(fs, fs.mkdir);
 import { config } from '../package.json'
+import { dateInCustomFormat } from './lib/date-tool'
 
 function isDefined(value) {
 	return value !== undefined;
@@ -58,21 +59,19 @@ function parseIso8601Date(dateStr) {
 export function openDiary(days) {
 	// Collect Date objects
 	if (days.length === 0) {
-		days.push(new Date());
+		days.push(dateInCustomFormat(new Date()));
 	} else {
-		days = days.map(day => parseIso8601Date(day));
+		days = days.map(day => dateInCustomFormat(parseIso8601Date(day)));
 		if (!days.every(isDefined)) {
 			throw new Error("Couldn't parse all dates");
 		}
 	}
 
 	// Convert to paths
-	var diaryBaseDir = "/Users/jannes/Dropbox/Notes/Tagebuch";
-	var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-	var files = days.map(day => path.join(diaryBaseDir,
-		`${day.getFullYear()}`,
-		`${day.getMonth() + 1}`,
-		`${monthNames[day.getMonth()]} ${day.getDate()}${config.mdSuffix}`));
+	var files = days.map(day => {
+		var filename = day.monthName + ' ' + day.day + config.mdSuffix;
+		return path.join(config.diaryBaseDir, day.year.toString(), day.month.toString(), filename)
+	});
 
 	// Open the files in an editor
 	openFiles(files);

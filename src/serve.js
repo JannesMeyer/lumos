@@ -77,10 +77,10 @@ module.exports = function(req, res, next) {
 			data.filePath = requestPathMd.absolute;
 			data.content = fileContentToHtml(file.content);
 
-			var c = file.stat.birthtime;
+			// var c = file.stat.birthtime;
 			// data.creationDate = `${padZero(c.getDate())}.${padZero(c.getMonth() + 1)}.${c.getFullYear()}`;
-			data.creationDate = `${config.monthNames[c.getMonth()]} ${c.getDate()}, ${c.getFullYear()}`;
-			data.creationTime = `${padZero(c.getHours())}:${padZero(c.getMinutes())}`;
+			// data.creationDate = `${config.monthNames[c.getMonth()]} ${c.getDate()}, ${c.getFullYear()}`;
+			// data.creationTime = `${padZero(c.getHours())}:${padZero(c.getMinutes())}`;
 
 			// Read directory
 			return readDir(requestPathMd.makeParent())
