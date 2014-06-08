@@ -5,13 +5,13 @@ module.exports.fn = function() {
 	// var uglify = require('gulp-uglify');
 	// var streamify = require('gulp-streamify');
 	// var rename = require('gulp-rename');
-	var paths = require('./paths.json');
+	var config = require('./gulpconfig.json');
 
-	browserify(paths.src.clientJS)
+	browserify(config.src.clientJS)
 	    .bundle()
 	    .pipe(sourceStream('client.js'))
-	    .pipe(gulp.dest(paths.dest.clientJS));
+	    .pipe(gulp.dest(config.dest.clientJS));
 	    // .pipe(rename({ suffix: '.min' }))
 	    // .pipe(streamify(uglify()))
-	    // .pipe(gulp.dest(paths.dest.clientJS));
+	    // .pipe(gulp.dest(config.dest.clientJS));
 };

@@ -1,12 +1,10 @@
 module.exports.dep = ['build', 'node'];
 module.exports.fn = function() {
 	var gulp = require('gulp');
-	var paths = require('./paths.json');
+	var config = require('./gulpconfig.json');
 
-	// console.log(paths.watch.styles);
-
-	gulp.watch(paths.watch.styles, ['build-stylus']);
-	gulp.watch(paths.src.clientJS, ['build-js-client']);
-	gulp.watch(paths.src.serverJS, ['build-js-server', 'node']);
-	gulp.watch(paths.src.components, ['build-jsx']);
+	gulp.watch(config.watch.styles, ['build-stylus']);
+	gulp.watch(config.src.clientJS, ['build-js-client']);
+	gulp.watch(config.src.serverJS, ['build-js-server', 'node']);
+	gulp.watch(config.src.components, ['build-jsx']);
 };

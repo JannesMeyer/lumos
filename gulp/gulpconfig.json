@@ -14,5 +14,9 @@
 	"watch": {
 		"styles": "./assets/stylus/**",
 		"public": "./public/**"
+	},
+	"errorTemplate": {
+		"title": "<%= error.plugin %>",
+		"message": "<%= error.name %>\n<%= error.message %>"
 	}
 }
