@@ -1,15 +1,15 @@
 {
 	"src": {
-		"styles":     "./assets/stylus/*.styl",
-		"clientJS":   "./src/client/index.js",
-		"serverJS":   "./src/*.js",
-		"components": "./components-jsx/*.jsx"
+		"serverJS":   "./src/**/*.js",
+		"clientJS":   "./dist/client/index.js",
+		"components": "./components-jsx/**/*.jsx",
+		"styles":     "./assets/stylus/*.styl"
 	},
 	"dest": {
-		"styles":     "./public/stylesheets/",
-		"clientJS":   "./public/javascripts/",
 		"serverJS":   "./dist/",
-		"components": "./components-js/"
+		"clientJS":   "./public/javascripts/",
+		"components": "./components-js/",
+		"styles":     "./public/stylesheets/"
 	},
 	"watch": {
 		"styles": "./assets/stylus/**",

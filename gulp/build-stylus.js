@@ -1,6 +1,7 @@
 module.exports.fn = function() {
 	var gulp = require('gulp');
 	var stylus = require('gulp-stylus');
+	var plumber = require('gulp-plumber');
 	var notify = require('gulp-notify');
 	var autoprefixer = require('gulp-autoprefixer');
 	var minifycss = require('gulp-minify-css');
@@ -8,8 +9,8 @@ module.exports.fn = function() {
 	var config = require('./gulpconfig.json');
 
 	return gulp.src(config.src.styles)
+		.pipe(plumber({ errorHandler: notify.onError(config.errorTemplate) }))
 		.pipe(stylus())
-		.on('error', notify.onError(config.errorTemplate))
 		.pipe(autoprefixer('last 2 versions'))
 		.pipe(gulp.dest(config.dest.styles));
 		// .pipe(rename({ suffix: '.min' }))

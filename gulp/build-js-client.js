@@ -2,6 +2,7 @@ module.exports.dep = ['build-js-server'];
 module.exports.fn = function() {
 	var gulp = require('gulp');
 	var notify = require('gulp-notify');
+	var plumber = require('gulp-plumber');
 	var browserify = require('browserify');
 	var sourceStream = require('vinyl-source-stream');
 	// var uglify = require('gulp-uglify');
@@ -11,7 +12,7 @@ module.exports.fn = function() {
 
 	return browserify(config.src.clientJS)
 		.bundle()
-		.on('error', notify.onError(config.errorTemplate))
+		.pipe(plumber({ errorHandler: notify.onError(config.errorTemplate) }))
 		.pipe(sourceStream('client.js'))
 		.pipe(gulp.dest(config.dest.clientJS));
 		// .pipe(rename({ suffix: '.min' }))

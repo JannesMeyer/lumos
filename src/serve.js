@@ -119,8 +119,10 @@ module.exports = function(req, res, next) {
 			return denodeify(res, res.sendfile)(requestPath.absolute);
 		})
 		.catch(err => {
-			console.error(err);
-			next(mHTTPError(404, 'File Not Found'));
+			// throw err;
+			next(err);
+			// console.error(err);
+			// next(mHTTPError(404, 'File Not Found'));
 		});
 	}
 }
