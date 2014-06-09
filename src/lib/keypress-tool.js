@@ -1,3 +1,5 @@
+// https://github.com/madrobby/keymaster/blob/master/keymaster.js
+
 var KEYMAP = {
 	27: 'esc',
 	32: 'space',
@@ -15,8 +17,11 @@ var KEYMAP = {
 
 var mapping = {};
 
+export function bind(condition, fn) {
 
-window.addEventListener('keydown', function(e) {
+}
+
+export function handleKeyDown(e) {
 	var char;
 	if (KEYMAP[e.keyCode]) {
 		char = KEYMAP[e.keyCode];
@@ -25,51 +30,44 @@ window.addEventListener('keydown', function(e) {
 		return;
 	}
 
-	// Disable when an input element is focused
-	var element = e.target;
-	if (element.tagName === 'INPUT' ||
-		element.tagName === 'TEXTAREA' ||
-		element.tagName === 'SELECT' ||
-		element.isContentEditable) {
-		if (char === 'esc' && element.blur) {
-			element.blur();
-		}
-		return;
-	}
-
+	var target = e.target;
+	var input = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT' || target.isContentEditable;
 	var ctrl = e.ctrlKey;
 	var shift = e.shiftKey;
 	var alt = e.altKey;
 	var meta = e.metaKey;
 	var modifiers = ctrl + shift + alt + meta;
 
-	if (char === '/' && modifiers === 0) {
+	if (input && char === 'esc' && target.blur) {
+		target.blur();
+	}
+	if (!input && char === '/' && modifiers === 0) {
 		searchBox.focus();
 		e.preventDefault();
 		return;
 	}
-	if (char === 'j' && modifiers === 0 && nextUrl) {
+	if (!input && char === 'j' && modifiers === 0 && nextUrl) {
 		location.href = nextUrl;
 		return;
 	}
-	if (char === 'k' && modifiers === 0 && prevUrl) {
+	if (!input && char === 'k' && modifiers === 0 && prevUrl) {
 		location.href = prevUrl;
 		return;
 	}
-	if (char === 'e' && modifiers === 0) {
+	if (!input && char === 'e' && modifiers === 0) {
 		location.href= editButton.href;
 		return;
 	}
-	if (char === 'f' && modifiers === 0) {
+	if (!input && char === 'f' && modifiers === 0) {
 		toggleFullscreen(document.documentElement);
 		return;
 	}
-	if (char === 'r' && modifiers === 0) {
+	if (!input && char === 'r' && modifiers === 0) {
 		location.href = '/';
 		return;
 	}
-	if (char === 'up' && meta && modifiers === 1) {
+	if (!input && char === 'up' && meta && modifiers === 1) {
 		location.href = '..';
 		return;
 	}
-});
+}

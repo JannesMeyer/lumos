@@ -1,66 +1,25 @@
 /** @jsx React.DOM */
 
-/********************************
-   Helper functions
- ********************************/
-
-function getFirstOfClass(className) {
-	return document.getElementsByClassName(className)[0];
-}
-
-function toggleFullscreen(el) {
-	var fullscreenEnabled = document.fullscreenEnabled ||
-	    document.mozFullScreenEnabled ||
-	    document.webkitFullscreenEnabled ||
-	    document.msFullscreenEnabled;
-	if (!fullscreenEnabled) { return; }
-
-	var fullscreenElement = document.fullscreenElement ||
-	    document.mozFullScreenElement ||
-	    document.webkitFullscreenElement ||
-	    document.msFullscreenElement;
-	var exitFullscreen = document.exitFullscreen ||
-	    document.mozCancelFullScreen ||
-	    document.webkitExitFullscreen ||
-	    document.msExitFullscreen;
-	var requestFullscreen = el.requestFullscreen ||
-	    el.mozRequestFullScreen ||
-	    el.webkitRequestFullscreen ||
-	    el.msRequestFullscreen;
-
-	if (fullscreenElement === el) {
-		exitFullscreen.apply(document);
-	} else {
-		requestFullscreen.apply(el);
-	}
-}
-
-function fullscreenErrorHandler() {
-	alert('Fullscreen operation failed');
-}
-
-document.addEventListener('fullscreenerror', fullscreenErrorHandler);
-document.addEventListener('webkitfullscreenerror', fullscreenErrorHandler);
-document.addEventListener('mozfullscreenerror', fullscreenErrorHandler);
-document.addEventListener('MSFullscreenError', fullscreenErrorHandler);
+// var keypressTool = require('../dist/lib/keypress-tool');
+var keypressTool = {};
 
 /********************************
    React
  ********************************/
 
-function getPreviousAndNext() {
-	var prev, next, i, link;
-	var links = document.getElementsByTagName('link');
-	for (i = 0; i < links.length; ++i) {
-		link = links[i];
-		if (link.rel === 'prev') {
-			prev = link.href;
-		} else if (link.rel === 'next') {
-			next = link.href;
-		}
-	};
-	return { prev, next };
-}
+// function getPreviousAndNext() {
+// 	var prev, next, i, link;
+// 	var links = document.getElementsByTagName('link');
+// 	for (i = 0; i < links.length; ++i) {
+// 		link = links[i];
+// 		if (link.rel === 'prev') {
+// 			prev = link.href;
+// 		} else if (link.rel === 'next') {
+// 			next = link.href;
+// 		}
+// 	};
+// 	return { prev, next };
+// }
 
 var Header = React.createClass({
 	render() {
@@ -158,13 +117,22 @@ var PageButton = React.createClass({
 });
 
 var LumosApplication = React.createClass({
-	componentWillMount() {
-		getPreviousAndNext();
+	getInitialState() {
+		var colors = ['purple-mist', 'orange', 'blue', 'apple', 'cyan'];
+		var color = colors[Math.floor(Math.random() * colors.length)];
+		return { color };
+	},
+	componentDidMount() {
+		window.addEventListener('keydown', keypressTool.handleKeyDown);
+		// getPreviousAndNext();
+	},
+	componentWillUnmount() {
+	    window.removeEventListener('keydown', keypressTool.handleKeyDown);
 	},
 	render() {
 		var data = this.props.data;
 		return (
-			<div className={'m-container s-' + this.props.color}>
+			<div className={'m-container s-' + this.state.color}>
 				<Header breadcrumbs={data.breadcrumbs} dirs={data.dirs} />
 				<div>
 					<Page title={data.title} creationDate={data.creationDate} content={data.content} filePath={data.filePath} />
@@ -174,10 +142,4 @@ var LumosApplication = React.createClass({
 		);
 	}
 });
-
-//var color = 'purple-mist';
-//var color = 'orange';
-var color = 'blue';
-//var color = 'apple';
-//var color = 'cyan';
-React.renderComponent(<LumosApplication data={data} color={color}/>, document.body);
+React.renderComponent(<LumosApplication data={data} />, document.body);

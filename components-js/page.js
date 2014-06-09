@@ -1,48 +1,5 @@
 "use strict";
-function getFirstOfClass(className) {
-  return document.getElementsByClassName(className)[0];
-}
-function toggleFullscreen(el) {
-  var fullscreenEnabled = document.fullscreenEnabled || document.mozFullScreenEnabled || document.webkitFullscreenEnabled || document.msFullscreenEnabled;
-  if (!fullscreenEnabled) {
-    return;
-  }
-  var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
-  var exitFullscreen = document.exitFullscreen || document.mozCancelFullScreen || document.webkitExitFullscreen || document.msExitFullscreen;
-  var requestFullscreen = el.requestFullscreen || el.mozRequestFullScreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
-  if (fullscreenElement === el) {
-    exitFullscreen.apply(document);
-  } else {
-    requestFullscreen.apply(el);
-  }
-}
-function fullscreenErrorHandler() {
-  alert('Fullscreen operation failed');
-}
-document.addEventListener('fullscreenerror', fullscreenErrorHandler);
-document.addEventListener('webkitfullscreenerror', fullscreenErrorHandler);
-document.addEventListener('mozfullscreenerror', fullscreenErrorHandler);
-document.addEventListener('MSFullscreenError', fullscreenErrorHandler);
-function getPreviousAndNext() {
-  var prev,
-      next,
-      i,
-      link;
-  var links = document.getElementsByTagName('link');
-  for (i = 0; i < links.length; ++i) {
-    link = links[i];
-    if (link.rel === 'prev') {
-      prev = link.href;
-    } else if (link.rel === 'next') {
-      next = link.href;
-    }
-  }
-  ;
-  return {
-    prev: prev,
-    next: next
-  };
-}
+var keypressTool = {};
 var Header = React.createClass({
   displayName: 'Header',
   render: function() {
@@ -128,12 +85,20 @@ var PageButton = React.createClass({
 });
 var LumosApplication = React.createClass({
   displayName: 'LumosApplication',
-  componentWillMount: function() {
-    getPreviousAndNext();
+  getInitialState: function() {
+    var colors = ['purple-mist', 'orange', 'blue', 'apple', 'cyan'];
+    var color = colors[Math.floor(Math.random() * colors.length)];
+    return {color: color};
+  },
+  componentDidMount: function() {
+    window.addEventListener('keydown', keypressTool.handleKeyDown);
+  },
+  componentWillUnmount: function() {
+    window.removeEventListener('keydown', keypressTool.handleKeyDown);
   },
   render: function() {
     var data = this.props.data;
-    return (React.DOM.div({className: 'm-container s-' + this.props.color}, Header({
+    return (React.DOM.div({className: 'm-container s-' + this.state.color}, Header({
       breadcrumbs: data.breadcrumbs,
       dirs: data.dirs
     }), React.DOM.div(null, Page({
@@ -144,8 +109,4 @@ var LumosApplication = React.createClass({
     }), Navigation({items: data.items}))));
   }
 });
-var color = 'blue';
-React.renderComponent(LumosApplication({
-  data: data,
-  color: color
-}), document.body);
+React.renderComponent(LumosApplication({data: data}), document.body);
