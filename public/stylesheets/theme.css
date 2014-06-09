@@ -47,9 +47,6 @@ body {
   -ms-flex: 0 0 250px;
   flex: 0 0 250px;
 }
-.m-container > div > nav > ul > li.file > a {
-  padding-left: 32px;
-}
 article > h1:first-child,
 article > h2:first-child,
 article > h3:first-child,
@@ -98,7 +95,7 @@ article .callout > li {
 }
 .m-navigation > ul > li > a {
   display: block;
-  padding: 10px 15px;
+  padding: 10px 22px;
 }
 .m-navigation > ul > li > a:hover,
 .m-navigation > ul > li > a:focus {

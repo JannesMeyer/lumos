@@ -1,4 +1,28 @@
 "use strict";
+function getFirstOfClass(className) {
+  return document.getElementsByClassName(className)[0];
+}
+function toggleFullscreen(el) {
+  var fullscreenEnabled = document.fullscreenEnabled || document.mozFullScreenEnabled || document.webkitFullscreenEnabled || document.msFullscreenEnabled;
+  if (!fullscreenEnabled) {
+    return;
+  }
+  var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+  var exitFullscreen = document.exitFullscreen || document.mozCancelFullScreen || document.webkitExitFullscreen || document.msExitFullscreen;
+  var requestFullscreen = el.requestFullscreen || el.mozRequestFullScreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+  if (fullscreenElement === el) {
+    exitFullscreen.apply(document);
+  } else {
+    requestFullscreen.apply(el);
+  }
+}
+function fullscreenErrorHandler() {
+  alert('Fullscreen operation failed');
+}
+document.addEventListener('fullscreenerror', fullscreenErrorHandler);
+document.addEventListener('webkitfullscreenerror', fullscreenErrorHandler);
+document.addEventListener('mozfullscreenerror', fullscreenErrorHandler);
+document.addEventListener('MSFullscreenError', fullscreenErrorHandler);
 var data = {
   baseDirName: 'Notes',
   breadcrumbs: [{
@@ -110,16 +134,45 @@ var data = {
     link: 'Lumos'
   }
 };
+function getPreviousAndNext() {
+  var prev,
+      next,
+      i,
+      link;
+  var links = document.getElementsByTagName('link');
+  for (i = 0; i < links.length; ++i) {
+    link = links[i];
+    if (link.rel === 'prev') {
+      prev = link.href;
+    } else if (link.rel === 'next') {
+      next = link.href;
+    }
+  }
+  ;
+  return {
+    prev: prev,
+    next: next
+  };
+}
 var Header = React.createClass({
   displayName: 'Header',
   render: function() {
-    return (React.DOM.header({className: "m-header"}, BreadcrumbList(null), SearchBar(null)));
+    return (React.DOM.header({className: "m-header"}, BreadcrumbList({
+      breadcrumbs: this.props.breadcrumbs,
+      dirs: this.props.dirs
+    }), SearchBar(null)));
   }
 });
 var BreadcrumbList = React.createClass({
   displayName: 'BreadcrumbList',
   render: function() {
-    return (React.DOM.ol(null, React.DOM.li(null, React.DOM.a({href: "/"}, "Notes"))));
+    var breadcrumbs = this.props.breadcrumbs.map(function(item) {
+      return React.DOM.li({key: item.name}, React.DOM.a({href: item.link}, item.name));
+    });
+    var dirs = this.props.dirs.map(function(item) {
+      return React.DOM.li({key: item.relative}, React.DOM.a({href: item.link}, item.relative));
+    });
+    return (React.DOM.ol(null, breadcrumbs, React.DOM.li({className: "more"}, React.DOM.ol(null, dirs))));
   }
 });
 var SearchBar = React.createClass({
@@ -138,20 +191,25 @@ var SearchBar = React.createClass({
 var Navigation = React.createClass({
   displayName: 'Navigation',
   render: function() {
-    return (React.DOM.nav({className: "m-navigation"}, React.DOM.ul(null, React.DOM.li({className: "file"}, React.DOM.a({href: "Bookmarks"}, "Bookmarks")), React.DOM.li({className: "file"}, React.DOM.a({href: "Find%20launch%20items"}, "Find launch items")), React.DOM.li({className: "file"}, React.DOM.a({href: "Finds"}, "Finds")), React.DOM.li({className: "file active"}, React.DOM.a({href: "."}, "Google")), React.DOM.li({className: "file"}, React.DOM.a({href: "Lumos"}, "Lumos")), React.DOM.li({className: "file"}, React.DOM.a({href: "OSX%20TODO"}, "OSX TODO")), React.DOM.li({className: "file"}, React.DOM.a({href: "Snippets"}, "Snippets")), React.DOM.li({className: "file"}, React.DOM.a({href: "TabAttack"}, "TabAttack")), React.DOM.li({className: "file"}, React.DOM.a({href: "TV%20and%20Movies"}, "TV and Movies")))));
+    var items = this.props.items;
+    return (React.DOM.nav({className: "m-navigation"}, React.DOM.ul(null, items.map(function(item) {
+      return React.DOM.li({
+        className: item.isActive ? 'active' : '',
+        key: item.name
+      }, React.DOM.a({href: item.link}, item.name));
+    }))));
   }
 });
 var Page = React.createClass({
   displayName: 'Page',
   render: function() {
-    var editLink = 'lumos-connect://' + this.props.filePath;
     return (React.DOM.section({
       className: "m-page",
       role: "content"
     }, React.DOM.div({className: "m-page-buttons"}, PageButton({
       name: "edit",
       icon: "pencil",
-      href: editLink,
+      href: 'lumos-connect://' + this.props.filePath,
       title: "Edit page (E)"
     }), PageButton({
       name: "fullscreen",
@@ -164,8 +222,11 @@ var Page = React.createClass({
 var PageButton = React.createClass({
   displayName: 'PageButton',
   handleClick: function(e) {
-    alert(this.props.name);
-    e.preventDefault();
+    if (this.props.name === 'fullscreen') {
+      toggleFullscreen(document.documentElement);
+      e.currentTarget.blur();
+      e.preventDefault();
+    }
   },
   render: function() {
     return (React.DOM.a({
@@ -178,14 +239,20 @@ var PageButton = React.createClass({
 });
 var LumosApplication = React.createClass({
   displayName: 'LumosApplication',
+  componentWillMount: function() {
+    getPreviousAndNext();
+  },
   render: function() {
     var data = this.props.data;
-    return (React.DOM.div({className: 'm-container s-' + this.props.color}, Header(null), React.DOM.div(null, Page({
+    return (React.DOM.div({className: 'm-container s-' + this.props.color}, Header({
+      breadcrumbs: data.breadcrumbs,
+      dirs: data.dirs
+    }), React.DOM.div(null, Page({
       title: data.title,
       creationDate: data.creationDate,
       content: data.content,
       filePath: data.filePath
-    }), Navigation(null))));
+    }), Navigation({items: data.items}))));
   }
 });
 var color = 'blue';

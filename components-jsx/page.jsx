@@ -1,5 +1,53 @@
 /** @jsx React.DOM */
 
+/********************************
+   Helper functions
+ ********************************/
+
+function getFirstOfClass(className) {
+	return document.getElementsByClassName(className)[0];
+}
+
+function toggleFullscreen(el) {
+	var fullscreenEnabled = document.fullscreenEnabled ||
+	    document.mozFullScreenEnabled ||
+	    document.webkitFullscreenEnabled ||
+	    document.msFullscreenEnabled;
+	if (!fullscreenEnabled) { return; }
+
+	var fullscreenElement = document.fullscreenElement ||
+	    document.mozFullScreenElement ||
+	    document.webkitFullscreenElement ||
+	    document.msFullscreenElement;
+	var exitFullscreen = document.exitFullscreen ||
+	    document.mozCancelFullScreen ||
+	    document.webkitExitFullscreen ||
+	    document.msExitFullscreen;
+	var requestFullscreen = el.requestFullscreen ||
+	    el.mozRequestFullScreen ||
+	    el.webkitRequestFullscreen ||
+	    el.msRequestFullscreen;
+
+	if (fullscreenElement === el) {
+		exitFullscreen.apply(document);
+	} else {
+		requestFullscreen.apply(el);
+	}
+}
+
+function fullscreenErrorHandler() {
+	alert('Fullscreen operation failed');
+}
+
+document.addEventListener('fullscreenerror', fullscreenErrorHandler);
+document.addEventListener('webkitfullscreenerror', fullscreenErrorHandler);
+document.addEventListener('mozfullscreenerror', fullscreenErrorHandler);
+document.addEventListener('MSFullscreenError', fullscreenErrorHandler);
+
+/********************************
+   React
+ ********************************/
+
 var data = { baseDirName: 'Notes',
   breadcrumbs: [ { name: 'Notes', path: '/', isActive: false } ],
   title: 'Google',
@@ -87,11 +135,26 @@ var data = { baseDirName: 'Notes',
      relative: 'Lumos.md',
      link: 'Lumos' } };
 
+function getPreviousAndNext() {
+	var prev, next, i, link;
+	var links = document.getElementsByTagName('link');
+	for (i = 0; i < links.length; ++i) {
+		link = links[i];
+		if (link.rel === 'prev') {
+			prev = link.href;
+		} else if (link.rel === 'next') {
+			next = link.href;
+		}
+	};
+	return { prev, next };
+}
+
+
 var Header = React.createClass({
 	render() {
 		return (
 			<header className="m-header">
-				<BreadcrumbList />
+				<BreadcrumbList breadcrumbs={this.props.breadcrumbs} dirs={this.props.dirs} />
 				<SearchBar />
 			</header>
 		);
@@ -100,9 +163,16 @@ var Header = React.createClass({
 
 var BreadcrumbList = React.createClass({
 	render() {
+		var breadcrumbs = this.props.breadcrumbs.map(item =>
+			<li key={item.name}><a href={item.link}>{item.name}</a></li>
+		);
+		var dirs = this.props.dirs.map(item =>
+			<li key={item.relative}><a href={item.link}>{item.relative}</a></li>
+		);
 		return (
 			<ol>
-				<li><a href="/">Notes</a></li>
+				{breadcrumbs}
+				<li className="more"><ol>{dirs}</ol></li>
 			</ol>
 		);
 	}
@@ -112,8 +182,13 @@ var SearchBar = React.createClass({
 	render() {
 		return (
 			<form method="get">
-				<input className="m-search" type="text" name="q"
-				       autoComplete="off" spellCheck="false" dir="auto" />
+				<input
+					className="m-search"
+					type="text"
+					name="q"
+					autoComplete="off"
+					spellCheck="false"
+					dir="auto" />
 			</form>
 		);
 	}
@@ -121,19 +196,14 @@ var SearchBar = React.createClass({
 
 var Navigation = React.createClass({
 	render() {
+		var items = this.props.items;
 		return (
 			<nav className="m-navigation">
-				<ul>
-					<li className="file"><a href="Bookmarks">Bookmarks</a></li>
-					<li className="file"><a href="Find%20launch%20items">Find launch items</a></li>
-					<li className="file"><a href="Finds">Finds</a></li>
-					<li className="file active"><a href=".">Google</a></li>
-					<li className="file"><a href="Lumos">Lumos</a></li>
-					<li className="file"><a href="OSX%20TODO">OSX TODO</a></li>
-					<li className="file"><a href="Snippets">Snippets</a></li>
-					<li className="file"><a href="TabAttack">TabAttack</a></li>
-					<li className="file"><a href="TV%20and%20Movies">TV and Movies</a></li>
-				</ul>
+				<ul>{items.map(item =>
+					<li className={item.isActive ? 'active' : ''} key={item.name}>
+						<a href={item.link}>{item.name}</a>
+					</li>
+				)}</ul>
 			</nav>
 		);
 	}
@@ -141,11 +211,10 @@ var Navigation = React.createClass({
 
 var Page = React.createClass({
 	render() {
-		var editLink = 'lumos-connect://' + this.props.filePath;
 		return (
 			<section className="m-page" role="content">
 				<div className="m-page-buttons">
-					<PageButton name="edit" icon="pencil" href={editLink} title="Edit page (E)" />
+					<PageButton name="edit" icon="pencil" href={'lumos-connect://' + this.props.filePath} title="Edit page (E)" />
 					<PageButton name="fullscreen" icon="resize-full" href="" title="Toggle fullscreen (F)" />
 				</div>
 				<div className="m-page-title">
@@ -160,8 +229,12 @@ var Page = React.createClass({
 
 var PageButton = React.createClass({
 	handleClick(e) {
-		alert(this.props.name);
-		e.preventDefault();
+		if (this.props.name === 'fullscreen') {
+			// TODO: fullscreen state
+			toggleFullscreen(document.documentElement);
+			e.currentTarget.blur();
+			e.preventDefault();
+		}
 	},
 	render() {
 		return (
@@ -173,14 +246,17 @@ var PageButton = React.createClass({
 });
 
 var LumosApplication = React.createClass({
+	componentWillMount() {
+		getPreviousAndNext();
+	},
 	render() {
 		var data = this.props.data;
 		return (
 			<div className={'m-container s-' + this.props.color}>
-				<Header />
+				<Header breadcrumbs={data.breadcrumbs} dirs={data.dirs} />
 				<div>
 					<Page title={data.title} creationDate={data.creationDate} content={data.content} filePath={data.filePath} />
-					<Navigation />
+					<Navigation items={data.items} />
 				</div>
 			</div>
 		);
@@ -194,17 +270,16 @@ var color = 'blue';
 //var color = 'cyan';
 React.renderComponent(<LumosApplication data={data} color={color}/>, document.body);
 
-/*
-	<li class="more">
-		<ol>
-			<li><a href="Archive/">Archive</a></li>
-			<li><a href="Computer/">Computer</a></li>
-			<li><a href="GTD/">GTD</a></li>
-			<li><a href="Learning/">Learning</a></li>
-			<li><a href="Material/">Material</a></li>
-			<li><a href="Programming/">Programming</a></li>
-			<li><a href="Tagebuch/">Tagebuch</a></li>
-			<li><a href="Temporary/">Temporary</a></li>
-		</ol>
-	</li>
-*/
+
+// <li class="more">
+// 	<ol>
+// 		<li><a href="Archive/">Archive</a></li>
+// 		<li><a href="Computer/">Computer</a></li>
+// 		<li><a href="GTD/">GTD</a></li>
+// 		<li><a href="Learning/">Learning</a></li>
+// 		<li><a href="Material/">Material</a></li>
+// 		<li><a href="Programming/">Programming</a></li>
+// 		<li><a href="Tagebuch/">Tagebuch</a></li>
+// 		<li><a href="Temporary/">Temporary</a></li>
+// 	</ol>
+// </li>

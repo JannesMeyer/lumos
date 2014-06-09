@@ -28,8 +28,6 @@ document.addEventListener('webkitfullscreenerror', fullscreenErrorHandler);
 document.addEventListener('mozfullscreenerror', fullscreenErrorHandler);
 document.addEventListener('MSFullscreenError', fullscreenErrorHandler);
 addEventListener('DOMContentLoaded', function() {
-  var fullscreenButton = getFirstOfClass('button-fullscreen');
-  var editButton = getFirstOfClass('edit-button');
   var searchBox = getFirstOfClass('m-search');
   var prevUrl;
   var nextUrl;
