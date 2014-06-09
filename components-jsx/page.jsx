@@ -1,7 +1,6 @@
-/** @jsx React.DOM */
-
 // var keypressTool = require('../dist/lib/keypress-tool');
 var keypressTool = {};
+// var React = require('react');
 
 /********************************
    React
@@ -22,7 +21,7 @@ var keypressTool = {};
 // }
 
 var Header = React.createClass({
-	render() {
+	render: function() {
 		return (
 			<header className="m-header">
 				<BreadcrumbList breadcrumbs={this.props.breadcrumbs} dirs={this.props.dirs} />
@@ -33,7 +32,7 @@ var Header = React.createClass({
 });
 
 var BreadcrumbList = React.createClass({
-	render() {
+	render: function() {
 		var breadcrumbs = this.props.breadcrumbs.map(item =>
 			<li key={item.name}><a href={item.link}>{item.name}</a></li>
 		);
@@ -50,7 +49,7 @@ var BreadcrumbList = React.createClass({
 });
 
 var SearchBar = React.createClass({
-	render() {
+	render: function() {
 		return (
 			<form method="get">
 				<input
@@ -66,7 +65,7 @@ var SearchBar = React.createClass({
 });
 
 var Navigation = React.createClass({
-	render() {
+	render: function() {
 		var items = this.props.items;
 		return (
 			<nav className="m-navigation">
@@ -81,7 +80,7 @@ var Navigation = React.createClass({
 });
 
 var Page = React.createClass({
-	render() {
+	render: function() {
 		return (
 			<section className="m-page" role="content">
 				<div className="m-page-buttons">
@@ -99,7 +98,7 @@ var Page = React.createClass({
 });
 
 var PageButton = React.createClass({
-	handleClick(e) {
+	handleClick: function(e) {
 		if (this.props.name === 'fullscreen') {
 			// TODO: fullscreen as state
 			toggleFullscreen(document.documentElement);
@@ -107,7 +106,7 @@ var PageButton = React.createClass({
 			e.preventDefault();
 		}
 	},
-	render() {
+	render: function() {
 		return (
 			<a className={'button-' + this.props.name} href={this.props.href} title={this.props.title} onClick={this.handleClick}>
 				<span className={'glyphicon glyphicon-' + this.props.icon}></span>
@@ -117,19 +116,19 @@ var PageButton = React.createClass({
 });
 
 var LumosApplication = React.createClass({
-	getInitialState() {
+	getInitialState: function() {
 		var colors = ['purple-mist', 'orange', 'blue', 'apple', 'cyan'];
 		var color = colors[Math.floor(Math.random() * colors.length)];
 		return { color };
 	},
-	componentDidMount() {
+	componentDidMount: function() {
 		window.addEventListener('keydown', keypressTool.handleKeyDown);
 		// getPreviousAndNext();
 	},
-	componentWillUnmount() {
+	componentWillUnmount: function() {
 	    window.removeEventListener('keydown', keypressTool.handleKeyDown);
 	},
-	render() {
+	render: function() {
 		var data = this.props.data;
 		return (
 			<div className={'m-container s-' + this.state.color}>

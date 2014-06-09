@@ -1,4 +1,3 @@
-module.exports.dep = ['build-js-server'];
 module.exports.fn = function() {
 	var gulp = require('gulp');
 	var notify = require('gulp-notify');
@@ -8,7 +7,7 @@ module.exports.fn = function() {
 	// var uglify = require('gulp-uglify');
 	// var streamify = require('gulp-streamify');
 	// var rename = require('gulp-rename');
-	var config = require('./gulpconfig.json');
+	var config = require('./gulp.config.json');
 
 	return browserify(config.src.clientJS)
 		.bundle()

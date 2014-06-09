@@ -4,7 +4,7 @@ module.exports.fn = function() {
 	var traceur = require('gulp-traceur');
 	// var changed = require('gulp-changed');
 	var notify = require('gulp-notify');
-	var config = require('./gulpconfig.json');
+	var config = require('./gulp.config.json');
 
 	return gulp.src(config.src.serverJS)
 		.pipe(plumber({ errorHandler: notify.onError(config.errorTemplate) }))

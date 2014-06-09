@@ -6,7 +6,7 @@ module.exports.fn = function() {
 	var autoprefixer = require('gulp-autoprefixer');
 	var minifycss = require('gulp-minify-css');
 	var rename = require('gulp-rename');
-	var config = require('./gulpconfig.json');
+	var config = require('./gulp.config.json');
 
 	return gulp.src(config.src.styles)
 		.pipe(plumber({ errorHandler: notify.onError(config.errorTemplate) }))
