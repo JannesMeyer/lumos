@@ -48,93 +48,6 @@ document.addEventListener('MSFullscreenError', fullscreenErrorHandler);
    React
  ********************************/
 
-var data = { baseDirName: 'Notes',
-  breadcrumbs: [ { name: 'Notes', path: '/', isActive: false } ],
-  title: 'Google',
-  filePath: '/Users/jannes/Dropbox/Notes/Google.md',
-  content: '<h1 id="list-of-google-searches-to-carry-out">List of Google searches to carry out</h1>\n<ul>\n<li>Konkurrenz von Mobilinga<ul>\n<li>Repetico</li>\n<li><a href="http://www.phase-6.com/">Phase 6</a></li>\n<li><a href="http://babbel.com/">Babbel</a></li>\n</ul>\n</li>\n<li>OmniFocus 2</li>\n</ul>\n',
-  creationDate: '24.05.2014',
-  creationTime: '',
-  items:
-   [ { absolute: '/Users/jannes/Dropbox/Notes/Bookmarks.md',
-       relative: 'Bookmarks.md',
-       name: 'Bookmarks',
-       link: 'Bookmarks',
-       isActive: false },
-     { absolute: '/Users/jannes/Dropbox/Notes/Find launch items.md',
-       relative: 'Find launch items.md',
-       name: 'Find launch items',
-       link: 'Find%20launch%20items',
-       isActive: false },
-     { absolute: '/Users/jannes/Dropbox/Notes/Finds.md',
-       relative: 'Finds.md',
-       name: 'Finds',
-       link: 'Finds',
-       isActive: false },
-     { absolute: '/Users/jannes/Dropbox/Notes/Google.md',
-       relative: 'Google.md',
-       name: 'Google',
-       link: '.',
-       isActive: true },
-     { absolute: '/Users/jannes/Dropbox/Notes/Lumos.md',
-       relative: 'Lumos.md',
-       name: 'Lumos',
-       link: 'Lumos',
-       isActive: false },
-     { absolute: '/Users/jannes/Dropbox/Notes/OSX TODO.md',
-       relative: 'OSX TODO.md',
-       name: 'OSX TODO',
-       link: 'OSX%20TODO',
-       isActive: false },
-     { absolute: '/Users/jannes/Dropbox/Notes/Snippets.md',
-       relative: 'Snippets.md',
-       name: 'Snippets',
-       link: 'Snippets',
-       isActive: false },
-     { absolute: '/Users/jannes/Dropbox/Notes/TabAttack.md',
-       relative: 'TabAttack.md',
-       name: 'TabAttack',
-       link: 'TabAttack',
-       isActive: false },
-     { absolute: '/Users/jannes/Dropbox/Notes/TV and Movies.md',
-       relative: 'TV and Movies.md',
-       name: 'TV and Movies',
-       link: 'TV%20and%20Movies',
-       isActive: false } ],
-  dirs:
-   [ { absolute: '/Users/jannes/Dropbox/Notes/Archive',
-       relative: 'Archive',
-       link: 'Archive/' },
-     { absolute: '/Users/jannes/Dropbox/Notes/Computer',
-       relative: 'Computer',
-       link: 'Computer/' },
-     { absolute: '/Users/jannes/Dropbox/Notes/GTD',
-       relative: 'GTD',
-       link: 'GTD/' },
-     { absolute: '/Users/jannes/Dropbox/Notes/Learning',
-       relative: 'Learning',
-       link: 'Learning/' },
-     { absolute: '/Users/jannes/Dropbox/Notes/Material',
-       relative: 'Material',
-       link: 'Material/' },
-     { absolute: '/Users/jannes/Dropbox/Notes/Programming',
-       relative: 'Programming',
-       link: 'Programming/' },
-     { absolute: '/Users/jannes/Dropbox/Notes/Tagebuch',
-       relative: 'Tagebuch',
-       link: 'Tagebuch/' },
-     { absolute: '/Users/jannes/Dropbox/Notes/Temporary',
-       relative: 'Temporary',
-       link: 'Temporary/' } ],
-  prevItem:
-   { absolute: '/Users/jannes/Dropbox/Notes/Finds.md',
-     relative: 'Finds.md',
-     link: 'Finds' },
-  nextItem:
-   { absolute: '/Users/jannes/Dropbox/Notes/Lumos.md',
-     relative: 'Lumos.md',
-     link: 'Lumos' } };
-
 function getPreviousAndNext() {
 	var prev, next, i, link;
 	var links = document.getElementsByTagName('link');
@@ -148,7 +61,6 @@ function getPreviousAndNext() {
 	};
 	return { prev, next };
 }
-
 
 var Header = React.createClass({
 	render() {
@@ -230,7 +142,7 @@ var Page = React.createClass({
 var PageButton = React.createClass({
 	handleClick(e) {
 		if (this.props.name === 'fullscreen') {
-			// TODO: fullscreen state
+			// TODO: fullscreen as state
 			toggleFullscreen(document.documentElement);
 			e.currentTarget.blur();
 			e.preventDefault();
@@ -269,17 +181,3 @@ var color = 'blue';
 //var color = 'apple';
 //var color = 'cyan';
 React.renderComponent(<LumosApplication data={data} color={color}/>, document.body);
-
-
-// <li class="more">
-// 	<ol>
-// 		<li><a href="Archive/">Archive</a></li>
-// 		<li><a href="Computer/">Computer</a></li>
-// 		<li><a href="GTD/">GTD</a></li>
-// 		<li><a href="Learning/">Learning</a></li>
-// 		<li><a href="Material/">Material</a></li>
-// 		<li><a href="Programming/">Programming</a></li>
-// 		<li><a href="Tagebuch/">Tagebuch</a></li>
-// 		<li><a href="Temporary/">Temporary</a></li>
-// 	</ol>
-// </li>
