@@ -1,19 +1,4 @@
-// require('es6-shim');
 import keypressTool from 'lib/keypress-tool';
-
-// function getPreviousAndNext() {
-// 	var prev, next, i, link;
-// 	var links = document.getElementsByTagName('link');
-// 	for (i = 0; i < links.length; ++i) {
-// 		link = links[i];
-// 		if (link.rel === 'prev') {
-// 			prev = link.href;
-// 		} else if (link.rel === 'next') {
-// 			next = link.href;
-// 		}
-// 	};
-// 	return { prev, next };
-// }
 
 var Header = React.createClass({
 	render() {
@@ -111,17 +96,20 @@ var PageButton = React.createClass({
 });
 
 var LumosApplication = React.createClass({
-	getInitialState() {
+	pickRandomColor() {
 		var colors = ['purple-mist', 'orange', 'blue', 'apple', 'cyan'];
-		var color = colors[Math.floor(Math.random() * colors.length)];
-		return { color };
+		return colors[Math.floor(Math.random() * colors.length)];
+	},
+	getInitialState() {
+		return {
+			color: 'apple'
+		};
 	},
 	componentDidMount() {
 		window.addEventListener('keydown', keypressTool.handleKeyDown);
-		// getPreviousAndNext();
 	},
 	componentWillUnmount() {
-	    window.removeEventListener('keydown', keypressTool.handleKeyDown);
+		window.removeEventListener('keydown', keypressTool.handleKeyDown);
 	},
 	render() {
 		var data = this.props.data;

@@ -44,22 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/** @jsx React.DOM */// require('es6-shim');
-	var keypressTool = __webpack_require__(1);
-
-	// function getPreviousAndNext() {
-	// 	var prev, next, i, link;
-	// 	var links = document.getElementsByTagName('link');
-	// 	for (i = 0; i < links.length; ++i) {
-	// 		link = links[i];
-	// 		if (link.rel === 'prev') {
-	// 			prev = link.href;
-	// 		} else if (link.rel === 'next') {
-	// 			next = link.href;
-	// 		}
-	// 	};
-	// 	return { prev, next };
-	// }
+	/** @jsx React.DOM */var keypressTool = __webpack_require__(1);
 
 	var Header = React.createClass({displayName: 'Header',
 		render:function() {
@@ -157,17 +142,20 @@
 	});
 
 	var LumosApplication = React.createClass({displayName: 'LumosApplication',
-		getInitialState:function() {
+		pickRandomColor:function() {
 			var colors = ['purple-mist', 'orange', 'blue', 'apple', 'cyan'];
-			var color = colors[Math.floor(Math.random() * colors.length)];
-			return { color:color };
+			return colors[Math.floor(Math.random() * colors.length)];
+		},
+		getInitialState:function() {
+			return {
+				color: 'apple'
+			};
 		},
 		componentDidMount:function() {
 			window.addEventListener('keydown', keypressTool.handleKeyDown);
-			// getPreviousAndNext();
 		},
 		componentWillUnmount:function() {
-		    window.removeEventListener('keydown', keypressTool.handleKeyDown);
+			window.removeEventListener('keydown', keypressTool.handleKeyDown);
 		},
 		render:function() {
 			var data = this.props.data;
