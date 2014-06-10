@@ -44,13 +44,8 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/** @jsx React.DOM */// var keypressTool = require('../dist/lib/keypress-tool');
-	var keypressTool = {};
-	// var React = require('react');
-
-	/********************************
-	   React
-	 ********************************/
+	/** @jsx React.DOM */// require('es6-shim');
+	var keypressTool = __webpack_require__(1);
 
 	// function getPreviousAndNext() {
 	// 	var prev, next, i, link;
@@ -67,7 +62,7 @@
 	// }
 
 	var Header = React.createClass({displayName: 'Header',
-		render: function() {
+		render:function() {
 			return (
 				React.DOM.header( {className:"m-header"}, 
 					BreadcrumbList( {breadcrumbs:this.props.breadcrumbs, dirs:this.props.dirs} ),
@@ -78,7 +73,7 @@
 	});
 
 	var BreadcrumbList = React.createClass({displayName: 'BreadcrumbList',
-		render: function() {
+		render:function() {
 			var breadcrumbs = this.props.breadcrumbs.map(function(item) 
 				{return React.DOM.li( {key:item.name}, React.DOM.a( {href:item.link}, item.name));}
 			);
@@ -95,7 +90,7 @@
 	});
 
 	var SearchBar = React.createClass({displayName: 'SearchBar',
-		render: function() {
+		render:function() {
 			return (
 				React.DOM.form( {method:"get"}, 
 					React.DOM.input(
@@ -111,7 +106,7 @@
 	});
 
 	var Navigation = React.createClass({displayName: 'Navigation',
-		render: function() {
+		render:function() {
 			var items = this.props.items;
 			return (
 				React.DOM.nav( {className:"m-navigation"}, 
@@ -126,7 +121,7 @@
 	});
 
 	var Page = React.createClass({displayName: 'Page',
-		render: function() {
+		render:function() {
 			return (
 				React.DOM.section( {className:"m-page", role:"content"}, 
 					React.DOM.div( {className:"m-page-buttons"}, 
@@ -144,7 +139,7 @@
 	});
 
 	var PageButton = React.createClass({displayName: 'PageButton',
-		handleClick: function(e) {
+		handleClick:function(e) {
 			if (this.props.name === 'fullscreen') {
 				// TODO: fullscreen as state
 				toggleFullscreen(document.documentElement);
@@ -152,7 +147,7 @@
 				e.preventDefault();
 			}
 		},
-		render: function() {
+		render:function() {
 			return (
 				React.DOM.a( {className:'button-' + this.props.name, href:this.props.href, title:this.props.title, onClick:this.handleClick}, 
 					React.DOM.span( {className:'glyphicon glyphicon-' + this.props.icon})
@@ -162,19 +157,19 @@
 	});
 
 	var LumosApplication = React.createClass({displayName: 'LumosApplication',
-		getInitialState: function() {
+		getInitialState:function() {
 			var colors = ['purple-mist', 'orange', 'blue', 'apple', 'cyan'];
 			var color = colors[Math.floor(Math.random() * colors.length)];
 			return { color:color };
 		},
-		componentDidMount: function() {
+		componentDidMount:function() {
 			window.addEventListener('keydown', keypressTool.handleKeyDown);
 			// getPreviousAndNext();
 		},
-		componentWillUnmount: function() {
+		componentWillUnmount:function() {
 		    window.removeEventListener('keydown', keypressTool.handleKeyDown);
 		},
-		render: function() {
+		render:function() {
 			var data = this.props.data;
 			return (
 				React.DOM.div( {className:'m-container s-' + this.state.color}, 
@@ -188,6 +183,84 @@
 		}
 	});
 	React.renderComponent(LumosApplication( {data:data} ), document.body);
+
+
+/***/ },
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// https://github.com/madrobby/keymaster/blob/master/keymaster.js
+
+	var KEYMAP = {
+		27: 'esc',
+		32: 'space',
+		37: 'left',
+		38: 'up',
+		39: 'right',
+		40: 'down',
+		69: 'e',
+		70: 'f',
+		74: 'j',
+		75: 'k',
+		82: 'r',
+		191: '/'
+	};
+
+	function bind(condition, fn) {
+
+	} module.exports.bind = bind;
+
+	function handleKeyDown(e) {
+		var char;
+		if (KEYMAP[e.keyCode]) {
+			char = KEYMAP[e.keyCode];
+		} else {
+			// console.log('Unrecognized key:', e.keyCode);
+			return;
+		}
+
+		var target = e.target;
+		var input = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT' || target.isContentEditable;
+		var ctrl = e.ctrlKey;
+		var shift = e.shiftKey;
+		var alt = e.altKey;
+		var meta = e.metaKey;
+		var modifiers = ctrl + shift + alt + meta;
+
+		if (input && char === 'esc' && target.blur) {
+			target.blur();
+		}
+		if (!input && char === '/' && modifiers === 0) {
+			searchBox.focus();
+			e.preventDefault();
+			return;
+		}
+		if (!input && char === 'j' && modifiers === 0 && nextUrl) {
+			location.href = nextUrl;
+			return;
+		}
+		if (!input && char === 'k' && modifiers === 0 && prevUrl) {
+			location.href = prevUrl;
+			return;
+		}
+		if (!input && char === 'e' && modifiers === 0) {
+			location.href= editButton.href;
+			return;
+		}
+		if (!input && char === 'f' && modifiers === 0) {
+			toggleFullscreen(document.documentElement);
+			return;
+		}
+		if (!input && char === 'r' && modifiers === 0) {
+			location.href = '/';
+			return;
+		}
+		if (!input && char === 'up' && meta && modifiers === 1) {
+			location.href = '..';
+			return;
+		}
+	} module.exports.handleKeyDown = handleKeyDown;
+
 
 /***/ }
 /******/ ])

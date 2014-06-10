@@ -11,11 +11,12 @@ var webpackConfig = {
 	},
 	module: {
         loaders: [
-			{ test: /\.jsx$/, loader: "jsx-loader?harmony&insertPragma=React.DOM" }
+			{ test: /\.jsx$/, loader: "jsx-loader?harmony&insertPragma=React.DOM" },
+			{ test: /\.js$/, loader: "jsx-loader?harmony" }
         ]
 	},
 	resolve: {
-	    extensions: ['', '.js', '.jsx'],
+	    extensions: ['', '.js'],
 	    modulesDirectories: ['src', 'node_modules']
 	}
 };
@@ -25,8 +26,7 @@ module.exports.fn = function(callback) {
         if(err) {
         	throw new gutil.PluginError('webpack', err);
         }
-        console.log(stats.toString());
-        // gutil.log("[webpack]", stats.toString());
+        console.log(stats.toString({ colors: true }));
         callback();
     });
 }

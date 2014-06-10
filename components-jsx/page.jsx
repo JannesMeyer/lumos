@@ -1,10 +1,5 @@
-// var keypressTool = require('../dist/lib/keypress-tool');
-var keypressTool = {};
-// var React = require('react');
-
-/********************************
-   React
- ********************************/
+// require('es6-shim');
+import keypressTool from 'lib/keypress-tool';
 
 // function getPreviousAndNext() {
 // 	var prev, next, i, link;
@@ -21,7 +16,7 @@ var keypressTool = {};
 // }
 
 var Header = React.createClass({
-	render: function() {
+	render() {
 		return (
 			<header className="m-header">
 				<BreadcrumbList breadcrumbs={this.props.breadcrumbs} dirs={this.props.dirs} />
@@ -32,7 +27,7 @@ var Header = React.createClass({
 });
 
 var BreadcrumbList = React.createClass({
-	render: function() {
+	render() {
 		var breadcrumbs = this.props.breadcrumbs.map(item =>
 			<li key={item.name}><a href={item.link}>{item.name}</a></li>
 		);
@@ -49,7 +44,7 @@ var BreadcrumbList = React.createClass({
 });
 
 var SearchBar = React.createClass({
-	render: function() {
+	render() {
 		return (
 			<form method="get">
 				<input
@@ -65,7 +60,7 @@ var SearchBar = React.createClass({
 });
 
 var Navigation = React.createClass({
-	render: function() {
+	render() {
 		var items = this.props.items;
 		return (
 			<nav className="m-navigation">
@@ -80,7 +75,7 @@ var Navigation = React.createClass({
 });
 
 var Page = React.createClass({
-	render: function() {
+	render() {
 		return (
 			<section className="m-page" role="content">
 				<div className="m-page-buttons">
@@ -98,7 +93,7 @@ var Page = React.createClass({
 });
 
 var PageButton = React.createClass({
-	handleClick: function(e) {
+	handleClick(e) {
 		if (this.props.name === 'fullscreen') {
 			// TODO: fullscreen as state
 			toggleFullscreen(document.documentElement);
@@ -106,7 +101,7 @@ var PageButton = React.createClass({
 			e.preventDefault();
 		}
 	},
-	render: function() {
+	render() {
 		return (
 			<a className={'button-' + this.props.name} href={this.props.href} title={this.props.title} onClick={this.handleClick}>
 				<span className={'glyphicon glyphicon-' + this.props.icon}></span>
@@ -116,19 +111,19 @@ var PageButton = React.createClass({
 });
 
 var LumosApplication = React.createClass({
-	getInitialState: function() {
+	getInitialState() {
 		var colors = ['purple-mist', 'orange', 'blue', 'apple', 'cyan'];
 		var color = colors[Math.floor(Math.random() * colors.length)];
 		return { color };
 	},
-	componentDidMount: function() {
+	componentDidMount() {
 		window.addEventListener('keydown', keypressTool.handleKeyDown);
 		// getPreviousAndNext();
 	},
-	componentWillUnmount: function() {
+	componentWillUnmount() {
 	    window.removeEventListener('keydown', keypressTool.handleKeyDown);
 	},
-	render: function() {
+	render() {
 		var data = this.props.data;
 		return (
 			<div className={'m-container s-' + this.state.color}>

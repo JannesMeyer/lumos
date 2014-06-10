@@ -15,8 +15,6 @@ var KEYMAP = {
 	191: '/'
 };
 
-var mapping = {};
-
 export function bind(condition, fn) {
 
 }

@@ -23,50 +23,31 @@
   "dependencies": {
     "body-parser": "1.x",
     "cookie-parser": "1.x",
-    "debug": "0.x",
     "ejs": "0.x",
     "ejs-locals": "1.x",
-    "envify": "^1.2.1",
     "express": "4.x",
-    "express-helpers": "1.x",
     "highlight.js": "8.x",
     "marked": "0.x",
     "minimist": "0.x",
     "morgan": "1.x",
-    "react": "^0.10.0",
-    "static-favicon": "1.x",
-    "stylus": "0.x",
-    "traceur": "0.x"
+    "traceur": "0.0.43"
   },
   "devDependencies": {
-    "browserify": "^4.1.8",
-    "chokidar": "^0.8.2",
-    "commander": "2.x",
-    "connect-livereload": "0.x",
-    "es6ify": "^1.1.0",
+    "es6-shim": "0.x",
     "gulp": "3.x",
     "gulp-autoprefixer": "0.x",
     "gulp-changed": "0.x",
-    "gulp-concat": "2.x",
     "gulp-livereload": "1.x",
     "gulp-minify-css": "0.x",
-    "gulp-notify": "^1.3.1",
-    "gulp-plumber": "^0.6.2",
-    "gulp-react": "^0.3.3",
+    "gulp-notify": "1.x",
+    "gulp-plumber": "0.x",
     "gulp-rename": "1.x",
-    "gulp-streamify": "0.0.5",
     "gulp-stylus": "1.x",
     "gulp-traceur": "0.x",
-    "gulp-uglify": "0.x",
     "gulp-util": "2.x",
-    "jquery": "^2.1.1",
-    "jsx-loader": "^0.10.2",
-    "tiny-lr-fork": "0.x",
-    "vinyl-source-stream": "^0.1.1",
-    "webpack": "^1.3.0-beta5"
-  },
-  "engines": {
-    "node": "^0.11.13"
+    "jsx-loader": "0.10.2",
+    "vinyl-source-stream": "0.x",
+    "webpack": "1.x"
   },
   "os": [
     "darwin"
