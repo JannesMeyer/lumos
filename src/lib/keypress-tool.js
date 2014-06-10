@@ -1,71 +1,80 @@
 // https://github.com/madrobby/keymaster/blob/master/keymaster.js
 
-var KEYMAP = {
-	27: 'esc',
-	32: 'space',
-	37: 'left',
-	38: 'up',
-	39: 'right',
-	40: 'down',
-	69: 'e',
-	70: 'f',
-	74: 'j',
-	75: 'k',
-	82: 'r',
-	191: '/'
+var keyCodeMap = {
+	'esc': 27,
+	'space': 32,
+	'left': 37,
+	'up': 38,
+	'right': 39,
+	'down': 40,
+	'e': 69,
+	'f': 70,
+	'j': 74,
+	'k': 75,
+	'r': 82,
+	'/': 191
 };
+var bindings = {};
 
-export function bind(condition, fn) {
+export function bind(conditions, char, fn) {
+	if (fn === undefined) {
+		throw new Error('missing callback function');
+	}
+	if (char === undefined) {
+		throw new Error('missing char condition');
+	}
+	if (conditions === undefined) {
+		conditions = {};
+	}
+	conditions.inputEl = !!conditions.inputEl;
+	conditions.ctrl = !!conditions.ctrl;
+	conditions.shift = !!conditions.shift;
+	conditions.alt = !!conditions.alt;
+	conditions.meta = !!conditions.meta;
 
+	// Parse char parameter
+	var keyCode = keyCodeMap[char];
+	if (keyCode === undefined && typeof char === 'number') {
+		keyCode = char;
+	}
+	if (keyCode === undefined) {
+		throw new Error('unknown char condition')
+	}
+
+	// Re-use the conditions object for the binding
+	conditions.fn = fn;
+
+	// Do the binding
+	if (bindings[keyCode] === undefined) {
+		bindings[keyCode] = [conditions];
+	} else {
+		bindings[keyCode].push(conditions);
+	}
 }
 
-export function handleKeyDown(e) {
-	var char;
-	if (KEYMAP[e.keyCode]) {
-		char = KEYMAP[e.keyCode];
-	} else {
+export function handleDown(e) {
+	var bucket = bindings[e.keyCode];
+	if (bucket === undefined) {
 		// console.log('Unrecognized key:', e.keyCode);
 		return;
 	}
 
 	var target = e.target;
-	var input = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT' || target.isContentEditable;
-	var ctrl = e.ctrlKey;
-	var shift = e.shiftKey;
-	var alt = e.altKey;
-	var meta = e.metaKey;
-	var modifiers = ctrl + shift + alt + meta;
+	var inputEl = target.tagName === 'INPUT' ||
+		target.tagName === 'TEXTAREA' ||
+		target.tagName === 'SELECT' ||
+		target.isContentEditable;
 
-	if (input && char === 'esc' && target.blur) {
-		target.blur();
-	}
-	if (!input && char === '/' && modifiers === 0) {
-		searchBox.focus();
-		e.preventDefault();
-		return;
-	}
-	if (!input && char === 'j' && modifiers === 0 && nextUrl) {
-		location.href = nextUrl;
-		return;
-	}
-	if (!input && char === 'k' && modifiers === 0 && prevUrl) {
-		location.href = prevUrl;
-		return;
-	}
-	if (!input && char === 'e' && modifiers === 0) {
-		location.href= editButton.href;
-		return;
-	}
-	if (!input && char === 'f' && modifiers === 0) {
-		toggleFullscreen(document.documentElement);
-		return;
-	}
-	if (!input && char === 'r' && modifiers === 0) {
-		location.href = '/';
-		return;
-	}
-	if (!input && char === 'up' && meta && modifiers === 1) {
-		location.href = '..';
-		return;
+	for (var i = 0; i < bucket.length; ++i) {
+		var binding = bucket[i];
+		if (binding.inputEl === inputEl &&
+			binding.ctrl === e.ctrlKey &&
+			binding.shift === e.shiftKey &&
+			binding.alt === e.altKey &&
+			binding.meta === e.metaKey) {
+			// Match found
+			binding.fn(e);
+			break;
+		}
 	}
 }

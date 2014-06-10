@@ -1,4 +1,9 @@
-import keypressTool from 'lib/keypress-tool';
+import key from 'lib/keypress-tool';
+import fullscreen from 'lib/fullscreen-tool';
+
+// initialize
+addEventListener('keydown', key.handleDown);
+fullscreen.initializeErrorHandler();
 
 var Header = React.createClass({
 	render() {
@@ -102,14 +107,41 @@ var LumosApplication = React.createClass({
 	},
 	getInitialState() {
 		return {
-			color: 'apple'
+			color: this.pickRandomColor()
 		};
 	},
-	componentDidMount() {
-		window.addEventListener('keydown', keypressTool.handleKeyDown);
-	},
-	componentWillUnmount() {
-		window.removeEventListener('keydown', keypressTool.handleKeyDown);
+	componentWillMount() {
+		key.bind(undefined, '/', function(e) {
+			console.log('searchBox.focus()');
+			e.preventDefault();
+		});
+		key.bind(undefined, 'e', function(e) {
+			console.log('location.href = editButton.href;');
+		});
+		key.bind(undefined, 'f', function(e) {
+			fullscreen.toggle(document.documentElement);
+		});
+		key.bind(undefined, 'r', function(e) {
+			location.href = '/';
+		});
+		key.bind({ meta: true }, 'up', function(e) {
+			location.href = '..';
+		});
+		key.bind({ inputEl: true }, 'esc', function(e) {
+			if (e.target.blur) {
+				e.target.blur();
+			}
+		});
+		// if (nextUrl) {
+		// 	key.bind(undefined, 'j', function(e) {
+		// 		location.href = nextUrl;
+		// 	});
+		// }
+		// if (prevUrl) {
+		// 	key.bind(undefined, 'k', function(e) {
+		// 		location.href = prevUrl;
+		// 	});
+		// }
 	},
 	render() {
 		var data = this.props.data;

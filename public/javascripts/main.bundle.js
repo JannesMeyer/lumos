@@ -44,7 +44,12 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/** @jsx React.DOM */var keypressTool = __webpack_require__(1);
+	/** @jsx React.DOM */var key = __webpack_require__(1);
+	var fullscreen = __webpack_require__(2);
+
+	// initialize
+	addEventListener('keydown', key.handleDown);
+	fullscreen.initializeErrorHandler();
 
 	var Header = React.createClass({displayName: 'Header',
 		render:function() {
@@ -148,14 +153,41 @@
 		},
 		getInitialState:function() {
 			return {
-				color: 'apple'
+				color: this.pickRandomColor()
 			};
 		},
-		componentDidMount:function() {
-			window.addEventListener('keydown', keypressTool.handleKeyDown);
-		},
-		componentWillUnmount:function() {
-			window.removeEventListener('keydown', keypressTool.handleKeyDown);
+		componentWillMount:function() {
+			key.bind(undefined, '/', function(e) {
+				console.log('searchBox.focus()');
+				e.preventDefault();
+			});
+			key.bind(undefined, 'e', function(e) {
+				console.log('location.href = editButton.href;');
+			});
+			key.bind(undefined, 'f', function(e) {
+				fullscreen.toggle(document.documentElement);
+			});
+			key.bind(undefined, 'r', function(e) {
+				location.href = '/';
+			});
+			key.bind({ meta: true }, 'up', function(e) {
+				location.href = '..';
+			});
+			key.bind({ inputEl: true }, 'esc', function(e) {
+				if (e.target.blur) {
+					e.target.blur();
+				}
+			});
+			// if (nextUrl) {
+			// 	key.bind(undefined, 'j', function(e) {
+			// 		location.href = nextUrl;
+			// 	});
+			// }
+			// if (prevUrl) {
+			// 	key.bind(undefined, 'k', function(e) {
+			// 		location.href = prevUrl;
+			// 	});
+			// }
 		},
 		render:function() {
 			var data = this.props.data;
@@ -179,76 +211,116 @@
 
 	// https://github.com/madrobby/keymaster/blob/master/keymaster.js
 
-	var KEYMAP = {
-		27: 'esc',
-		32: 'space',
-		37: 'left',
-		38: 'up',
-		39: 'right',
-		40: 'down',
-		69: 'e',
-		70: 'f',
-		74: 'j',
-		75: 'k',
-		82: 'r',
-		191: '/'
+	var keyCodeMap = {
+		'esc': 27,
+		'space': 32,
+		'left': 37,
+		'up': 38,
+		'right': 39,
+		'down': 40,
+		'e': 69,
+		'f': 70,
+		'j': 74,
+		'k': 75,
+		'r': 82,
+		'/': 191
 	};
+	var bindings = {};
 
-	function bind(condition, fn) {
+	function bind(conditions, char, fn) {
+		if (fn === undefined) {
+			throw new Error('missing callback function');
+		}
+		if (char === undefined) {
+			throw new Error('missing char condition');
+		}
+		if (conditions === undefined) {
+			conditions = {};
+		}
+		conditions.inputEl = !!conditions.inputEl;
+		conditions.ctrl = !!conditions.ctrl;
+		conditions.shift = !!conditions.shift;
+		conditions.alt = !!conditions.alt;
+		conditions.meta = !!conditions.meta;
 
+		// Parse char parameter
+		var keyCode = keyCodeMap[char];
+		if (keyCode === undefined && typeof char === 'number') {
+			keyCode = char;
+		}
+		if (keyCode === undefined) {
+			throw new Error('unknown char condition')
+		}
+
+		// Re-use the conditions object for the binding
+		conditions.fn = fn;
+
+		// Do the binding
+		if (bindings[keyCode] === undefined) {
+			bindings[keyCode] = [conditions];
+		} else {
+			bindings[keyCode].push(conditions);
+		}
 	} module.exports.bind = bind;
 
-	function handleKeyDown(e) {
-		var char;
-		if (KEYMAP[e.keyCode]) {
-			char = KEYMAP[e.keyCode];
-		} else {
+	function handleDown(e) {
+		var bucket = bindings[e.keyCode];
+		if (bucket === undefined) {
 			// console.log('Unrecognized key:', e.keyCode);
 			return;
 		}
 
 		var target = e.target;
-		var input = target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.tagName === 'SELECT' || target.isContentEditable;
-		var ctrl = e.ctrlKey;
-		var shift = e.shiftKey;
-		var alt = e.altKey;
-		var meta = e.metaKey;
-		var modifiers = ctrl + shift + alt + meta;
+		var inputEl = target.tagName === 'INPUT' ||
+			target.tagName === 'TEXTAREA' ||
+			target.tagName === 'SELECT' ||
+			target.isContentEditable;
 
-		if (input && char === 'esc' && target.blur) {
-			target.blur();
+		for (var i = 0; i < bucket.length; ++i) {
+			var binding = bucket[i];
+			if (binding.inputEl === inputEl &&
+				binding.ctrl === e.ctrlKey &&
+				binding.shift === e.shiftKey &&
+				binding.alt === e.altKey &&
+				binding.meta === e.metaKey) {
+				// Match found
+				binding.fn(e);
+				break;
+			}
 		}
-		if (!input && char === '/' && modifiers === 0) {
-			searchBox.focus();
-			e.preventDefault();
-			return;
-		}
-		if (!input && char === 'j' && modifiers === 0 && nextUrl) {
-			location.href = nextUrl;
-			return;
-		}
-		if (!input && char === 'k' && modifiers === 0 && prevUrl) {
-			location.href = prevUrl;
-			return;
-		}
-		if (!input && char === 'e' && modifiers === 0) {
-			location.href= editButton.href;
-			return;
-		}
-		if (!input && char === 'f' && modifiers === 0) {
-			toggleFullscreen(document.documentElement);
-			return;
-		}
-		if (!input && char === 'r' && modifiers === 0) {
-			location.href = '/';
-			return;
-		}
-		if (!input && char === 'up' && meta && modifiers === 1) {
-			location.href = '..';
-			return;
-		}
-	} module.exports.handleKeyDown = handleKeyDown;
+	} module.exports.handleDown = handleDown;
 
+
+/***/ },
+/* 2 */
+/***/ function(module, exports, __webpack_require__) {
+
+	function initializeErrorHandler() {
+		function fullscreenErrorHandler() {
+			alert('Fullscreen operation failed');
+		}
+		document.addEventListener('fullscreenerror', fullscreenErrorHandler);
+		document.addEventListener('webkitfullscreenerror', fullscreenErrorHandler);
+		document.addEventListener('mozfullscreenerror', fullscreenErrorHandler);
+		document.addEventListener('MSFullscreenError', fullscreenErrorHandler);
+	} module.exports.initializeErrorHandler = initializeErrorHandler;
+
+	var fullscreenEnabled = document.fullscreenEnabled || document.mozFullScreenEnabled || document.webkitFullscreenEnabled || document.msFullscreenEnabled;
+	var exitFullscreen = document.exitFullscreen || document.mozCancelFullScreen || document.webkitExitFullscreen || document.msExitFullscreen;
+
+	function toggle(element) {
+		if (!fullscreenEnabled) {
+			return;
+		}
+		var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+		var requestFullscreen = element.requestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen || element.msRequestFullscreen;
+
+		if (fullscreenElement === element) {
+			exitFullscreen.apply(document);
+		} else {
+			requestFullscreen.apply(element);
+		}
+	} module.exports.toggle = toggle;
 
 /***/ }
 /******/ ])

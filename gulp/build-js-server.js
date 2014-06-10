@@ -8,6 +8,6 @@ module.exports.fn = function() {
 
 	return gulp.src(config.src.serverJS)
 		.pipe(plumber({ errorHandler: notify.onError(config.errorTemplate) }))
-		.pipe(traceur({ sourceMap: true }))
+		.pipe(traceur())
 		.pipe(gulp.dest(config.dest.serverJS));
 };
