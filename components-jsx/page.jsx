@@ -14,16 +14,18 @@ function getJSON(path) {
 				reject(e);
 			}
 		};
-		req.onerror = function(e) {
-			reject(new Error(req.status));
-		};
+		req.onerror = event => { reject(new Error(req.status)); };
+		req.ontimeout = event => { reject(new Error('Timed out')); };
 		req.send();
 	});
 }
 
 function navigateTo(path) {
 	getJSON(path)
-	.then(renderBody)
+	.then(newData => {
+		data = newData;
+		renderBody();
+	})
 	.catch(console.error.bind(console));
 }
 
@@ -192,7 +194,7 @@ var LumosApplication = React.createClass({
 	}
 });
 
-function renderBody(data) {
+function renderBody() {
 	React.renderComponent(<LumosApplication data={data} />, document.body);
 }
 

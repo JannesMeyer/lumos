@@ -60,16 +60,18 @@
 					reject(e);
 				}
 			};
-			req.onerror = function(e) {
-				reject(new Error(req.status));
-			};
+			req.onerror = function(event)  { reject(new Error(req.status)); };
+			req.ontimeout = function(event)  { reject(new Error('Timed out')); };
 			req.send();
 		});
 	}
 
 	function navigateTo(path) {
 		getJSON(path)
-		.then(renderBody)
+		.then(function(newData)  {
+			data = newData;
+			renderBody();
+		})
 		.catch(console.error.bind(console));
 	}
 
@@ -238,7 +240,7 @@
 		}
 	});
 
-	function renderBody(data) {
+	function renderBody() {
 		React.renderComponent(LumosApplication( {data:data} ), document.body);
 	}
 
