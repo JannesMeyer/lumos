@@ -47,13 +47,17 @@
 	/** @jsx React.DOM */var keypress = __webpack_require__(1);
 	var fullscreen = __webpack_require__(2);
 
+	/*
+	- [XMLHttpRequest | MDN](https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest)
+	- [XMLHttpRequest wrapped into a promise](https://gist.github.com/matthewp/3099268)
+	 */
 	function getJSON(path) {
 		var req = new XMLHttpRequest();
 		req.open('GET', path);
 		req.setRequestHeader('Accept', 'application/json');
 
 		return new Promise(function(resolve, reject) {
-			req.onload = function(e) {
+			req.onload = function(event)  {
 				try {
 					resolve(JSON.parse(req.response));
 				} catch(e) {
@@ -62,6 +66,7 @@
 			};
 			req.onerror = function(event)  { reject(new Error(req.status)); };
 			req.ontimeout = function(event)  { reject(new Error('Timed out')); };
+			// req.onabort
 			req.send();
 		});
 	}

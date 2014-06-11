@@ -1,13 +1,17 @@
 import keypress from 'lib/keypress-tool';
 import fullscreen from 'lib/fullscreen-tool';
 
+/*
+- [XMLHttpRequest | MDN](https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest)
+- [XMLHttpRequest wrapped into a promise](https://gist.github.com/matthewp/3099268)
+ */
 function getJSON(path) {
 	var req = new XMLHttpRequest();
 	req.open('GET', path);
 	req.setRequestHeader('Accept', 'application/json');
 
 	return new Promise(function(resolve, reject) {
-		req.onload = function(e) {
+		req.onload = event => {
 			try {
 				resolve(JSON.parse(req.response));
 			} catch(e) {
@@ -16,6 +20,7 @@ function getJSON(path) {
 		};
 		req.onerror = event => { reject(new Error(req.status)); };
 		req.ontimeout = event => { reject(new Error('Timed out')); };
+		// req.onabort
 		req.send();
 	});
 }
