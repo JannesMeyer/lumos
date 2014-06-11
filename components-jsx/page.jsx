@@ -25,9 +25,21 @@ function getJSON(path) {
 	});
 }
 
+addEventListener('popstate', event => {
+	if (event.state) {
+		data = event.state;
+		renderBody();
+	} else {
+		console.warn('state is null after popstate event');
+	}
+});
+
 function navigateTo(path) {
 	getJSON(path)
 	.then(newData => {
+		history.pushState(newData, null, path);
+		// console.log(data);
+
 		data = newData;
 		renderBody();
 	})
@@ -77,12 +89,16 @@ var Header = React.createClass({
 });
 
 var BreadcrumbList = React.createClass({
+	handleClick(e) {
+		navigateTo(e.currentTarget.pathname);
+		e.preventDefault();
+	},
 	render() {
 		var breadcrumbs = this.props.breadcrumbs.map(item =>
-			<li key={item.path}><a href={item.path}>{item.name}</a></li>
+			<li key={item.path}><a href={item.path} onClick={this.handleClick}>{item.name}</a></li>
 		);
 		var dirs = this.props.dirs.map(item =>
-			<li key={item.relative}><a href={item.link}>{item.relative}</a></li>
+			<li key={item.relative}><a href={item.link} onClick={this.handleClick}>{item.relative}</a></li>
 		);
 		return (
 			<ol>
@@ -117,13 +133,17 @@ var SearchBar = React.createClass({
 });
 
 var Navigation = React.createClass({
+	handleClick(e) {
+		navigateTo(e.currentTarget.pathname);
+		e.preventDefault();
+	},
 	render() {
 		var items = this.props.items;
 		return (
 			<nav className="m-navigation">
-				<ul>{items.map(item =>
+				<ul>{items.map((item, i) =>
 					<li className={item.isActive ? 'active' : ''} key={item.name}>
-						<a href={item.link}>{item.name}</a>
+						<a href={item.link} onClick={this.handleClick}>{item.name}</a>
 					</li>
 				)}</ul>
 			</nav>
@@ -174,12 +194,13 @@ var LumosApplication = React.createClass({
 	},
 	getInitialState() {
 		return {
-			color: this.pickRandomColor()
+			color: this.pickRandomColor(),
+			path: ''
 		};
 	},
-	// componentWillMount() {
-	// 	console.log('componentWillMount');
-	// },
+	componentDidMount() {
+		history.replaceState(this.props.data, null, location.pathname);
+	},
 	render() {
 		console.log('rendering');
 		var data = this.props.data;

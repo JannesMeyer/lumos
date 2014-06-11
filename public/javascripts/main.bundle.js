@@ -71,9 +71,21 @@
 		});
 	}
 
+	addEventListener('popstate', function(event)  {
+		if (event.state) {
+			data = event.state;
+			renderBody();
+		} else {
+			console.warn('state is null after popstate event');
+		}
+	});
+
 	function navigateTo(path) {
 		getJSON(path)
 		.then(function(newData)  {
+			history.pushState(newData, null, path);
+			// console.log(data);
+
 			data = newData;
 			renderBody();
 		})
@@ -123,12 +135,16 @@
 	});
 
 	var BreadcrumbList = React.createClass({displayName: 'BreadcrumbList',
+		handleClick:function(e) {
+			navigateTo(e.currentTarget.pathname);
+			e.preventDefault();
+		},
 		render:function() {
 			var breadcrumbs = this.props.breadcrumbs.map(function(item) 
-				{return React.DOM.li( {key:item.path}, React.DOM.a( {href:item.path}, item.name));}
+				{return React.DOM.li( {key:item.path}, React.DOM.a( {href:item.path, onClick:this.handleClick}, item.name));}.bind(this)
 			);
 			var dirs = this.props.dirs.map(function(item) 
-				{return React.DOM.li( {key:item.relative}, React.DOM.a( {href:item.link}, item.relative));}
+				{return React.DOM.li( {key:item.relative}, React.DOM.a( {href:item.link, onClick:this.handleClick}, item.relative));}.bind(this)
 			);
 			return (
 				React.DOM.ol(null, 
@@ -163,14 +179,18 @@
 	});
 
 	var Navigation = React.createClass({displayName: 'Navigation',
+		handleClick:function(e) {
+			navigateTo(e.currentTarget.pathname);
+			e.preventDefault();
+		},
 		render:function() {
 			var items = this.props.items;
 			return (
 				React.DOM.nav( {className:"m-navigation"}, 
-					React.DOM.ul(null, items.map(function(item) 
+					React.DOM.ul(null, items.map(function(item, i) 
 						{return React.DOM.li( {className:item.isActive ? 'active' : '', key:item.name}, 
-							React.DOM.a( {href:item.link}, item.name)
-						);}
+							React.DOM.a( {href:item.link, onClick:this.handleClick}, item.name)
+						);}.bind(this)
 					))
 				)
 			);
@@ -220,12 +240,13 @@
 		},
 		getInitialState:function() {
 			return {
-				color: this.pickRandomColor()
+				color: this.pickRandomColor(),
+				path: ''
 			};
 		},
-		// componentWillMount() {
-		// 	console.log('componentWillMount');
-		// },
+		componentDidMount:function() {
+			history.replaceState(this.props.data, null, location.pathname);
+		},
 		render:function() {
 			console.log('rendering');
 			var data = this.props.data;
