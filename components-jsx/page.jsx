@@ -1,10 +1,6 @@
 import key from 'lib/keypress-tool';
 import fullscreen from 'lib/fullscreen-tool';
 
-// initialize
-addEventListener('keydown', key.handleDown);
-fullscreen.initializeErrorHandler();
-
 var Header = React.createClass({
 	render() {
 		return (

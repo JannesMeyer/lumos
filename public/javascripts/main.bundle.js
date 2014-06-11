@@ -47,10 +47,6 @@
 	/** @jsx React.DOM */var key = __webpack_require__(1);
 	var fullscreen = __webpack_require__(2);
 
-	// initialize
-	addEventListener('keydown', key.handleDown);
-	fullscreen.initializeErrorHandler();
-
 	var Header = React.createClass({displayName: 'Header',
 		render:function() {
 			return (
@@ -212,20 +208,26 @@
 	// https://github.com/madrobby/keymaster/blob/master/keymaster.js
 
 	var keyCodeMap = {
-		'esc': 27,
-		'space': 32,
-		'left': 37,
-		'up': 38,
-		'right': 39,
-		'down': 40,
-		'e': 69,
-		'f': 70,
-		'j': 74,
-		'k': 75,
-		'r': 82,
-		'/': 191
+		'backspace': 8, 'tab': 9, 'clear': 12,
+		'enter': 13, 'return': 13,
+		'esc': 27, 'space': 32,
+		'left': 37, 'up': 38, 'right': 39, 'down': 40,
+		'del': 46,
+		'home': 36, 'end': 35, 'pageup': 33, 'pagedown': 34,
+		',': 188, '.': 190, '/': 191,
+		'`': 192, '-': 189, '=': 187,
+		';': 186, '\'': 222,
+		'[': 219, ']': 221, '\\': 220,
+		'a': 65, 'b': 66, 'c': 67, 'd': 68,
+		'e': 69, 'f': 70, 'g': 71, 'h': 72,
+		'i': 73, 'j': 74, 'k': 75, 'l': 76,
+		'm': 77, 'n': 78, 'o': 79, 'p': 80,
+		'q': 81, 'r': 82, 's': 83, 't': 84,
+		'u': 85, 'v': 86, 'w': 87, 'x': 88,
+		'y': 89, 'z': 90
 	};
 	var bindings = {};
+	var handlerAdded = false;
 
 	function bind(conditions, char, fn) {
 		if (fn === undefined) {
@@ -249,11 +251,17 @@
 			keyCode = char;
 		}
 		if (keyCode === undefined) {
-			throw new Error('unknown char condition')
+			throw new Error('unknown char condition ' + char)
 		}
 
 		// Re-use the conditions object for the binding
 		conditions.fn = fn;
+
+		// If this is the first binding
+		if (!handlerAdded) {
+			addEventListener('keydown', handleDown);
+			handlerAdded = true;
+		}
 
 		// Do the binding
 		if (bindings[keyCode] === undefined) {
@@ -288,33 +296,55 @@
 				break;
 			}
 		}
-	} module.exports.handleDown = handleDown;
+	}
 
 
 /***/ },
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	function initializeErrorHandler() {
-		function fullscreenErrorHandler() {
-			alert('Fullscreen operation failed');
-		}
-		document.addEventListener('fullscreenerror', fullscreenErrorHandler);
-		document.addEventListener('webkitfullscreenerror', fullscreenErrorHandler);
-		document.addEventListener('mozfullscreenerror', fullscreenErrorHandler);
-		document.addEventListener('MSFullscreenError', fullscreenErrorHandler);
-	} module.exports.initializeErrorHandler = initializeErrorHandler;
+	var handlerAdded = false;
 
-	var fullscreenEnabled = document.fullscreenEnabled || document.mozFullScreenEnabled || document.webkitFullscreenEnabled || document.msFullscreenEnabled;
-	var exitFullscreen = document.exitFullscreen || document.mozCancelFullScreen || document.webkitExitFullscreen || document.msExitFullscreen;
+	function fullscreenErrorHandler() {
+		alert('Fullscreen operation failed');
+	}
+
+	var fullscreenEnabled =
+		document.fullscreenEnabled ||
+		document.mozFullScreenEnabled ||
+		document.webkitFullscreenEnabled ||
+		document.msFullscreenEnabled;
+	var exitFullscreen =
+		document.exitFullscreen ||
+		document.mozCancelFullScreen ||
+		document.webkitExitFullscreen ||
+		document.msExitFullscreen;
 
 	function toggle(element) {
 		if (!fullscreenEnabled) {
 			return;
 		}
-		var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
-		var requestFullscreen = element.requestFullscreen || element.mozRequestFullScreen || element.webkitRequestFullscreen || element.msRequestFullscreen;
+		var fullscreenElement =
+			document.fullscreenElement ||
+			document.mozFullScreenElement ||
+			document.webkitFullscreenElement ||
+			document.msFullscreenElement;
+		var requestFullscreen =
+			element.requestFullscreen ||
+			element.mozRequestFullScreen ||
+			element.webkitRequestFullscreen ||
+			element.msRequestFullscreen;
 
+		// If this is the first time
+		if (!handlerAdded) {
+			document.addEventListener('fullscreenerror', fullscreenErrorHandler);
+			document.addEventListener('webkitfullscreenerror', fullscreenErrorHandler);
+			document.addEventListener('mozfullscreenerror', fullscreenErrorHandler);
+			document.addEventListener('MSFullscreenError', fullscreenErrorHandler);
+			handlerAdded = true;
+		}
+
+		// Toggle fullscreen
 		if (fullscreenElement === element) {
 			exitFullscreen.apply(document);
 		} else {
