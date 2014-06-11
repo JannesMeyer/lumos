@@ -57,8 +57,12 @@ module.exports = function(req, res, next) {
 			throw mHTTPError(404, 'Directory Not Found');
 		})
 		.then(() => {
-			console.log('Rendering directory index');
-			res.render('document', data)
+			var acceptHeader = req.get('Accept');
+			if (acceptHeader === 'application/json') {
+				res.json(data);
+			} else {
+				res.render('document', data);
+			}
 		})
 		.catch(err => next(err));
 	} else {
@@ -110,8 +114,12 @@ module.exports = function(req, res, next) {
 				}
 			})
 			.then(() => {
-				console.log('Rendering document');
-				res.render('document', data)
+				var acceptHeader = req.get('Accept');
+				if (acceptHeader === 'application/json') {
+					res.json(data);
+				} else {
+					res.render('document', data);
+				}
 			})
 			.catch(err => next(err));
 		}, err => {

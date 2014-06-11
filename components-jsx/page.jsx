@@ -1,9 +1,60 @@
 import key from 'lib/keypress-tool';
 import fullscreen from 'lib/fullscreen-tool';
 
-function navigateTo(path) {
-	location.href = path;
+function getJSON(path) {
+	var req = new XMLHttpRequest();
+	req.open('GET', path);
+	req.setRequestHeader('Accept', 'application/json');
+
+	return new Promise(function(resolve, reject) {
+		req.onload = function(e) {
+			try {
+				resolve(JSON.parse(req.response));
+			} catch(e) {
+				reject(e);
+			}
+		};
+		req.onerror = function(e) {
+			reject(new Error(req.status));
+		};
+		req.send();
+	});
 }
+
+function navigateTo(path) {
+	getJSON(path)
+	.then(renderBody)
+	.catch(console.error.bind(console));
+}
+
+key.bind({}, 'e', event => {
+	location.href = data.editLink;
+});
+key.bind({}, 'j', event => {
+	if (data.nextItem) {
+		navigateTo(data.nextItem.link);
+	}
+});
+key.bind({}, 'k', event => {
+	if (data.prevItem) {
+		navigateTo(data.prevItem.link);
+	}
+});
+key.bind({}, 'r', event => {
+	navigateTo('/');
+});
+key.bind({ meta: true }, 'up', event => {
+	navigateTo('..');
+});
+key.bind({}, 'f', event => {
+	fullscreen.toggle(document.documentElement);
+});
+key.bind({ inputEl: true }, 'esc', event => {
+	if (event.target.blur) {
+		event.target.blur();
+	}
+});
+
 
 var Header = React.createClass({
 	render() {
@@ -35,7 +86,7 @@ var BreadcrumbList = React.createClass({
 
 var SearchBar = React.createClass({
 	componentDidMount() {
-		key.bind(undefined, '/', (event) => {
+		key.bind(undefined, '/', event => {
 			this.refs.searchBox.getDOMNode().focus();
 			event.preventDefault();
 		});
@@ -118,38 +169,15 @@ var LumosApplication = React.createClass({
 		};
 	},
 	componentWillMount() {
+		console.log('componentWillMount');
+
 		var data = this.props.data;
 		data.editLink = 'lumos-connect://' + data.filePath;
 
-		key.bind(undefined, 'e', (event) => {
-			navigateTo(data.editLink);
-		});
-		key.bind(undefined, 'f', (event) => {
-			fullscreen.toggle(document.documentElement);
-		});
-		key.bind(undefined, 'r', (event) => {
-			navigateTo('/');
-		});
-		key.bind({ meta: true }, 'up', (event) => {
-			navigateTo('..');
-		});
-		key.bind({ inputEl: true }, 'esc', (event) => {
-			if (event.target.blur) {
-				event.target.blur();
-			}
-		});
-		key.bind(undefined, 'j', (event) => {
-			if (data.nextItem) {
-				navigateTo(data.nextItem.link);
-			}
-		});
-		key.bind(undefined, 'k', (event) => {
-			if (data.prevItem) {
-				navigateTo(data.prevItem.link);
-			}
-		});
+
 	},
 	render() {
+		console.log('rendering');
 		var data = this.props.data;
 
 		return (
@@ -163,4 +191,10 @@ var LumosApplication = React.createClass({
 		);
 	}
 });
-React.renderComponent(<LumosApplication data={data} />, document.body);
+
+function renderBody(data) {
+	React.renderComponent(<LumosApplication data={data} />, document.body);
+}
+
+// Initial render
+renderBody(data);

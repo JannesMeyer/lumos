@@ -47,9 +47,60 @@
 	/** @jsx React.DOM */var key = __webpack_require__(1);
 	var fullscreen = __webpack_require__(2);
 
-	function navigateTo(path) {
-		location.href = path;
+	function getJSON(path) {
+		var req = new XMLHttpRequest();
+		req.open('GET', path);
+		req.setRequestHeader('Accept', 'application/json');
+
+		return new Promise(function(resolve, reject) {
+			req.onload = function(e) {
+				try {
+					resolve(JSON.parse(req.response));
+				} catch(e) {
+					reject(e);
+				}
+			};
+			req.onerror = function(e) {
+				reject(new Error(req.status));
+			};
+			req.send();
+		});
 	}
+
+	function navigateTo(path) {
+		getJSON(path)
+		.then(renderBody)
+		.catch(console.error.bind(console));
+	}
+
+	key.bind({}, 'e', function(event)  {
+		location.href = data.editLink;
+	});
+	key.bind({}, 'j', function(event)  {
+		if (data.nextItem) {
+			navigateTo(data.nextItem.link);
+		}
+	});
+	key.bind({}, 'k', function(event)  {
+		if (data.prevItem) {
+			navigateTo(data.prevItem.link);
+		}
+	});
+	key.bind({}, 'r', function(event)  {
+		navigateTo('/');
+	});
+	key.bind({ meta: true }, 'up', function(event)  {
+		navigateTo('..');
+	});
+	key.bind({}, 'f', function(event)  {
+		fullscreen.toggle(document.documentElement);
+	});
+	key.bind({ inputEl: true }, 'esc', function(event)  {
+		if (event.target.blur) {
+			event.target.blur();
+		}
+	});
+
 
 	var Header = React.createClass({displayName: 'Header',
 		render:function() {
@@ -164,38 +215,15 @@
 			};
 		},
 		componentWillMount:function() {
+			console.log('componentWillMount');
+
 			var data = this.props.data;
 			data.editLink = 'lumos-connect://' + data.filePath;
 
-			key.bind(undefined, 'e', function(event)  {
-				navigateTo(data.editLink);
-			});
-			key.bind(undefined, 'f', function(event)  {
-				fullscreen.toggle(document.documentElement);
-			});
-			key.bind(undefined, 'r', function(event)  {
-				navigateTo('/');
-			});
-			key.bind({ meta: true }, 'up', function(event)  {
-				navigateTo('..');
-			});
-			key.bind({ inputEl: true }, 'esc', function(event)  {
-				if (event.target.blur) {
-					event.target.blur();
-				}
-			});
-			key.bind(undefined, 'j', function(event)  {
-				if (data.nextItem) {
-					navigateTo(data.nextItem.link);
-				}
-			});
-			key.bind(undefined, 'k', function(event)  {
-				if (data.prevItem) {
-					navigateTo(data.prevItem.link);
-				}
-			});
+
 		},
 		render:function() {
+			console.log('rendering');
 			var data = this.props.data;
 
 			return (
@@ -209,7 +237,13 @@
 			);
 		}
 	});
-	React.renderComponent(LumosApplication( {data:data} ), document.body);
+
+	function renderBody(data) {
+		React.renderComponent(LumosApplication( {data:data} ), document.body);
+	}
+
+	// Initial render
+	renderBody(data);
 
 
 /***/ },
