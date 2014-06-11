@@ -47,6 +47,10 @@
 	/** @jsx React.DOM */var key = __webpack_require__(1);
 	var fullscreen = __webpack_require__(2);
 
+	function navigateTo(path) {
+		location.href = path;
+	}
+
 	var Header = React.createClass({displayName: 'Header',
 		render:function() {
 			return (
@@ -118,7 +122,7 @@
 			return (
 				React.DOM.section( {className:"m-page", role:"content"}, 
 					React.DOM.div( {className:"m-page-buttons"}, 
-						PageButton( {name:"edit", icon:"pencil", href:'lumos-connect://' + this.props.filePath, title:"Edit page (E)"} ),
+						PageButton( {name:"edit", icon:"pencil", href:this.props.editLink, title:"Edit page (E)"} ),
 						PageButton( {name:"fullscreen", icon:"resize-full", href:"", title:"Toggle fullscreen (F)"} )
 					),
 					React.DOM.div( {className:"m-page-title"}, 
@@ -160,41 +164,45 @@
 			};
 		},
 		componentWillMount:function() {
+			var data = this.props.data;
+			data.editLink = 'lumos-connect://' + data.filePath;
+
 			key.bind(undefined, 'e', function(event)  {
-				console.log('location.href = editButton.href;');
+				navigateTo(data.editLink);
 			});
 			key.bind(undefined, 'f', function(event)  {
 				fullscreen.toggle(document.documentElement);
 			});
 			key.bind(undefined, 'r', function(event)  {
-				location.href = '/';
+				navigateTo('/');
 			});
 			key.bind({ meta: true }, 'up', function(event)  {
-				location.href = '..';
+				navigateTo('..');
 			});
 			key.bind({ inputEl: true }, 'esc', function(event)  {
 				if (event.target.blur) {
 					event.target.blur();
 				}
 			});
-			// if (nextUrl) {
-			// 	key.bind(undefined, 'j', (event) => {
-			// 		location.href = nextUrl;
-			// 	});
-			// }
-			// if (prevUrl) {
-			// 	key.bind(undefined, 'k', (event) => {
-			// 		location.href = prevUrl;
-			// 	});
-			// }
+			key.bind(undefined, 'j', function(event)  {
+				if (data.nextItem) {
+					navigateTo(data.nextItem.link);
+				}
+			});
+			key.bind(undefined, 'k', function(event)  {
+				if (data.prevItem) {
+					navigateTo(data.prevItem.link);
+				}
+			});
 		},
 		render:function() {
 			var data = this.props.data;
+
 			return (
 				React.DOM.div( {className:'m-container s-' + this.state.color}, 
 					Header( {breadcrumbs:data.breadcrumbs, dirs:data.dirs} ),
 					React.DOM.div(null, 
-						Page( {title:data.title, creationDate:data.creationDate, content:data.content, filePath:data.filePath} ),
+						Page( {title:data.title, creationDate:data.creationDate, content:data.content, editLink:data.editLink} ),
 						Navigation( {items:data.items} )
 					)
 				)
@@ -277,7 +285,7 @@
 
 		// If this is the first binding
 		if (!handlerAdded) {
-			addEventListener('keydown', handleDown);
+			window.addEventListener('keydown', handleDown);
 			handlerAdded = true;
 		}
 
@@ -297,7 +305,8 @@
 		}
 
 		var target = e.target;
-		var inputEl = target.tagName === 'INPUT' ||
+		var inputEl =
+			target.tagName === 'INPUT' ||
 			target.tagName === 'TEXTAREA' ||
 			target.tagName === 'SELECT' ||
 			target.isContentEditable;

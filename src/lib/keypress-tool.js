@@ -67,7 +67,7 @@ export function bind(conditions, char, fn) {
 
 	// If this is the first binding
 	if (!handlerAdded) {
-		addEventListener('keydown', handleDown);
+		window.addEventListener('keydown', handleDown);
 		handlerAdded = true;
 	}
 

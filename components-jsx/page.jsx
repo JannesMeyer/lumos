@@ -1,6 +1,10 @@
 import key from 'lib/keypress-tool';
 import fullscreen from 'lib/fullscreen-tool';
 
+function navigateTo(path) {
+	location.href = path;
+}
+
 var Header = React.createClass({
 	render() {
 		return (
@@ -72,7 +76,7 @@ var Page = React.createClass({
 		return (
 			<section className="m-page" role="content">
 				<div className="m-page-buttons">
-					<PageButton name="edit" icon="pencil" href={'lumos-connect://' + this.props.filePath} title="Edit page (E)" />
+					<PageButton name="edit" icon="pencil" href={this.props.editLink} title="Edit page (E)" />
 					<PageButton name="fullscreen" icon="resize-full" href="" title="Toggle fullscreen (F)" />
 				</div>
 				<div className="m-page-title">
@@ -114,41 +118,45 @@ var LumosApplication = React.createClass({
 		};
 	},
 	componentWillMount() {
+		var data = this.props.data;
+		data.editLink = 'lumos-connect://' + data.filePath;
+
 		key.bind(undefined, 'e', (event) => {
-			console.log('location.href = editButton.href;');
+			navigateTo(data.editLink);
 		});
 		key.bind(undefined, 'f', (event) => {
 			fullscreen.toggle(document.documentElement);
 		});
 		key.bind(undefined, 'r', (event) => {
-			location.href = '/';
+			navigateTo('/');
 		});
 		key.bind({ meta: true }, 'up', (event) => {
-			location.href = '..';
+			navigateTo('..');
 		});
 		key.bind({ inputEl: true }, 'esc', (event) => {
 			if (event.target.blur) {
 				event.target.blur();
 			}
 		});
-		// if (nextUrl) {
-		// 	key.bind(undefined, 'j', (event) => {
-		// 		location.href = nextUrl;
-		// 	});
-		// }
-		// if (prevUrl) {
-		// 	key.bind(undefined, 'k', (event) => {
-		// 		location.href = prevUrl;
-		// 	});
-		// }
+		key.bind(undefined, 'j', (event) => {
+			if (data.nextItem) {
+				navigateTo(data.nextItem.link);
+			}
+		});
+		key.bind(undefined, 'k', (event) => {
+			if (data.prevItem) {
+				navigateTo(data.prevItem.link);
+			}
+		});
 	},
 	render() {
 		var data = this.props.data;
+
 		return (
 			<div className={'m-container s-' + this.state.color}>
 				<Header breadcrumbs={data.breadcrumbs} dirs={data.dirs} />
 				<div>
-					<Page title={data.title} creationDate={data.creationDate} content={data.content} filePath={data.filePath} />
+					<Page title={data.title} creationDate={data.creationDate} content={data.content} editLink={data.editLink} />
 					<Navigation items={data.items} />
 				</div>
 			</div>

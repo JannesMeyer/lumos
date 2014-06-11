@@ -57,8 +57,7 @@ module.exports = function(req, res, next) {
 			throw mHTTPError(404, 'Directory Not Found');
 		})
 		.then(() => {
-			console.log('Rendering directory index:');
-			console.log(data);
+			console.log('Rendering directory index');
 			res.render('document', data)
 		})
 		.catch(err => next(err));
@@ -111,14 +110,11 @@ module.exports = function(req, res, next) {
 				}
 			})
 			.then(() => {
-				console.log('Rendering document:');
-				console.log(data);
+				console.log('Rendering document');
 				res.render('document', data)
 			})
 			.catch(err => next(err));
 		}, err => {
-			// console.log('message:', err.message);
-			// console.log('stack:', err.stack);
 			console.error(err);
 			// Document not found, try to deliver the file at the original path
 			return denodeify(res, res.sendfile)(requestPath.absolute);
