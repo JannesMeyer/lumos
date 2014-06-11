@@ -1,4 +1,4 @@
-import key from 'lib/keypress-tool';
+import keypress from 'lib/keypress-tool';
 import fullscreen from 'lib/fullscreen-tool';
 
 function getJSON(path) {
@@ -29,31 +29,31 @@ function navigateTo(path) {
 	.catch(console.error.bind(console));
 }
 
-key.bind({}, 'e', event => {
+keypress.bind({}, 'e', event => {
 	if (data.editURL) {
 		location.href = data.editURL;
 	}
 });
-key.bind({}, 'j', event => {
+keypress.bind({}, 'j', event => {
 	if (data.nextItem) {
 		navigateTo(data.nextItem.link);
 	}
 });
-key.bind({}, 'k', event => {
+keypress.bind({}, 'k', event => {
 	if (data.prevItem) {
 		navigateTo(data.prevItem.link);
 	}
 });
-key.bind({}, 'r', event => {
+keypress.bind({}, 'r', event => {
 	navigateTo('/');
 });
-key.bind({ meta: true }, 'up', event => {
+keypress.bind({meta: true}, 'up', event => {
 	navigateTo('..');
 });
-key.bind({}, 'f', event => {
+keypress.bind({}, 'f', event => {
 	fullscreen.toggle(document.documentElement);
 });
-key.bind({ inputEl: true }, 'esc', event => {
+keypress.bind({inputEl: true}, 'esc', event => {
 	if (event.target.blur) {
 		event.target.blur();
 	}
@@ -74,7 +74,7 @@ var Header = React.createClass({
 var BreadcrumbList = React.createClass({
 	render() {
 		var breadcrumbs = this.props.breadcrumbs.map(item =>
-			<li key={item.name}><a href={item.link}>{item.name}</a></li>
+			<li key={item.path}><a href={item.path}>{item.name}</a></li>
 		);
 		var dirs = this.props.dirs.map(item =>
 			<li key={item.relative}><a href={item.link}>{item.relative}</a></li>
@@ -90,7 +90,7 @@ var BreadcrumbList = React.createClass({
 
 var SearchBar = React.createClass({
 	componentDidMount() {
-		key.bind(undefined, '/', event => {
+		keypress.bind({}, '/', event => {
 			this.refs.searchBox.getDOMNode().focus();
 			event.preventDefault();
 		});

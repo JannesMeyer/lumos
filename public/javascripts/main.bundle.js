@@ -44,7 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/** @jsx React.DOM */var key = __webpack_require__(1);
+	/** @jsx React.DOM */var keypress = __webpack_require__(1);
 	var fullscreen = __webpack_require__(2);
 
 	function getJSON(path) {
@@ -75,31 +75,31 @@
 		.catch(console.error.bind(console));
 	}
 
-	key.bind({}, 'e', function(event)  {
+	keypress.bind({}, 'e', function(event)  {
 		if (data.editURL) {
 			location.href = data.editURL;
 		}
 	});
-	key.bind({}, 'j', function(event)  {
+	keypress.bind({}, 'j', function(event)  {
 		if (data.nextItem) {
 			navigateTo(data.nextItem.link);
 		}
 	});
-	key.bind({}, 'k', function(event)  {
+	keypress.bind({}, 'k', function(event)  {
 		if (data.prevItem) {
 			navigateTo(data.prevItem.link);
 		}
 	});
-	key.bind({}, 'r', function(event)  {
+	keypress.bind({}, 'r', function(event)  {
 		navigateTo('/');
 	});
-	key.bind({ meta: true }, 'up', function(event)  {
+	keypress.bind({meta: true}, 'up', function(event)  {
 		navigateTo('..');
 	});
-	key.bind({}, 'f', function(event)  {
+	keypress.bind({}, 'f', function(event)  {
 		fullscreen.toggle(document.documentElement);
 	});
-	key.bind({ inputEl: true }, 'esc', function(event)  {
+	keypress.bind({inputEl: true}, 'esc', function(event)  {
 		if (event.target.blur) {
 			event.target.blur();
 		}
@@ -120,7 +120,7 @@
 	var BreadcrumbList = React.createClass({displayName: 'BreadcrumbList',
 		render:function() {
 			var breadcrumbs = this.props.breadcrumbs.map(function(item) 
-				{return React.DOM.li( {key:item.name}, React.DOM.a( {href:item.link}, item.name));}
+				{return React.DOM.li( {key:item.path}, React.DOM.a( {href:item.path}, item.name));}
 			);
 			var dirs = this.props.dirs.map(function(item) 
 				{return React.DOM.li( {key:item.relative}, React.DOM.a( {href:item.link}, item.relative));}
@@ -136,7 +136,7 @@
 
 	var SearchBar = React.createClass({displayName: 'SearchBar',
 		componentDidMount:function() {
-			key.bind(undefined, '/', function(event)  {
+			keypress.bind({}, '/', function(event)  {
 				this.refs.searchBox.getDOMNode().focus();
 				event.preventDefault();
 			}.bind(this));
