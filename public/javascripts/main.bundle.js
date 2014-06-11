@@ -76,11 +76,18 @@
 	});
 
 	var SearchBar = React.createClass({displayName: 'SearchBar',
+		componentDidMount:function() {
+			key.bind(undefined, '/', function(event)  {
+				this.refs.searchBox.getDOMNode().focus();
+				event.preventDefault();
+			}.bind(this));
+		},
 		render:function() {
 			return (
 				React.DOM.form( {method:"get"}, 
 					React.DOM.input(
 						{className:"m-search",
+						ref:"searchBox",
 						type:"text",
 						name:"q",
 						autoComplete:"off",
@@ -125,12 +132,12 @@
 	});
 
 	var PageButton = React.createClass({displayName: 'PageButton',
-		handleClick:function(e) {
+		handleClick:function(event) {
 			if (this.props.name === 'fullscreen') {
 				// TODO: fullscreen as state
-				toggleFullscreen(document.documentElement);
-				e.currentTarget.blur();
-				e.preventDefault();
+				fullscreen.toggle(document.documentElement);
+				event.currentTarget.blur();
+				event.preventDefault();
 			}
 		},
 		render:function() {
@@ -153,34 +160,30 @@
 			};
 		},
 		componentWillMount:function() {
-			key.bind(undefined, '/', function(e) {
-				console.log('searchBox.focus()');
-				e.preventDefault();
-			});
-			key.bind(undefined, 'e', function(e) {
+			key.bind(undefined, 'e', function(event)  {
 				console.log('location.href = editButton.href;');
 			});
-			key.bind(undefined, 'f', function(e) {
+			key.bind(undefined, 'f', function(event)  {
 				fullscreen.toggle(document.documentElement);
 			});
-			key.bind(undefined, 'r', function(e) {
+			key.bind(undefined, 'r', function(event)  {
 				location.href = '/';
 			});
-			key.bind({ meta: true }, 'up', function(e) {
+			key.bind({ meta: true }, 'up', function(event)  {
 				location.href = '..';
 			});
-			key.bind({ inputEl: true }, 'esc', function(e) {
-				if (e.target.blur) {
-					e.target.blur();
+			key.bind({ inputEl: true }, 'esc', function(event)  {
+				if (event.target.blur) {
+					event.target.blur();
 				}
 			});
 			// if (nextUrl) {
-			// 	key.bind(undefined, 'j', function(e) {
+			// 	key.bind(undefined, 'j', (event) => {
 			// 		location.href = nextUrl;
 			// 	});
 			// }
 			// if (prevUrl) {
-			// 	key.bind(undefined, 'k', function(e) {
+			// 	key.bind(undefined, 'k', (event) => {
 			// 		location.href = prevUrl;
 			// 	});
 			// }
@@ -205,19 +208,34 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	// https://github.com/madrobby/keymaster/blob/master/keymaster.js
-
 	var keyCodeMap = {
-		'backspace': 8, 'tab': 9, 'clear': 12,
-		'enter': 13, 'return': 13,
-		'esc': 27, 'space': 32,
-		'left': 37, 'up': 38, 'right': 39, 'down': 40,
+		'backspace': 8,
+		'tab': 9,
+		'clear': 12,
+		'enter': 13,
+		'return': 13,
+		'esc': 27,
+		'space': 32,
+		'left': 37,
+		'up': 38,
+		'right': 39,
+		'down': 40,
 		'del': 46,
-		'home': 36, 'end': 35, 'pageup': 33, 'pagedown': 34,
-		',': 188, '.': 190, '/': 191,
-		'`': 192, '-': 189, '=': 187,
-		';': 186, '\'': 222,
-		'[': 219, ']': 221, '\\': 220,
+		'home': 36,
+		'end': 35,
+		'pageup': 33,
+		'pagedown': 34,
+		',': 188,
+		'.': 190,
+		'/': 191,
+		'`': 192,
+		'-': 189,
+		'=': 187,
+		';': 186,
+		'\'': 222,
+		'[': 219,
+		']': 221,
+		'\\': 220,
 		'a': 65, 'b': 66, 'c': 67, 'd': 68,
 		'e': 69, 'f': 70, 'g': 71, 'h': 72,
 		'i': 73, 'j': 74, 'k': 75, 'l': 76,

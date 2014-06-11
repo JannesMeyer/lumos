@@ -87,7 +87,8 @@ function handleDown(e) {
 	}
 
 	var target = e.target;
-	var inputEl = target.tagName === 'INPUT' ||
+	var inputEl =
+		target.tagName === 'INPUT' ||
 		target.tagName === 'TEXTAREA' ||
 		target.tagName === 'SELECT' ||
 		target.isContentEditable;

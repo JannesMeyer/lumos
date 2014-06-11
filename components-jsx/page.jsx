@@ -30,11 +30,18 @@ var BreadcrumbList = React.createClass({
 });
 
 var SearchBar = React.createClass({
+	componentDidMount() {
+		key.bind(undefined, '/', (event) => {
+			this.refs.searchBox.getDOMNode().focus();
+			event.preventDefault();
+		});
+	},
 	render() {
 		return (
 			<form method="get">
 				<input
 					className="m-search"
+					ref="searchBox"
 					type="text"
 					name="q"
 					autoComplete="off"
@@ -79,12 +86,12 @@ var Page = React.createClass({
 });
 
 var PageButton = React.createClass({
-	handleClick(e) {
+	handleClick(event) {
 		if (this.props.name === 'fullscreen') {
 			// TODO: fullscreen as state
-			toggleFullscreen(document.documentElement);
-			e.currentTarget.blur();
-			e.preventDefault();
+			fullscreen.toggle(document.documentElement);
+			event.currentTarget.blur();
+			event.preventDefault();
 		}
 	},
 	render() {
@@ -107,34 +114,30 @@ var LumosApplication = React.createClass({
 		};
 	},
 	componentWillMount() {
-		key.bind(undefined, '/', function(e) {
-			console.log('searchBox.focus()');
-			e.preventDefault();
-		});
-		key.bind(undefined, 'e', function(e) {
+		key.bind(undefined, 'e', (event) => {
 			console.log('location.href = editButton.href;');
 		});
-		key.bind(undefined, 'f', function(e) {
+		key.bind(undefined, 'f', (event) => {
 			fullscreen.toggle(document.documentElement);
 		});
-		key.bind(undefined, 'r', function(e) {
+		key.bind(undefined, 'r', (event) => {
 			location.href = '/';
 		});
-		key.bind({ meta: true }, 'up', function(e) {
+		key.bind({ meta: true }, 'up', (event) => {
 			location.href = '..';
 		});
-		key.bind({ inputEl: true }, 'esc', function(e) {
-			if (e.target.blur) {
-				e.target.blur();
+		key.bind({ inputEl: true }, 'esc', (event) => {
+			if (event.target.blur) {
+				event.target.blur();
 			}
 		});
 		// if (nextUrl) {
-		// 	key.bind(undefined, 'j', function(e) {
+		// 	key.bind(undefined, 'j', (event) => {
 		// 		location.href = nextUrl;
 		// 	});
 		// }
 		// if (prevUrl) {
-		// 	key.bind(undefined, 'k', function(e) {
+		// 	key.bind(undefined, 'k', (event) => {
 		// 		location.href = prevUrl;
 		// 	});
 		// }
