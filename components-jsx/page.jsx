@@ -30,7 +30,9 @@ function navigateTo(path) {
 }
 
 key.bind({}, 'e', event => {
-	location.href = data.editLink;
+	if (data.editURL) {
+		location.href = data.editURL;
+	}
 });
 key.bind({}, 'j', event => {
 	if (data.nextItem) {
@@ -129,7 +131,7 @@ var Page = React.createClass({
 		return (
 			<section className="m-page" role="content">
 				<div className="m-page-buttons">
-					<PageButton name="edit" icon="pencil" href={this.props.editLink} title="Edit page (E)" />
+					<PageButton name="edit" icon="pencil" href={this.props.editURL} title="Edit page (E)" />
 					<PageButton name="fullscreen" icon="resize-full" href="" title="Toggle fullscreen (F)" />
 				</div>
 				<div className="m-page-title">
@@ -170,14 +172,9 @@ var LumosApplication = React.createClass({
 			color: this.pickRandomColor()
 		};
 	},
-	componentWillMount() {
-		console.log('componentWillMount');
-
-		var data = this.props.data;
-		data.editLink = 'lumos-connect://' + data.filePath;
-
-
-	},
+	// componentWillMount() {
+	// 	console.log('componentWillMount');
+	// },
 	render() {
 		console.log('rendering');
 		var data = this.props.data;
@@ -186,7 +183,7 @@ var LumosApplication = React.createClass({
 			<div className={'m-container s-' + this.state.color}>
 				<Header breadcrumbs={data.breadcrumbs} dirs={data.dirs} />
 				<div>
-					<Page title={data.title} creationDate={data.creationDate} content={data.content} editLink={data.editLink} />
+					<Page title={data.title} creationDate={data.creationDate} content={data.content} editURL={data.editURL} />
 					<Navigation items={data.items} />
 				</div>
 			</div>

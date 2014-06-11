@@ -13,6 +13,7 @@
     "defaultPort": 9000,
     "mdSuffix": ".md",
     "indexFile": "index.md",
+    "editURLProtocol": "lumos-connect://",
     "editor": "subl",
     "editorArgs": [
       "--project",

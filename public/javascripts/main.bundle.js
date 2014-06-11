@@ -76,7 +76,9 @@
 	}
 
 	key.bind({}, 'e', function(event)  {
-		location.href = data.editLink;
+		if (data.editURL) {
+			location.href = data.editURL;
+		}
 	});
 	key.bind({}, 'j', function(event)  {
 		if (data.nextItem) {
@@ -175,7 +177,7 @@
 			return (
 				React.DOM.section( {className:"m-page", role:"content"}, 
 					React.DOM.div( {className:"m-page-buttons"}, 
-						PageButton( {name:"edit", icon:"pencil", href:this.props.editLink, title:"Edit page (E)"} ),
+						PageButton( {name:"edit", icon:"pencil", href:this.props.editURL, title:"Edit page (E)"} ),
 						PageButton( {name:"fullscreen", icon:"resize-full", href:"", title:"Toggle fullscreen (F)"} )
 					),
 					React.DOM.div( {className:"m-page-title"}, 
@@ -216,14 +218,9 @@
 				color: this.pickRandomColor()
 			};
 		},
-		componentWillMount:function() {
-			console.log('componentWillMount');
-
-			var data = this.props.data;
-			data.editLink = 'lumos-connect://' + data.filePath;
-
-
-		},
+		// componentWillMount() {
+		// 	console.log('componentWillMount');
+		// },
 		render:function() {
 			console.log('rendering');
 			var data = this.props.data;
@@ -232,7 +229,7 @@
 				React.DOM.div( {className:'m-container s-' + this.state.color}, 
 					Header( {breadcrumbs:data.breadcrumbs, dirs:data.dirs} ),
 					React.DOM.div(null, 
-						Page( {title:data.title, creationDate:data.creationDate, content:data.content, editLink:data.editLink} ),
+						Page( {title:data.title, creationDate:data.creationDate, content:data.content, editURL:data.editURL} ),
 						Navigation( {items:data.items} )
 					)
 				)

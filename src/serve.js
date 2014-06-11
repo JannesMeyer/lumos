@@ -50,6 +50,8 @@ module.exports = function(req, res, next) {
 				return readFile(indexPath)
 				.then(file => {
 					data.filePath = indexPath.absolute;
+					// Can't have spaces in AppleScript
+					data.editURL = encodeURI(config.editURLProtocol + indexPath.absolute);
 					data.content = fileContentToHtml(file.content);
 				});
 			}
@@ -77,6 +79,8 @@ module.exports = function(req, res, next) {
 		.then(file => {
 			data.title = requestPathMd.name;
 			data.filePath = requestPathMd.absolute;
+			// Can't have spaces in AppleScript
+			data.editURL = encodeURI(config.editURLProtocol + requestPathMd.absolute);
 			data.content = fileContentToHtml(file.content);
 
 			var datetool = require('./lib/date-tool');
@@ -129,8 +133,6 @@ module.exports = function(req, res, next) {
 		})
 		.catch(err => {
 			next(err);
-			// console.log(err.getOwnPropertyNames());
-
 			// console.error(err);
 			// next(mHTTPError(404, 'File Not Found'));
 		});
