@@ -82,9 +82,10 @@
 	});
 
 	function navigateTo(path) {
+		history.pushState(undefined, undefined, path);
 		getJSON(path)
 		.then(function(newData)  {
-			history.pushState(newData, null, path);
+			history.replaceState(newData, undefined, path);
 			data = newData;
 			renderBody();
 		})
