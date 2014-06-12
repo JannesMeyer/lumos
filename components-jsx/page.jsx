@@ -36,10 +36,14 @@ addEventListener('popstate', event => {
 });
 
 function navigateTo(path) {
-	history.pushState(undefined, undefined, path);
+	// TODO: Don't push state in fullscreen, because it exits fullscreen mode
+	// if (deferPushState) {
+	// } else {
+	//	 history.pushState(undefined, undefined, path);
+	// }
 	getJSON(path)
 	.then(newData => {
-		history.replaceState(newData, undefined, path);
+		// history.replaceState(newData, undefined, path);
 		data = newData;
 		renderBody();
 	})
@@ -49,21 +53,38 @@ function navigateTo(path) {
 	});
 }
 
+/**
+ * Key events
+ */
+
 keypress.bind({}, 'e', event => {
 	if (data.editURL) {
 		location.href = data.editURL;
 	}
 });
-keypress.bind({}, 'j', event => {
+function navigateToNext() {
 	if (data.nextItem) {
 		navigateTo(data.nextItem.link);
 	}
-});
-keypress.bind({}, 'k', event => {
+}
+function navigateToPrev() {
 	if (data.prevItem) {
 		navigateTo(data.prevItem.link);
 	}
-});
+}
+keypress.bind({}, 'j', navigateToNext);
+keypress.bind({}, 'k', navigateToPrev);
+keypress.bind({}, 'right', navigateToNext);
+keypress.bind({}, 'left', navigateToPrev);
+keypress.bind({}, 'enter', navigateToNext);
+keypress.bind({shift: true}, 'enter', navigateToPrev);
+// TODO: If scrolled to bottom
+// keypress.bind({}, 'space', navigateToNext);
+// keypress.bind({}, 'down', navigateToNext);
+// TODO: If scrolled to top
+// keypress.bind({shift: true}, 'space', navigateToPrev);
+// keypress.bind({}, 'up', navigateToPrev);
+
 keypress.bind({}, 'r', event => {
 	navigateTo('/');
 });

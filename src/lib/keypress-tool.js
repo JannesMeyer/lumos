@@ -1,3 +1,29 @@
+/**
+	Only some keys work in Safari in fullscreen mode
+	9	tab
+	13	enter
+	32	space
+	37	left
+	38	up
+	39	right
+	40	down
+
+	112	F1
+	123 F12
+
+	186	;
+	187	=
+	188	,
+	189	-
+	190	.
+	191	/
+	192 `
+	219	[
+	220	\
+	221	]
+	222	"
+ */
+
 var keyCodeMap = {
 	'backspace': 8,
 	'tab': 9,
@@ -82,7 +108,6 @@ export function bind(conditions, char, fn) {
 function handleDown(e) {
 	var bucket = bindings[e.keyCode];
 	if (bucket === undefined) {
-		// console.log('Unrecognized key:', e.keyCode);
 		return;
 	}
 

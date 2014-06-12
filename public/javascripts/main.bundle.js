@@ -82,10 +82,14 @@
 	});
 
 	function navigateTo(path) {
-		history.pushState(undefined, undefined, path);
+		// TODO: Don't push state in fullscreen, because it exits fullscreen mode
+		// if (deferPushState) {
+		// } else {
+		//	 history.pushState(undefined, undefined, path);
+		// }
 		getJSON(path)
 		.then(function(newData)  {
-			history.replaceState(newData, undefined, path);
+			// history.replaceState(newData, undefined, path);
 			data = newData;
 			renderBody();
 		})
@@ -95,21 +99,38 @@
 		});
 	}
 
+	/**
+	 * Key events
+	 */
+
 	keypress.bind({}, 'e', function(event)  {
 		if (data.editURL) {
 			location.href = data.editURL;
 		}
 	});
-	keypress.bind({}, 'j', function(event)  {
+	function navigateToNext() {
 		if (data.nextItem) {
 			navigateTo(data.nextItem.link);
 		}
-	});
-	keypress.bind({}, 'k', function(event)  {
+	}
+	function navigateToPrev() {
 		if (data.prevItem) {
 			navigateTo(data.prevItem.link);
 		}
-	});
+	}
+	keypress.bind({}, 'j', navigateToNext);
+	keypress.bind({}, 'k', navigateToPrev);
+	keypress.bind({}, 'right', navigateToNext);
+	keypress.bind({}, 'left', navigateToPrev);
+	keypress.bind({}, 'enter', navigateToNext);
+	keypress.bind({shift: true}, 'enter', navigateToPrev);
+	// TODO: If scrolled to bottom
+	// keypress.bind({}, 'space', navigateToNext);
+	// keypress.bind({}, 'down', navigateToNext);
+	// TODO: If scrolled to top
+	// keypress.bind({shift: true}, 'space', navigateToPrev);
+	// keypress.bind({}, 'up', navigateToPrev);
+
 	keypress.bind({}, 'r', function(event)  {
 		navigateTo('/');
 	});
@@ -278,6 +299,32 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+		Only some keys work in Safari in fullscreen mode
+		9	tab
+		13	enter
+		32	space
+		37	left
+		38	up
+		39	right
+		40	down
+
+		112	F1
+		123 F12
+
+		186	;
+		187	=
+		188	,
+		189	-
+		190	.
+		191	/
+		192 `
+		219	[
+		220	\
+		221	]
+		222	"
+	 */
+
 	var keyCodeMap = {
 		'backspace': 8,
 		'tab': 9,
@@ -362,7 +409,6 @@
 	function handleDown(e) {
 		var bucket = bindings[e.keyCode];
 		if (bucket === undefined) {
-			// console.log('Unrecognized key:', e.keyCode);
 			return;
 		}
 
@@ -394,51 +440,78 @@
 
 	var handlerAdded = false;
 
-	function fullscreenErrorHandler() {
+	// webkitRequestFullScreen fails when passing Element.ALLOW_KEYBOARD_INPUT in Safari 5.1.2
+	// http://stackoverflow.com/questions/8427413/webkitrequestfullscreen-fails-when-passing-element-allow-keyboard-input-in-safar
+
+	var fullscreenEnabled = getEnabled();
+	var exitFullscreen = getExitFunc();
+
+	function errorHandler() {
 		alert('Fullscreen operation failed');
 	}
 
-	var fullscreenEnabled =
-		document.fullscreenEnabled ||
-		document.mozFullScreenEnabled ||
-		document.webkitFullscreenEnabled ||
-		document.msFullscreenEnabled;
-	var exitFullscreen =
-		document.exitFullscreen ||
-		document.mozCancelFullScreen ||
-		document.webkitExitFullscreen ||
-		document.msExitFullscreen;
+	// function stateChangeHandler() {
+	// 	state = getElement() !== undefined;
+	// }
+
+	function getElement() {
+		return document.fullscreenElement ||
+		       document.mozFullScreenElement ||
+		       document.webkitFullscreenElement ||
+		       document.msFullscreenElement;
+	}
+
+	function getRequestFunc(element) {
+		var fn = element.requestFullscreen ||
+		         element.mozRequestFullScreen ||
+		         element.webkitRequestFullscreen ||
+		         element.msRequestFullscreen;
+		return fn.bind(element);
+	}
+
+	function getExitFunc() {
+		var fn = document.exitFullscreen ||
+		         document.mozCancelFullScreen ||
+		         document.webkitExitFullscreen ||
+		         document.msExitFullscreen;
+		return fn.bind(document);
+	}
+
+	function getEnabled() {
+		return document.fullscreenEnabled ||
+		       document.mozFullScreenEnabled ||
+		       document.webkitFullscreenEnabled ||
+		       document.msFullscreenEnabled;
+	}
+
+	function getState() {
+		return getElement() !== undefined;
+	} module.exports.getState = getState;
 
 	function toggle(element) {
 		if (!fullscreenEnabled) {
 			console.warn('no fullscreen capability');
 			return;
 		}
-		var fullscreenElement =
-			document.fullscreenElement ||
-			document.mozFullScreenElement ||
-			document.webkitFullscreenElement ||
-			document.msFullscreenElement;
-		var requestFullscreen =
-			element.requestFullscreen ||
-			element.mozRequestFullScreen ||
-			element.webkitRequestFullscreen ||
-			element.msRequestFullscreen;
 
 		// If this is the first time
 		if (!handlerAdded) {
-			document.addEventListener('fullscreenerror', fullscreenErrorHandler);
-			document.addEventListener('webkitfullscreenerror', fullscreenErrorHandler);
-			document.addEventListener('mozfullscreenerror', fullscreenErrorHandler);
-			document.addEventListener('MSFullscreenError', fullscreenErrorHandler);
+			document.addEventListener('fullscreenerror', errorHandler);
+			document.addEventListener('webkitfullscreenerror', errorHandler);
+			document.addEventListener('mozfullscreenerror', errorHandler);
+			document.addEventListener('MSFullscreenError', errorHandler);
+			// document.addEventListener('fullscreenchange', stateChangeHandler);
+			// document.addEventListener('webkitfullscreenchange', stateChangeHandler);
+			// document.addEventListener('mozfullscreenchange', stateChangeHandler);
+			// document.addEventListener('MSFullscreenChange', stateChangeHandler);
 			handlerAdded = true;
 		}
 
 		// Toggle fullscreen
-		if (fullscreenElement === element) {
-			exitFullscreen.apply(document);
+		if (getElement() !== element) {
+			getRequestFunc(element)(); // Element.ALLOW_KEYBOARD_INPUT
 		} else {
-			requestFullscreen.apply(element);
+			exitFullscreen();
 		}
 	} module.exports.toggle = toggle;
 
