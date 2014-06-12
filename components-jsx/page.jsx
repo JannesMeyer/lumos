@@ -35,16 +35,15 @@ addEventListener('popstate', event => {
 	}
 });
 
+// TODO: links inside the page
 function navigateTo(path) {
-	// TODO: Don't push state in fullscreen, because it exits fullscreen mode
-	// if (deferPushState) {
-	// } else {
-	//	 history.pushState(undefined, undefined, path);
-	// }
+	// TODO: Queue push state when in fullscreen, because it would exit fullscreen mode
+	history.pushState(undefined, undefined, path);
 	getJSON(path)
 	.then(newData => {
-		// history.replaceState(newData, undefined, path);
+		history.replaceState(newData, undefined, path);
 		data = newData;
+		// TODO: Scroll to top
 		renderBody();
 	})
 	.catch(err => {
@@ -223,10 +222,16 @@ var LumosApplication = React.createClass({
 		};
 	},
 	componentDidMount() {
+		console.log('componentDidMount');
 		history.replaceState(this.props.data, null, location.pathname);
 	},
+	componentWillUpdate() {
+		console.log('componentWillUpdate');
+		// Scroll to the top before
+		document.body.scrollTop = 0;
+	},
 	render() {
-		console.log('rendering');
+		console.log('render');
 		var data = this.props.data;
 
 		return (
