@@ -1,5 +1,6 @@
 import keypress from 'lib/keypress-tool';
 import fullscreen from 'lib/fullscreen-tool';
+import Promise from 'bluebird'; // Replace native promises
 
 /*
 - [XMLHttpRequest | MDN](https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest)
@@ -38,12 +39,13 @@ function navigateTo(path) {
 	getJSON(path)
 	.then(newData => {
 		history.pushState(newData, null, path);
-		// console.log(data);
-
 		data = newData;
 		renderBody();
 	})
-	.catch(console.error.bind(console));
+	.catch(err => {
+		console.error(err);
+		throw err;
+	});
 }
 
 keypress.bind({}, 'e', event => {
@@ -189,7 +191,7 @@ var PageButton = React.createClass({
 
 var LumosApplication = React.createClass({
 	pickRandomColor() {
-		var colors = ['purple-mist', 'orange', 'blue', 'apple', 'cyan'];
+		var colors = ['purple-mist', 'orange', 'blue', 'cyan']; // 'apple'
 		return colors[Math.floor(Math.random() * colors.length)];
 	},
 	getInitialState() {

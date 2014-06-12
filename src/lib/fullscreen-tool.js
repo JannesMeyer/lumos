@@ -17,6 +17,7 @@ var exitFullscreen =
 
 export function toggle(element) {
 	if (!fullscreenEnabled) {
+		console.warn('no fullscreen capability');
 		return;
 	}
 	var fullscreenElement =
