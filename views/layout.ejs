@@ -9,9 +9,17 @@
   <link rel="stylesheet" href="/stylesheets/theme-one.css">
   <link rel="stylesheet" href="/stylesheets/hljs/github.css">
   <link rel="icon" href="/images/favicon.png">
+  <!--
+  We don't do this because we don't want chrome to prerender pages that we will load by ajax instead
   <% if (typeof prevItem !== 'undefined') { %><link rel="prev" href="<%- prevItem.link %>"><% } %>
   <% if (typeof nextItem !== 'undefined') { %><link rel="next" href="<%- nextItem.link %>"><% } %>
-  <script src="/javascripts/client.js"></script>
+  -->
+  <!-- <script src="/javascripts/vendor/react.js" defer></script> -->
+  <script>
+  addEventListener('popstate', function() {
+    console.log('popstate');
+  });
+  </script>
 </head>
 <body>
 

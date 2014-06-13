@@ -48,6 +48,33 @@
 	var fullscreen = __webpack_require__(2);
 	var Promise = __webpack_require__(3); // Replace native promises
 
+	console.log('load');
+
+	addEventListener('popstate', function() {
+		console.log('popstate');
+	});
+
+	/* Chrome sucks for this XHR stuff:
+
+	https://code.google.com/p/chromium/issues/detail?id=108425
+	https://code.google.com/p/chromium/issues/detail?id=108766
+	https://code.google.com/p/chromium/issues/detail?id=94369#c65
+	http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html#sec13.13
+
+	[JSON breaking back button in Chrome, Reload Button in IE (Showing as naked data) - Stack Overflow](http://stackoverflow.com/questions/10715852/json-breaking-back-button-in-chrome-reload-button-in-ie-showing-as-naked-data)
+
+	Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+	Pragma: no-cache
+	Expires: Fri, 01 Jan 1990 00:00:00 GMT
+
+	IE sucks when using vary:
+	http://crisp.tweakblogs.net/blog/311/internet-explorer-and-cacheing-beware-of-the-vary.html
+
+	Chrome sucks for link rel="subresource":
+	https://code.google.com/p/chromium/issues/detail?id=312327
+
+	*/
+
 	/*
 	- [XMLHttpRequest | MDN](https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest)
 	- [XMLHttpRequest wrapped into a promise](https://gist.github.com/matthewp/3099268)
@@ -56,6 +83,7 @@
 		var req = new XMLHttpRequest();
 		req.open('GET', path);
 		req.setRequestHeader('Accept', 'application/json');
+		// req.dataType = 'json';
 
 		return new Promise(function(resolve, reject) {
 			req.onload = function(event)  {
@@ -258,12 +286,12 @@
 
 	var LumosApplication = React.createClass({displayName: 'LumosApplication',
 		pickRandomColor:function() {
-			var colors = ['purple-mist', 'orange', 'blue', 'cyan']; // 'apple'
+			var colors = ['purple-mist', 'orange', 'blue', 'cyan']; // apple
 			return colors[Math.floor(Math.random() * colors.length)];
 		},
 		getInitialState:function() {
 			return {
-				color: this.pickRandomColor(),
+				color: 'blue',
 				path: ''
 			};
 		},

@@ -61,6 +61,10 @@ module.exports = function(req, res, next) {
 		.then(() => {
 			var acceptHeader = req.get('Accept');
 			if (acceptHeader === 'application/json') {
+				res.set({
+					'Content-Type': 'application/json',
+					'Vary': 'Accept'
+				});
 				res.json(data);
 			} else {
 				res.render('document', data);
@@ -120,6 +124,10 @@ module.exports = function(req, res, next) {
 			.then(() => {
 				var acceptHeader = req.get('Accept');
 				if (acceptHeader === 'application/json') {
+					res.set({
+						'Content-Type': 'application/json',
+						'Vary': 'Accept'
+					});
 					res.json(data);
 				} else {
 					res.render('document', data);
