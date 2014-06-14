@@ -46,7 +46,8 @@
 
 	/** @jsx React.DOM */var keypress = __webpack_require__(1);
 	var fullscreen = __webpack_require__(2);
-	var Promise = __webpack_require__(3); // Replace native promises
+	var scroll = __webpack_require__(3);
+	var Promise = __webpack_require__(4); // Replace native promises
 
 	console.log('load');
 
@@ -72,6 +73,8 @@
 
 	Chrome sucks for link rel="subresource":
 	https://code.google.com/p/chromium/issues/detail?id=312327
+	http://caffeinatetheweb.com/baking-acceleration-into-the-web-itself/
+	https://docs.google.com/document/d/1HeTVglnZHD_mGSaID1gUZPqLAa1lXWObV-Zkx6q_HF4/edit
 
 	*/
 
@@ -135,15 +138,17 @@
 			location.href = data.editURL;
 		}
 	});
-	function navigateToNext() {
+	function navigateToNext(e) {
 		if (data.nextItem) {
 			navigateTo(data.nextItem.link);
 		}
+		e.preventDefault();
 	}
-	function navigateToPrev() {
+	function navigateToPrev(e) {
 		if (data.prevItem) {
 			navigateTo(data.prevItem.link);
 		}
+		e.preventDefault();
 	}
 	keypress.bind({}, 'j', navigateToNext);
 	keypress.bind({}, 'k', navigateToPrev);
@@ -151,12 +156,13 @@
 	keypress.bind({}, 'left', navigateToPrev);
 	keypress.bind({}, 'enter', navigateToNext);
 	keypress.bind({shift: true}, 'enter', navigateToPrev);
-	// TODO: If scrolled to bottom
-	// keypress.bind({}, 'space', navigateToNext);
-	// keypress.bind({}, 'down', navigateToNext);
-	// TODO: If scrolled to top
-	// keypress.bind({shift: true}, 'space', navigateToPrev);
-	// keypress.bind({}, 'up', navigateToPrev);
+
+	// Only go further if we are at the bottom of the current page
+	keypress.bind({}, 'down', scroll.ifAtBottom(navigateToNext));
+	keypress.bind({}, 'space', scroll.ifAtBottom(navigateToNext));
+	// TODO: sroll the new page to the bottom when going back
+	keypress.bind({shift: true}, 'space', scroll.ifAtTop(navigateToPrev));
+	keypress.bind({}, 'up', scroll.ifAtTop(navigateToPrev));
 
 	keypress.bind({}, 'r', function(event)  {
 		navigateTo('/');
@@ -552,6 +558,44 @@
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var html = document.documentElement;
+	var body = document.body;
+
+
+	function isAtTop() {
+		// var scrollY = document.body.scrollTop || document.documentElement.scrollTop;
+		return window.scrollY <= 0;
+	} module.exports.isAtTop = isAtTop;
+
+	// TODO: this cannot determined accurately until the document has finished loading
+	function isAtBottom() {
+		// Don't work well with html and body at 100% height:
+		// html.getBoundingClientRect()
+		// html.getClientRects()
+
+		return html.scrollHeight - html.clientHeight - window.scrollY <= 0;
+	} module.exports.isAtBottom = isAtBottom;
+
+	function ifAtTop(callback) {
+		return function(event) {
+			if (isAtTop()) {
+				callback(event);
+			}
+		};
+	} module.exports.ifAtTop = ifAtTop;
+
+	function ifAtBottom(callback) {
+		return function(event) {
+			if (isAtBottom()) {
+				callback(event);
+			}
+		};
+	} module.exports.ifAtBottom = ifAtBottom;
+
+/***/ },
+/* 4 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/**
 	 * Copyright (c) 2014 Petka Antonov
 	 * 
@@ -575,11 +619,11 @@
 	 * 
 	 */
 	"use strict";
-	var Promise = __webpack_require__(4)();
+	var Promise = __webpack_require__(5)();
 	module.exports = Promise;
 
 /***/ },
-/* 4 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -613,19 +657,19 @@
 	    return bluebird;
 	}
 	module.exports = function() {
-	var util = __webpack_require__(5);
-	var async = __webpack_require__(6);
-	var errors = __webpack_require__(7);
+	var util = __webpack_require__(6);
+	var async = __webpack_require__(7);
+	var errors = __webpack_require__(8);
 
 	var INTERNAL = function(){};
 	var APPLY = {};
 	var NEXT_FILTER = {e: null};
 
-	var cast = __webpack_require__(8)(Promise, INTERNAL);
-	var PromiseArray = __webpack_require__(9)(Promise, INTERNAL, cast);
-	var CapturedTrace = __webpack_require__(10)();
-	var CatchFilter = __webpack_require__(11)(NEXT_FILTER);
-	var PromiseResolver = __webpack_require__(12);
+	var cast = __webpack_require__(9)(Promise, INTERNAL);
+	var PromiseArray = __webpack_require__(10)(Promise, INTERNAL, cast);
+	var CapturedTrace = __webpack_require__(11)();
+	var CatchFilter = __webpack_require__(12)(NEXT_FILTER);
+	var PromiseResolver = __webpack_require__(13);
 
 	var isArray = util.isArray;
 
@@ -642,7 +686,7 @@
 	var markAsOriginatingFromRejection = errors.markAsOriginatingFromRejection;
 	var canAttach = errors.canAttach;
 	var thrower = util.thrower;
-	var apiRejection = __webpack_require__(13)(Promise);
+	var apiRejection = __webpack_require__(14)(Promise);
 
 
 	var makeSelfResolutionError = function Promise$_makeSelfResolutionError() {
@@ -1587,10 +1631,10 @@
 	}
 
 	Promise._makeSelfResolutionError = makeSelfResolutionError;
-	__webpack_require__(14)(Promise, NEXT_FILTER, cast);
-	__webpack_require__(15)(Promise);
+	__webpack_require__(15)(Promise, NEXT_FILTER, cast);
 	__webpack_require__(16)(Promise);
-	__webpack_require__(17)(Promise, PromiseArray, cast, INTERNAL);
+	__webpack_require__(17)(Promise);
+	__webpack_require__(18)(Promise, PromiseArray, cast, INTERNAL);
 	Promise.RangeError = RangeError;
 	Promise.CancellationError = CancellationError;
 	Promise.TimeoutError = TimeoutError;
@@ -1602,33 +1646,33 @@
 	util.toFastProperties(Promise);
 	util.toFastProperties(Promise.prototype);
 	Promise.Promise = Promise;
-	__webpack_require__(18)(Promise,INTERNAL,cast);
 	__webpack_require__(19)(Promise,INTERNAL,cast);
-	__webpack_require__(20)(Promise);
-	__webpack_require__(21)(Promise,apiRejection,INTERNAL,cast);
-	__webpack_require__(22)(Promise,PromiseArray,apiRejection,cast,INTERNAL);
-	__webpack_require__(23)(Promise);
-	__webpack_require__(24)(Promise,INTERNAL);
-	__webpack_require__(25)(Promise,PromiseArray,cast);
-	__webpack_require__(26)(Promise,PromiseArray,apiRejection,cast,INTERNAL);
-	__webpack_require__(27)(Promise,PromiseArray);
-	__webpack_require__(28)(Promise,PromiseArray,apiRejection);
-	__webpack_require__(29)(Promise,PromiseArray);
-	__webpack_require__(30)(Promise,INTERNAL);
+	__webpack_require__(20)(Promise,INTERNAL,cast);
+	__webpack_require__(21)(Promise);
+	__webpack_require__(22)(Promise,apiRejection,INTERNAL,cast);
+	__webpack_require__(23)(Promise,PromiseArray,apiRejection,cast,INTERNAL);
+	__webpack_require__(24)(Promise);
+	__webpack_require__(25)(Promise,INTERNAL);
+	__webpack_require__(26)(Promise,PromiseArray,cast);
+	__webpack_require__(27)(Promise,PromiseArray,apiRejection,cast,INTERNAL);
+	__webpack_require__(28)(Promise,PromiseArray);
+	__webpack_require__(29)(Promise,PromiseArray,apiRejection);
+	__webpack_require__(30)(Promise,PromiseArray);
 	__webpack_require__(31)(Promise,INTERNAL);
-	__webpack_require__(32)(Promise,PromiseArray);
-	__webpack_require__(33)(Promise,INTERNAL);
-	__webpack_require__(34)(Promise,apiRejection,cast);
+	__webpack_require__(32)(Promise,INTERNAL);
+	__webpack_require__(33)(Promise,PromiseArray);
+	__webpack_require__(34)(Promise,INTERNAL);
+	__webpack_require__(35)(Promise,apiRejection,cast);
 
 	Promise.prototype = Promise.prototype;
 	return Promise;
 
 	};
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(35)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(36)))
 
 /***/ },
-/* 5 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -1654,7 +1698,7 @@
 	 * 
 	 */
 	"use strict";
-	var es5 = __webpack_require__(36);
+	var es5 = __webpack_require__(37);
 	var haveGetters = (function(){
 	    try {
 	        var o = {};
@@ -1902,7 +1946,7 @@
 
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -1928,10 +1972,10 @@
 	 * 
 	 */
 	"use strict";
-	var schedule = __webpack_require__(37);
-	var Queue = __webpack_require__(38);
-	var errorObj = __webpack_require__(5).errorObj;
-	var tryCatch1 = __webpack_require__(5).tryCatch1;
+	var schedule = __webpack_require__(38);
+	var Queue = __webpack_require__(39);
+	var errorObj = __webpack_require__(6).errorObj;
+	var tryCatch1 = __webpack_require__(6).tryCatch1;
 	var _process = typeof process !== "undefined" ? process : void 0;
 
 	function Async() {
@@ -2017,10 +2061,10 @@
 
 	module.exports = new Async();
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(35)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(36)))
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -2046,8 +2090,8 @@
 	 * 
 	 */
 	"use strict";
-	var Objectfreeze = __webpack_require__(36).freeze;
-	var util = __webpack_require__(5);
+	var Objectfreeze = __webpack_require__(37).freeze;
+	var util = __webpack_require__(6);
 	var inherits = util.inherits;
 	var notEnumerableProp = util.notEnumerableProp;
 
@@ -2171,7 +2215,7 @@
 
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -2198,8 +2242,8 @@
 	 */
 	"use strict";
 	module.exports = function(Promise, INTERNAL) {
-	var util = __webpack_require__(5);
-	var canAttach = __webpack_require__(7).canAttach;
+	var util = __webpack_require__(6);
+	var canAttach = __webpack_require__(8).canAttach;
 	var errorObj = util.errorObj;
 	var isObject = util.isObject;
 
@@ -2310,7 +2354,7 @@
 
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -2337,8 +2381,8 @@
 	 */
 	"use strict";
 	module.exports = function(Promise, INTERNAL, cast) {
-	var canAttach = __webpack_require__(7).canAttach;
-	var util = __webpack_require__(5);
+	var canAttach = __webpack_require__(8).canAttach;
+	var util = __webpack_require__(6);
 	var isArray = util.isArray;
 
 	function toResolutionValue(val) {
@@ -2518,7 +2562,7 @@
 
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -2545,8 +2589,8 @@
 	 */
 	"use strict";
 	module.exports = function() {
-	var inherits = __webpack_require__(5).inherits;
-	var defineProperty = __webpack_require__(36).defineProperty;
+	var inherits = __webpack_require__(6).inherits;
+	var defineProperty = __webpack_require__(37).defineProperty;
 
 	var rignore = new RegExp(
 	    "\\b(?:[a-zA-Z0-9.]+\\$_\\w+|" +
@@ -2741,7 +2785,7 @@
 
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -2768,11 +2812,11 @@
 	 */
 	"use strict";
 	module.exports = function(NEXT_FILTER) {
-	var util = __webpack_require__(5);
-	var errors = __webpack_require__(7);
+	var util = __webpack_require__(6);
+	var errors = __webpack_require__(8);
 	var tryCatch1 = util.tryCatch1;
 	var errorObj = util.errorObj;
-	var keys = __webpack_require__(36).keys;
+	var keys = __webpack_require__(37).keys;
 	var TypeError = errors.TypeError;
 
 	function CatchFilter(instances, callback, promise) {
@@ -2841,7 +2885,7 @@
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -2867,14 +2911,14 @@
 	 * 
 	 */
 	"use strict";
-	var util = __webpack_require__(5);
+	var util = __webpack_require__(6);
 	var maybeWrapAsError = util.maybeWrapAsError;
-	var errors = __webpack_require__(7);
+	var errors = __webpack_require__(8);
 	var TimeoutError = errors.TimeoutError;
 	var OperationalError = errors.OperationalError;
-	var async = __webpack_require__(6);
+	var async = __webpack_require__(7);
 	var haveGetters = util.haveGetters;
-	var es5 = __webpack_require__(36);
+	var es5 = __webpack_require__(37);
 
 	function isUntypedError(obj) {
 	    return obj instanceof Error &&
@@ -3005,50 +3049,6 @@
 
 
 /***/ },
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise) {
-	var TypeError = __webpack_require__(7).TypeError;
-
-	function apiRejection(msg) {
-	    var error = new TypeError(msg);
-	    var ret = Promise.rejected(error);
-	    var parent = ret._peekContext();
-	    if (parent != null) {
-	        parent._attachExtraTrace(error);
-	    }
-	    return ret;
-	}
-
-	return apiRejection;
-	};
-
-
-/***/ },
 /* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -3075,8 +3075,52 @@
 	 * 
 	 */
 	"use strict";
+	module.exports = function(Promise) {
+	var TypeError = __webpack_require__(8).TypeError;
+
+	function apiRejection(msg) {
+	    var error = new TypeError(msg);
+	    var ret = Promise.rejected(error);
+	    var parent = ret._peekContext();
+	    if (parent != null) {
+	        parent._attachExtraTrace(error);
+	    }
+	    return ret;
+	}
+
+	return apiRejection;
+	};
+
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
 	module.exports = function(Promise, NEXT_FILTER, cast) {
-	var util = __webpack_require__(5);
+	var util = __webpack_require__(6);
 	var wrapsPrimitiveReceiver = util.wrapsPrimitiveReceiver;
 	var isPrimitive = util.isPrimitive;
 	var thrower = util.thrower;
@@ -3175,7 +3219,7 @@
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -3201,7 +3245,7 @@
 	 * 
 	 */
 	"use strict";
-	var util = __webpack_require__(5);
+	var util = __webpack_require__(6);
 	var isPrimitive = util.isPrimitive;
 	var wrapsPrimitiveReceiver = util.wrapsPrimitiveReceiver;
 
@@ -3259,7 +3303,7 @@
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -3341,7 +3385,7 @@
 
 
 /***/ },
-/* 17 */
+/* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -3369,7 +3413,7 @@
 	"use strict";
 	module.exports =
 	function(Promise, PromiseArray, cast, INTERNAL) {
-	var util = __webpack_require__(5);
+	var util = __webpack_require__(6);
 	var canEvaluate = util.canEvaluate;
 	var tryCatch1 = util.tryCatch1;
 	var errorObj = util.errorObj;
@@ -3469,7 +3513,7 @@
 
 
 /***/ },
-/* 18 */
+/* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -3506,9 +3550,9 @@
 	};
 
 	module.exports = function(Promise, INTERNAL, cast) {
-	var util = __webpack_require__(5);
-	var errors = __webpack_require__(7);
-	var apiRejection = __webpack_require__(13)(Promise);
+	var util = __webpack_require__(6);
+	var errors = __webpack_require__(8);
+	var apiRejection = __webpack_require__(14)(Promise);
 	var TimeoutError = Promise.TimeoutError;
 
 	var afterTimeout = function Promise$_afterTimeout(promise, message, ms) {
@@ -3566,7 +3610,7 @@
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -3593,8 +3637,8 @@
 	 */
 	"use strict";
 	module.exports = function(Promise, INTERNAL, cast) {
-	var apiRejection = __webpack_require__(13)(Promise);
-	var isArray = __webpack_require__(5).isArray;
+	var apiRejection = __webpack_require__(14)(Promise);
+	var isArray = __webpack_require__(6).isArray;
 
 	var raceLater = function Promise$_raceLater(promise) {
 	    return promise.then(function(array) {
@@ -3644,7 +3688,7 @@
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -3675,7 +3719,7 @@
 	var getterCache = cr && cr(null);
 	callerCache[" size"] = getterCache[" size"] = 0;
 	module.exports = function(Promise) {
-	var util = __webpack_require__(5);
+	var util = __webpack_require__(6);
 	var canEvaluate = util.canEvaluate;
 	var isIdentifier = util.isIdentifier;
 
@@ -3766,7 +3810,7 @@
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -3793,10 +3837,10 @@
 	 */
 	"use strict";
 	module.exports = function(Promise, apiRejection, INTERNAL, cast) {
-	var errors = __webpack_require__(7);
+	var errors = __webpack_require__(8);
 	var TypeError = errors.TypeError;
-	var deprecated = __webpack_require__(5).deprecated;
-	var util = __webpack_require__(5);
+	var deprecated = __webpack_require__(6).deprecated;
+	var util = __webpack_require__(6);
 	var errorObj = util.errorObj;
 	var tryCatch1 = util.tryCatch1;
 	var yieldHandlers = [];
@@ -3923,7 +3967,7 @@
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -3950,7 +3994,7 @@
 	 */
 	"use strict";
 	module.exports = function(Promise, PromiseArray, apiRejection, cast, INTERNAL) {
-	var util = __webpack_require__(5);
+	var util = __webpack_require__(6);
 	var tryCatch3 = util.tryCatch3;
 	var errorObj = util.errorObj;
 	var PENDING = {};
@@ -4078,7 +4122,7 @@
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4105,8 +4149,8 @@
 	 */
 	"use strict";
 	module.exports = function(Promise) {
-	var util = __webpack_require__(5);
-	var async = __webpack_require__(6);
+	var util = __webpack_require__(6);
+	var async = __webpack_require__(7);
 	var tryCatch2 = util.tryCatch2;
 	var tryCatch1 = util.tryCatch1;
 	var errorObj = util.errorObj;
@@ -4160,7 +4204,7 @@
 
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4188,13 +4232,13 @@
 	"use strict";
 	module.exports = function(Promise, INTERNAL) {
 	var THIS = {};
-	var util = __webpack_require__(5);
-	var nodebackForPromise = __webpack_require__(12)
+	var util = __webpack_require__(6);
+	var nodebackForPromise = __webpack_require__(13)
 	    ._nodebackForPromise;
 	var withAppended = util.withAppended;
 	var maybeWrapAsError = util.maybeWrapAsError;
 	var canEvaluate = util.canEvaluate;
-	var TypeError = __webpack_require__(7).TypeError;
+	var TypeError = __webpack_require__(8).TypeError;
 	var defaultSuffix = "Async";
 	var defaultFilter = function(name, func) {
 	    return util.isIdentifier(name) &&
@@ -4492,7 +4536,7 @@
 
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4519,10 +4563,10 @@
 	 */
 	"use strict";
 	module.exports = function(Promise, PromiseArray, cast) {
-	var util = __webpack_require__(5);
-	var apiRejection = __webpack_require__(13)(Promise);
+	var util = __webpack_require__(6);
+	var apiRejection = __webpack_require__(14)(Promise);
 	var isObject = util.isObject;
-	var es5 = __webpack_require__(36);
+	var es5 = __webpack_require__(37);
 
 	function PropertiesPromiseArray(obj) {
 	    var keys = es5.keys(obj);
@@ -4606,7 +4650,7 @@
 
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4633,7 +4677,7 @@
 	 */
 	"use strict";
 	module.exports = function(Promise, PromiseArray, apiRejection, cast, INTERNAL) {
-	var util = __webpack_require__(5);
+	var util = __webpack_require__(6);
 	var tryCatch4 = util.tryCatch4;
 	var tryCatch3 = util.tryCatch3;
 	var errorObj = util.errorObj;
@@ -4770,7 +4814,7 @@
 
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4799,7 +4843,7 @@
 	module.exports =
 	    function(Promise, PromiseArray) {
 	var PromiseInspection = Promise.PromiseInspection;
-	var util = __webpack_require__(5);
+	var util = __webpack_require__(6);
 
 	function SettledPromiseArray(values) {
 	    this.constructor$(values);
@@ -4843,7 +4887,7 @@
 
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4871,9 +4915,9 @@
 	"use strict";
 	module.exports =
 	function(Promise, PromiseArray, apiRejection) {
-	var util = __webpack_require__(5);
-	var RangeError = __webpack_require__(7).RangeError;
-	var AggregateError = __webpack_require__(7).AggregateError;
+	var util = __webpack_require__(6);
+	var RangeError = __webpack_require__(8).RangeError;
+	var AggregateError = __webpack_require__(8).AggregateError;
 	var isArray = util.isArray;
 
 
@@ -5000,7 +5044,7 @@
 
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5027,9 +5071,9 @@
 	 */
 	"use strict";
 	module.exports = function(Promise, PromiseArray) {
-	var util = __webpack_require__(5);
-	var async = __webpack_require__(6);
-	var errors = __webpack_require__(7);
+	var util = __webpack_require__(6);
+	var async = __webpack_require__(7);
+	var errors = __webpack_require__(8);
 	var tryCatch1 = util.tryCatch1;
 	var errorObj = util.errorObj;
 
@@ -5110,7 +5154,7 @@
 
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5137,9 +5181,9 @@
 	 */
 	"use strict";
 	module.exports = function(Promise, INTERNAL) {
-	var errors = __webpack_require__(7);
+	var errors = __webpack_require__(8);
 	var canAttach = errors.canAttach;
-	var async = __webpack_require__(6);
+	var async = __webpack_require__(7);
 	var CancellationError = errors.CancellationError;
 
 	Promise.prototype._cancel = function Promise$_cancel(reason) {
@@ -5191,7 +5235,7 @@
 
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5231,7 +5275,7 @@
 
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5283,7 +5327,7 @@
 
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5323,7 +5367,7 @@
 
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5350,8 +5394,8 @@
 	 */
 	"use strict";
 	module.exports = function (Promise, apiRejection, cast) {
-	    var TypeError = __webpack_require__(7).TypeError;
-	    var inherits = __webpack_require__(5).inherits;
+	    var TypeError = __webpack_require__(8).TypeError;
+	    var inherits = __webpack_require__(6).inherits;
 	    var PromiseInspection = Promise.PromiseInspection;
 
 	    function inspectionMapper(inspections) {
@@ -5503,7 +5547,7 @@
 
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// shim for using process in browser
@@ -5572,7 +5616,7 @@
 
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5665,7 +5709,7 @@
 
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -5730,10 +5774,10 @@
 	else throw new Error("no async scheduler available");
 	module.exports = schedule;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(35)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(36)))
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**

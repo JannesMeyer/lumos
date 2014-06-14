@@ -1,5 +1,6 @@
 import keypress from 'lib/keypress-tool';
 import fullscreen from 'lib/fullscreen-tool';
+import scroll from 'lib/scroll-tool';
 import Promise from 'bluebird'; // Replace native promises
 
 console.log('load');
@@ -26,6 +27,8 @@ http://crisp.tweakblogs.net/blog/311/internet-explorer-and-cacheing-beware-of-th
 
 Chrome sucks for link rel="subresource":
 https://code.google.com/p/chromium/issues/detail?id=312327
+http://caffeinatetheweb.com/baking-acceleration-into-the-web-itself/
+https://docs.google.com/document/d/1HeTVglnZHD_mGSaID1gUZPqLAa1lXWObV-Zkx6q_HF4/edit
 
 */
 
@@ -89,15 +92,17 @@ keypress.bind({}, 'e', event => {
 		location.href = data.editURL;
 	}
 });
-function navigateToNext() {
+function navigateToNext(e) {
 	if (data.nextItem) {
 		navigateTo(data.nextItem.link);
 	}
+	e.preventDefault();
 }
-function navigateToPrev() {
+function navigateToPrev(e) {
 	if (data.prevItem) {
 		navigateTo(data.prevItem.link);
 	}
+	e.preventDefault();
 }
 keypress.bind({}, 'j', navigateToNext);
 keypress.bind({}, 'k', navigateToPrev);
@@ -105,12 +110,13 @@ keypress.bind({}, 'right', navigateToNext);
 keypress.bind({}, 'left', navigateToPrev);
 keypress.bind({}, 'enter', navigateToNext);
 keypress.bind({shift: true}, 'enter', navigateToPrev);
-// TODO: If scrolled to bottom
-// keypress.bind({}, 'space', navigateToNext);
-// keypress.bind({}, 'down', navigateToNext);
-// TODO: If scrolled to top
-// keypress.bind({shift: true}, 'space', navigateToPrev);
-// keypress.bind({}, 'up', navigateToPrev);
+
+// Only go further if we are at the bottom of the current page
+keypress.bind({}, 'down', scroll.ifAtBottom(navigateToNext));
+keypress.bind({}, 'space', scroll.ifAtBottom(navigateToNext));
+// TODO: sroll the new page to the bottom when going back
+keypress.bind({shift: true}, 'space', scroll.ifAtTop(navigateToPrev));
+keypress.bind({}, 'up', scroll.ifAtTop(navigateToPrev));
 
 keypress.bind({}, 'r', event => {
 	navigateTo('/');
