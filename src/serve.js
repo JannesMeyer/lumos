@@ -2,7 +2,10 @@ module util from 'util'
 module marked from 'marked'
 module path from 'path'
 module fs from 'fs'
+module layout from './templates/layout'
 module denodeify from './denodeify'
+module React from 'react'
+
 var fsStat     = denodeify(fs, fs.stat);
 var fsReadDir  = denodeify(fs, fs.readdir);
 var fsReadFile = denodeify(fs, fs.readFile);
@@ -13,6 +16,10 @@ import { Directory } from './Directory'
 
 var baseDir = process.env.LUMOSPATH || process.cwd(); // Default to current working directory
 var baseDirName = path.basename(baseDir);
+
+function renderToString(data) {
+	layout.render(data);
+}
 
 module.exports = function(req, res, next) {
 	var processedPath = decodeURIComponent(req.path);

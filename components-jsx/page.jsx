@@ -1,7 +1,8 @@
 import keypress from 'lib/keypress-tool';
 import fullscreen from 'lib/fullscreen-tool';
 import scroll from 'lib/scroll-tool';
-import Promise from 'bluebird'; // Replace native promises
+// Replace native promises
+// import Promise from 'bluebird';
 
 console.log('load');
 
