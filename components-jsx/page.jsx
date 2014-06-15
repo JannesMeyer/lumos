@@ -1,3 +1,5 @@
+/** @jsx React.DOM */
+
 import keypress from 'lib/keypress-tool';
 import fullscreen from 'lib/fullscreen-tool';
 import scroll from 'lib/scroll-tool';
