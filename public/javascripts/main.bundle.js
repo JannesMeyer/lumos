@@ -44,7 +44,9 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/** @jsx React.DOM */var keypress = __webpack_require__(1);
+	/** @jsx React.DOM */
+
+	var keypress = __webpack_require__(1);
 	var fullscreen = __webpack_require__(2);
 	var scroll = __webpack_require__(3);
 	// Replace native promises

@@ -37,7 +37,9 @@
   },
   "devDependencies": {
     "bluebird": "^2.1.1",
+    "es6-module-jstransform": "^0.1.4",
     "es6-shim": "0.x",
+    "esprima-fb": "^4001.1.0-dev-harmony-fb",
     "gulp": "3.x",
     "gulp-autoprefixer": "0.x",
     "gulp-changed": "0.x",
@@ -49,7 +51,9 @@
     "gulp-stylus": "1.x",
     "gulp-traceur": "0.x",
     "gulp-util": "2.x",
+    "jstransform": "^5.0.0",
     "jsx-loader": "0.10.2",
+    "loader-utils": "^0.2.2",
     "node-notifier": "^3.0.3",
     "vinyl-source-stream": "0.x",
     "webpack": "1.x"

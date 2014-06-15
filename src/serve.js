@@ -21,7 +21,7 @@ function renderToString(data) {
 	layout.render(data);
 }
 
-module.exports = function(req, res, next) {
+exports = function(req, res, next) {
 	var processedPath = decodeURIComponent(req.path);
 	var requestPath = new SegmentedPath(baseDir, processedPath);
 	if (!requestPath.verifyDescendance()) {

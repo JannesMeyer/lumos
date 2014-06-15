@@ -16,8 +16,8 @@ function stopNode() {
 	}
 }
 
-module.exports.dep = ['build-js-server'];
-module.exports.fn = function() {
+exports.dep = ['build-js-server'];
+exports.fn = function() {
 	stopNode();
 	startNode();
 };

@@ -1,4 +1,4 @@
-module.exports.fn = function(callback) {
+exports.fn = function(callback) {
 	var path = require('path');
 	var gutil = require('gulp-util');
 	var webpack = require('webpack');
@@ -7,15 +7,15 @@ module.exports.fn = function(callback) {
 	// https://github.com/webpack/webpack-with-common-libs/blob/master/gulpfile.js
 	var webpackConfig = {
 		cache: true,
-		entry: './components-jsx/page.jsx',
+		entry: './src/components/page.jsx',
 		output: {
 		    path: './public/javascripts/',
 		    filename: '[name].bundle.js'
 		},
 		module: {
 	        loaders: [
-				{ test: /\.jsx$/, loader: "jsx-loader?harmony&insertPragma=React.DOM" },
-				{ test: /\.js$/, loader: "jsx-loader?harmony" }
+				{ test: /\.jsx$/, loader: __dirname + '/../transform/es6-loader.js?jsx' },
+				{ test: /\.js$/, loader: __dirname + '/../transform/es6-loader.js' }
 	        ]
 		},
 		resolve: {
@@ -32,12 +32,14 @@ module.exports.fn = function(callback) {
 	    // Show notification
 	    // https://github.com/webpack/docs/wiki/node.js-api
 	    // https://github.com/webpack/webpack/blob/master/lib/Stats.js
-        stats.compilation.errors.forEach(function(err) {
-        	notifier.notify({
-        		title: path.basename(err.module.userRequest),
-        		message: err.error.message
-        	});
-        });
+        // stats.compilation.errors.forEach(function(err) {
+        // 	notifier.notify({
+        // 		title: path.basename(err.module.userRequest),
+        // 		message: err.error.message
+        // 	});
+        // });
+
+    	// TODO: configuration error instead of compilation error
 
         // Log error
     	console.error(stats.toString({ colors: true }));

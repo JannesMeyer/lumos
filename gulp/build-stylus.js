@@ -1,4 +1,4 @@
-module.exports.fn = function() {
+exports.fn = function() {
 	var gulp = require('gulp');
 	var stylus = require('gulp-stylus');
 	var plumber = require('gulp-plumber');

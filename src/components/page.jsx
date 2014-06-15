@@ -1,8 +1,8 @@
 /** @jsx React.DOM */
 
-import keypress from 'lib/keypress-tool';
-import fullscreen from 'lib/fullscreen-tool';
-import scroll from 'lib/scroll-tool';
+import keypress from 'client-lib/keypress-tool';
+import fullscreen from 'client-lib/fullscreen-tool';
+import scroll from 'client-lib/scroll-tool';
 // Replace native promises
 // import Promise from 'bluebird';
 

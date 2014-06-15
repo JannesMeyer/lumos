@@ -1,5 +1,3 @@
-// http://www.esdiscuss.org/topic/template-strings-and-templates
-
 export var render = ({title, markupString}) =>
 `<!DOCTYPE html>
 <html>
