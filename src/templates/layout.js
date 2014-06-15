@@ -1,4 +1,4 @@
-export var render = ({title, markupString}) =>
+exports.render = (title, markupString) =>
 `<!DOCTYPE html>
 <html>
 <head>

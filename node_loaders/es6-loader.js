@@ -8,7 +8,6 @@ var transform = require('jstransform').transform;
 var visitors = [];
 [
 	require('es6-module-jstransform').visitorList,
-	// require('es6-module-jstransform/visitors'),
 	require('jstransform/visitors/es6-arrow-function-visitors').visitorList,
 	require('jstransform/visitors/es6-object-concise-method-visitors.js').visitorList,
 	require('jstransform/visitors/es6-class-visitors').visitorList,
@@ -16,7 +15,8 @@ var visitors = [];
 	require('jstransform/visitors/es6-rest-param-visitors').visitorList,
 	require('jstransform/visitors/es6-template-visitors').visitorList,
 	require('./visitors/react').visitorList,
-	require('./visitors/reactDisplayName').visitorList
+	require('./visitors/reactDisplayName').visitorList,
+	require('es6-destructuring-jstransform').visitorList
 ].forEach(function(visitor) {
 	visitors = visitors.concat(visitor);
 });

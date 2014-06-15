@@ -1,4 +1,4 @@
-#!/usr/bin/env node --harmony
+// #!/usr/bin/env node --harmony
 'use strict';
 
 var config = require('../package.json').config;
@@ -7,8 +7,7 @@ var baseUrl = 'http://notes';
 // Understand command line arguments
 var commands = {
 	serve: function(args) {
-		var traceur = require('traceur');
-		var app = require('../dist/app');
+		var app = require('../src/app');
 
 		// TODO: make the port a command line argument
 		var port = process.env.PORT || config.defaultPort;
@@ -57,8 +56,7 @@ var commands = {
 	},
 
 	edit: function(args) {
-		require('traceur');
-		var open = require('../dist/open');
+		var open = require('../src/open');
 		var argv = require('minimist')(args);
 
 		if (argv._.length === 0) {
@@ -78,8 +76,7 @@ var commands = {
 	},
 
 	diary: function(days) {
-		require('traceur');
-		require('../dist/open').openDiary(days);
+		require('../src/open').openDiary(days);
 	}
 };
 

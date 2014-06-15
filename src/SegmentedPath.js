@@ -5,7 +5,7 @@ module path from 'path'
  */
 export class SegmentedPath {
 
-	constructor(basePath, ...segments) {
+	constructor(basePath, segments) {
 		this.basePath = basePath;
 		this.baseDirName = path.basename(basePath);
 		this.segments = segments;
@@ -25,10 +25,10 @@ export class SegmentedPath {
 
 	update() {
 		// Compute the absolute name
-		this.absolute = path.join(this.basePath, ...this.segments_);
+		this.absolute = path.join.apply(path, this.basePath.concat(this.segments_));
 
 		// Only use segments [2, ∞)
-		this.relative = path.join(...this.segments_);
+		this.relative = path.join.apply(path, this.segments_);
 		this.name = path.basename(this.relative);
 		this.sortStr = this.name.toLowerCase();
 		this.isDir = this.relative.endsWith('/');
@@ -55,7 +55,7 @@ export class SegmentedPath {
 		if (this.isDir) {
 
 		} else {
-			var segmentsJoined = path.join(...this.segments_);
+			var segmentsJoined = path.join.apply(path, this.segments_);
 			return new SegmentedPath(this.basePath, path.dirname(segmentsJoined));
 		}
 	}
@@ -65,13 +65,13 @@ export class SegmentedPath {
 		var segments = this.segments_.slice();
 		// Add descendant
 		segments.push(name);
-		return new SegmentedPath(this.basePath, ...segments);
+		return new SegmentedPath(this.basePath, segments);
 	}
 
 	makeClone() {
 		// Clone segments
 		var segments = this.segments_.slice();
-		return new SegmentedPath(this.basePath, ...segments);
+		return new SegmentedPath(this.basePath, segments);
 	}
 
 	makeBreadcrumbs() {

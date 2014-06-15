@@ -97,7 +97,8 @@ export class Directory {
 	}
 
 	hasFile(name) {
-		for(var file of this.files) {
+		for (var i = 0; i < this.files.length; ++i) {
+			var file = this.files[i];
 			if (file.fullName === name) {
 				return true;
 			}

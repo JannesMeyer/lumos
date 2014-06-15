@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "bluebird": "^2.1.1",
+    "es6-destructuring-jstransform": "^0.1.0",
     "es6-module-jstransform": "^0.1.4",
     "es6-shim": "0.x",
     "esprima-fb": "^4001.1.0-dev-harmony-fb",

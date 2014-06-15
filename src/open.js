@@ -29,11 +29,11 @@ function openFiles(files) {
 		});
 	}))
 	.then(() => {
-		for (var file of files) {
+		files.forEach(file => {
 			console.log(`Opening '${file}'`);
-		}
+		});
 		// Open editor
-		spawn(config.editor, [...config.editorArgs, ...files], { stdio: 'inherit' });
+		spawn(config.editor, config.editorArgs.concat(files), { stdio: 'inherit' });
 	});
 }
 
@@ -84,7 +84,7 @@ export function openEditor(file) {
 		argPromise = fsStat(file)
 		.then(stat => {
 			console.log('Opening...', file);
-			return [...config.editorArgs, file];
+			return config.editorArgs.concat([file]);
 		})
 		.catch(err => {
 			console.error('File not found');
