@@ -14,8 +14,8 @@ exports.fn = function(callback) {
 		},
 		module: {
 	        loaders: [
-				{ test: /\.jsx$/, loader: __dirname + '/../transform/es6-loader.js?jsx' },
-				{ test: /\.js$/, loader: __dirname + '/../transform/es6-loader.js' }
+				{ test: /\.jsx$/, loader:  'es6?jsx' },
+				{ test: /\.js$/, loader: 'es6', exclude: [ path.join(__dirname, '..', 'node_modules') ] }
 	        ]
 		},
 		resolve: {
@@ -26,7 +26,8 @@ exports.fn = function(callback) {
 
     webpack(webpackConfig, function(err, stats) {
         if(err) {
-        	throw err;
+			console.error(err);
+			throw err;
         }
 
 	    // Show notification

@@ -25,7 +25,7 @@ module.exports = function(source) {
 	this.cacheable();
 
 	var query = loaderUtils.parseQuery(this.query);
-	if (query.insertPragma) {
+	if (query.jsx) {
 		source = '/** @jsx React.DOM */' + source;
 	}
 
