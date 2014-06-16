@@ -1,11 +1,11 @@
 {
 	"src": {
-		"javascripts":  "./src/**/*.+(js|jsx)",
-		"styles":       "./assets/stylus/*.styl"
+		"javascripts": "./src/**/*.+(js|jsx)",
+		"styles": "./stylus/*.styl"
 	},
 	"dest": {
-		"javascripts":   "./dist/",
-		"styles":        "./public/stylesheets/"
+		"javascripts": "./dist/",
+		"styles": "./public/stylesheets/"
 	},
 	"webpack": {
 		"entry": "./src/components/page.jsx",
