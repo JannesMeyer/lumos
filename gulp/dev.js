@@ -4,6 +4,5 @@ exports.fn = function() {
 	var config = require('./gulp.config.json');
 
 	gulp.watch(config.watch.styles, ['build-stylus']);
-	gulp.watch(config.src.serverJS, ['node']);
-	gulp.watch(config.src.components, ['build-jsx']);
+	gulp.watch(config.src.javascripts, ['build-js-server', 'build-js-client', 'node']);
 };
