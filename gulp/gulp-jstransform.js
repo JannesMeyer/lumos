@@ -2,7 +2,7 @@ var through = require('through2');
 var gutil = require('gulp-util');
 var path = require('path');
 var jstransform = require('jstransform');
-var visitors = require('./visitors').visitorList;
+var visitors = require('../mytransform').visitorList;
 
 function replaceExtension(filePath, newExtension) {
 	var extension = path.extname(filePath);

@@ -16,12 +16,12 @@ var gulp = require('gulp');
 // Load tasks from files in `gulpDir`
 fs.readdirSync(path.join(__dirname, gulpDir))
 .filter(function(filename) {
-    return path.extname(filename) === '.js';
+    return path.extname(filename) === '.js' && !filename.startsWith('gulp-');
 })
 .forEach(function(filename) {
-	var t = require(gulpDir + filename);
-	t.name = path.basename(filename, '.js');
-	gulp.task(t.name, t.dep, t.fn);
+	var task = require(gulpDir + filename);
+	var taskName = path.basename(filename, '.js');
+	gulp.task(taskName, task.dep, task.fn);
 });
 
 // Default task

@@ -1,6 +1,6 @@
 var loaderUtils = require('loader-utils');
 var transform = require('jstransform').transform;
-var visitors = require('../transform/visitors.js').visitorList;
+var visitors = require('../mytransform').visitorList;
 
 module.exports = function(source) {
 	this.cacheable();

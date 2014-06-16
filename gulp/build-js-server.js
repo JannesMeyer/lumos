@@ -1,8 +1,8 @@
 exports.fn = function() {
 	var gulp = require('gulp');
-	var jstransform = require('../transform/gulp-jstransform');
 	var plumber = require('gulp-plumber');
 	var notify = require('gulp-notify');
+	var jstransform = require('./gulp-jstransform');
 	var config = require('./gulp.config.json');
 
 	return gulp.src(config.src.serverJS)
