@@ -1,6 +1,5 @@
 var child;
 function startNode() {
-	// var gutil = require('gulp-util');
 	var spawn = require('child_process').spawn;
 
 	process.env.LUMOSPATH = '/Users/jannes/Dropbox/Notes';
