@@ -13,6 +13,7 @@ exports.fn = function(callback) {
 		cache: true,
 		entry: config.webpack.entry,
 		output: config.webpack.output,
+		externals: {'react': 'React'},
 		module: {
 	        loaders: [
 				{ test: /\.jsx$/, loader:  'es6-loader?jsx' },
@@ -20,7 +21,8 @@ exports.fn = function(callback) {
 	        ]
 		},
 		resolve: {
-		    root: getDir('src')
+		    root: getDir('src'),
+		    extensions: ['', '.webpack.js', '.web.js', '.js', '.jsx']
 		}
 	}
 

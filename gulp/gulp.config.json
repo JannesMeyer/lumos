@@ -8,7 +8,7 @@
 		"styles": "./public/stylesheets/"
 	},
 	"webpack": {
-		"entry": "./src/components/page.jsx",
+		"entry": "./src/browser-main.js",
 		"output": {
 			"path": "./public/javascripts/",
 		    "filename": "[name].bundle.js"

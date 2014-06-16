@@ -24,23 +24,19 @@
   "dependencies": {
     "body-parser": "1.x",
     "cookie-parser": "1.x",
-    "ejs": "0.x",
-    "ejs-locals": "1.x",
-    "envify": "^1.2.1",
     "express": "4.x",
     "highlight.js": "8.x",
     "marked": "0.x",
     "minimist": "0.x",
     "morgan": "1.x",
-    "react": "^0.10.0",
-    "traceur": "0.0.43"
+    "react": "0.x"
   },
   "devDependencies": {
-    "bluebird": "^2.1.1",
-    "es6-destructuring-jstransform": "^0.1.0",
-    "es6-module-jstransform": "^0.1.4",
+    "bluebird": "2.x",
+    "es6-destructuring-jstransform": "0.x",
+    "es6-module-jstransform": "0.x",
     "es6-shim": "0.x",
-    "esprima-fb": "^4001.1.0-dev-harmony-fb",
+    "esprima-fb": "4001.x",
     "gulp": "3.x",
     "gulp-autoprefixer": "0.x",
     "gulp-changed": "0.x",
@@ -52,11 +48,9 @@
     "gulp-stylus": "1.x",
     "gulp-traceur": "0.x",
     "gulp-util": "2.x",
-    "jstransform": "^5.0.0",
-    "jsx-loader": "0.10.2",
-    "loader-utils": "^0.2.2",
-    "node-notifier": "^3.0.3",
-    "vinyl-source-stream": "0.x",
+    "jstransform": "5.x",
+    "loader-utils": "0.x",
+    "node-notifier": "3.x",
     "webpack": "1.x"
   },
   "os": [

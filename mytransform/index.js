@@ -17,8 +17,8 @@ exports.visitorList = Array.prototype.concat.apply([], [
 	require('jstransform/visitors/es6-object-short-notation-visitors').visitorList,
 	require('jstransform/visitors/es6-rest-param-visitors').visitorList,
 	require('jstransform/visitors/es6-template-visitors').visitorList,
+	// require('./visitors/es6-destructuring-jstransform').visitorList,
 	require('./visitors/es6-module-jstransform').visitorList,
-	require('./visitors/es6-destructuring-jstransform').visitorList,
 	require('./visitors/react').visitorList,
 	require('./visitors/reactDisplayName').visitorList
 ]);

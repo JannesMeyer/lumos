@@ -2,9 +2,10 @@ module util from 'util'
 module marked from 'marked'
 module path from 'path'
 module fs from 'fs'
-module layout from './templates/layout'
 module denodeify from './denodeify'
-// module React from 'react'
+
+module layoutTemplate from './templates/layout'
+module pageComponent from './components/page'
 
 import { config } from '../package.json'
 import { SegmentedPath } from './SegmentedPath'
@@ -17,9 +18,12 @@ var fsReadFile = denodeify(fs, fs.readFile);
 var baseDir = process.env.LUMOSPATH || process.cwd(); // Default to current working directory
 var baseDirName = path.basename(baseDir);
 
-function renderToString(data) {
-	layout.render(data);
+
+function renderPage(data, body) {
+	var body = pageComponent.renderToString(data);
+	return layoutTemplate.render(data, body);
 }
+
 
 function handleRequest(req, res, next) {
 	var processedPath = decodeURIComponent(req.path);
@@ -57,8 +61,8 @@ function handleRequest(req, res, next) {
 				return readFile(indexPath)
 				.then(file => {
 					data.filePath = indexPath.absolute;
-					// Can't have spaces in AppleScript
-					data.editURL = encodeURI(config.editURLProtocol + indexPath.absolute);
+					// Can't have spaces or quotes in AppleScript
+					data.editURL = encodeURI(config.editURLProtocol + indexPath.absolute).replace(/'/g, '%27');
 					data.content = fileContentToHtml(file.content);
 				});
 			}
@@ -75,7 +79,8 @@ function handleRequest(req, res, next) {
 				});
 				res.json(data);
 			} else {
-				res.render('document', data);
+				res.end(renderPage(data));
+				// res.render('document', data);
 			}
 		})
 		.catch(err => next(err));
@@ -91,8 +96,8 @@ function handleRequest(req, res, next) {
 		.then(file => {
 			data.title = requestPathMd.name;
 			data.filePath = requestPathMd.absolute;
-			// Can't have spaces in AppleScript
-			data.editURL = encodeURI(config.editURLProtocol + requestPathMd.absolute);
+			// Can't have spaces or quotes in AppleScript
+			data.editURL = encodeURI(config.editURLProtocol + requestPathMd.absolute).replace(/'/g, '%27');
 			data.content = fileContentToHtml(file.content);
 
 			var datetool = require('./lib/date-tool');
@@ -138,7 +143,8 @@ function handleRequest(req, res, next) {
 					});
 					res.json(data);
 				} else {
-					res.render('document', data);
+					// res.render('document', data);
+					res.end(renderPage(data));
 				}
 			})
 			.catch(err => next(err));

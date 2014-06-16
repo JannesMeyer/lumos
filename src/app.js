@@ -1,16 +1,11 @@
-module path from 'path'
-module express from 'express'
-module ejsLocals from 'ejs-locals'
-module morgan from 'morgan'
-module serve from './serve'
-module api from './api'
+module path from 'path';
+module express from 'express';
+module morgan from 'morgan';
+module serve from './serve';
+module api from './api';
+module errorTemplate from './templates/error';
 
 var app = express();
-
-// view engine setup
-app.engine('ejs', ejsLocals);
-app.set('views', path.join(__dirname, '../views'));
-app.set('view engine', 'ejs');
 
 // logger
 app.use(morgan(':method :url :status (done after :response-time ms)'));
@@ -25,7 +20,7 @@ app.use(serve);
 // development error handler
 app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.render('error', { err });
+    res.end(errorTemplate.render(err));
 });
 
 module.exports = app;

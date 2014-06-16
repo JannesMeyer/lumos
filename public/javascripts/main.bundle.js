@@ -44,93 +44,25 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/** @jsx React.DOM *//** @jsx React.DOM */
-
-	var keypress = __webpack_require__(1);
-	var fullscreen = __webpack_require__(2);
-	var scroll = __webpack_require__(3);
-	// Replace native promises
+	var keypress = __webpack_require__(2);
+	var fullscreen = __webpack_require__(3);
+	var scroll = __webpack_require__(4);
+	var pageComponent = __webpack_require__(1);
 	// import Promise from 'bluebird';
 
-	console.log('load');
 
-	addEventListener('popstate', function() {
-		console.log('popstate');
-	});
-
-	/* Chrome sucks for this XHR stuff:
-
-	https://code.google.com/p/chromium/issues/detail?id=108425
-	https://code.google.com/p/chromium/issues/detail?id=108766
-	https://code.google.com/p/chromium/issues/detail?id=94369#c65
-	http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html#sec13.13
-
-	[JSON breaking back button in Chrome, Reload Button in IE (Showing as naked data) - Stack Overflow](http://stackoverflow.com/questions/10715852/json-breaking-back-button-in-chrome-reload-button-in-ie-showing-as-naked-data)
-
-	Cache-Control: no-cache, no-store, max-age=0, must-revalidate
-	Pragma: no-cache
-	Expires: Fri, 01 Jan 1990 00:00:00 GMT
-
-	IE sucks when using vary:
-	http://crisp.tweakblogs.net/blog/311/internet-explorer-and-cacheing-beware-of-the-vary.html
-
-	Chrome sucks for link rel="subresource":
-	https://code.google.com/p/chromium/issues/detail?id=312327
-	http://caffeinatetheweb.com/baking-acceleration-into-the-web-itself/
-	https://docs.google.com/document/d/1HeTVglnZHD_mGSaID1gUZPqLAa1lXWObV-Zkx6q_HF4/edit
-
-	*/
-
-	/*
-	- [XMLHttpRequest | MDN](https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest)
-	- [XMLHttpRequest wrapped into a promise](https://gist.github.com/matthewp/3099268)
+	/**
+	 * Navigation
 	 */
-	function getJSON(path) {
-		var req = new XMLHttpRequest();
-		req.open('GET', path);
-		req.setRequestHeader('Accept', 'application/json');
-		// req.dataType = 'json';
-
-		return new Promise(function(resolve, reject) {
-			req.onload = function(event)  {
-				try {
-					resolve(JSON.parse(req.response));
-				} catch(e) {
-					reject(e);
-				}
-			};
-			req.onerror = function(event)  { reject(new Error(req.status)); };
-			req.ontimeout = function(event)  { reject(new Error('Timed out')); };
-			// req.onabort
-			req.send();
-		});
-	}
 
 	addEventListener('popstate', function(event)  {
 		if (event.state) {
 			data = event.state;
-			renderBody();
+			pageComponent.renderToDocument(data, document.body);
 		} else {
 			console.warn('state is null after popstate event');
 		}
 	});
-
-	// TODO: links inside the page
-	function navigateTo(path) {
-		// TODO: Queue push state when in fullscreen, because it would exit fullscreen mode
-		history.pushState(undefined, undefined, path);
-		getJSON(path)
-		.then(function(newData)  {
-			history.replaceState(newData, undefined, path);
-			data = newData;
-			// TODO: Scroll to top
-			renderBody();
-		})
-		.catch(function(err)  {
-			console.error(err);
-			throw err;
-		});
-	}
 
 	/**
 	 * Key events
@@ -141,37 +73,37 @@
 			location.href = data.editURL;
 		}
 	});
-	function navigateToNext(e) {
+	function goToNext(e) {
 		if (data.nextItem) {
-			navigateTo(data.nextItem.link);
+			pageComponent.navigateTo(data.nextItem.link);
 		}
 		e.preventDefault();
 	}
-	function navigateToPrev(e) {
+	function goToPrevious(e) {
 		if (data.prevItem) {
-			navigateTo(data.prevItem.link);
+			pageComponent.navigateTo(data.prevItem.link);
 		}
 		e.preventDefault();
 	}
-	keypress.bind({}, 'j', navigateToNext);
-	keypress.bind({}, 'k', navigateToPrev);
-	keypress.bind({}, 'right', navigateToNext);
-	keypress.bind({}, 'left', navigateToPrev);
-	keypress.bind({}, 'enter', navigateToNext);
-	keypress.bind({shift: true}, 'enter', navigateToPrev);
+	keypress.bind({}, 'j', goToNext);
+	keypress.bind({}, 'k', goToPrevious);
+	keypress.bind({}, 'right', goToNext);
+	keypress.bind({}, 'left', goToPrevious);
+	keypress.bind({}, 'enter', goToNext);
+	keypress.bind({shift: true}, 'enter', goToPrevious);
 
 	// Only go further if we are at the bottom of the current page
-	keypress.bind({}, 'down', scroll.ifAtBottom(navigateToNext));
-	keypress.bind({}, 'space', scroll.ifAtBottom(navigateToNext));
+	keypress.bind({}, 'down', scroll.ifAtBottom(goToNext));
+	keypress.bind({}, 'space', scroll.ifAtBottom(goToNext));
 	// TODO: sroll the new page to the bottom when going back
-	keypress.bind({shift: true}, 'space', scroll.ifAtTop(navigateToPrev));
-	keypress.bind({}, 'up', scroll.ifAtTop(navigateToPrev));
+	keypress.bind({shift: true}, 'space', scroll.ifAtTop(goToPrevious));
+	keypress.bind({}, 'up', scroll.ifAtTop(goToPrevious));
 
 	keypress.bind({}, 'r', function(event)  {
-		navigateTo('/');
+		pageComponent.navigateTo('/');
 	});
 	keypress.bind({meta: true}, 'up', function(event)  {
-		navigateTo('..');
+		pageComponent.navigateTo('..');
 	});
 	keypress.bind({}, 'f', function(event)  {
 		fullscreen.toggle(document.documentElement);
@@ -182,6 +114,37 @@
 		}
 	});
 
+	pageComponent.renderToDocument(data, document.body);
+
+	// var isNode = typeof window === 'undefined' || !window.navigator;
+
+/***/ },
+/* 1 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/** @jsx React.DOM *//** @jsx React.DOM */
+
+	var React = __webpack_require__(5);
+
+	// TODO: use location.href if history api is not supported
+	// TODO: links inside the page
+	// TODO: replace this with state
+	function navigateTo(path) {
+		var xhr = __webpack_require__(6);
+		// TODO: Queue push state when in fullscreen, because it would exit fullscreen mode
+		history.pushState(undefined, undefined, path);
+		xhr.getJSON(path)
+		.then(function(newData)  {
+			history.replaceState(newData, undefined, path);
+			data = newData;
+			// TODO: Scroll to top
+			renderToDocument(data, document.body);
+		})
+		.catch(function(err)  {
+			console.error(err);
+			throw err;
+		});
+	}
 
 	var Header = React.createClass({displayName: 'Header',
 		render:function() {
@@ -196,8 +159,8 @@
 
 	var BreadcrumbList = React.createClass({displayName: 'BreadcrumbList',
 		handleClick:function(e) {
-			navigateTo(e.currentTarget.pathname);
 			e.preventDefault();
+			navigateTo(e.currentTarget.pathname);
 		},
 		render:function() {
 			var breadcrumbs = this.props.breadcrumbs.map(function(item) 
@@ -217,6 +180,7 @@
 
 	var SearchBar = React.createClass({displayName: 'SearchBar',
 		componentDidMount:function() {
+			var keypress = __webpack_require__(2);
 			keypress.bind({}, '/', function(event)  {
 				this.refs.searchBox.getDOMNode().focus();
 				event.preventDefault();
@@ -259,6 +223,7 @@
 
 	var Page = React.createClass({displayName: 'Page',
 		render:function() {
+			// TODO: no content: <p style="color: #999">+++ empty +++</p>
 			return (
 				React.DOM.section( {className:"m-page", role:"content"}, 
 					React.DOM.div( {className:"m-page-buttons"}, 
@@ -272,12 +237,14 @@
 					React.DOM.article( {dangerouslySetInnerHTML:{ __html: this.props.content }} )
 				)
 			);
+			// this.props.creationTime
 		}
 	});
 
 	var PageButton = React.createClass({displayName: 'PageButton',
 		handleClick:function(event) {
 			if (this.props.name === 'fullscreen') {
+				var fullscreen = __webpack_require__(3);
 				// TODO: fullscreen as state
 				fullscreen.toggle(document.documentElement);
 				event.currentTarget.blur();
@@ -310,11 +277,12 @@
 		},
 		componentWillUpdate:function() {
 			console.log('componentWillUpdate');
-			// Scroll to the top before
+			// TODO: Scroll to the top before
+			// module scroll from 'client-lib/scroll-tool';
 			document.body.scrollTop = 0;
 		},
 		render:function() {
-			console.log('render');
+			// console.log('render');
 			var data = this.props.data;
 
 			return (
@@ -329,16 +297,19 @@
 		}
 	});
 
-	function renderBody() {
-		React.renderComponent(LumosApplication( {data:data} ), document.body);
+	function renderToDocument(data, mountNode) {
+		return React.renderComponent(LumosApplication( {data:data} ), mountNode);
+	}
+	function renderToString(data) {
+		return React.renderComponentToString(LumosApplication( {data:data} ));
 	}
 
-	// Initial render
-	renderBody(data);
-
+	exports.navigateTo = navigateTo;
+	exports.renderToDocument = renderToDocument;
+	exports.renderToString = renderToString;
 
 /***/ },
-/* 1 */
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -477,7 +448,7 @@
 
 
 /***/ },
-/* 2 */
+/* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var handlerAdded = false;
@@ -558,7 +529,7 @@
 	} module.exports.toggle = toggle;
 
 /***/ },
-/* 3 */
+/* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var html = document.documentElement;
@@ -594,6 +565,67 @@
 			}
 		};
 	} module.exports.ifAtBottom = ifAtBottom;
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = React;
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* Chrome sucks for this XHR stuff:
+
+	https://code.google.com/p/chromium/issues/detail?id=108425
+	https://code.google.com/p/chromium/issues/detail?id=108766
+	https://code.google.com/p/chromium/issues/detail?id=94369#c65
+	http://www.w3.org/Protocols/rfc2616/rfc2616-sec13.html#sec13.13
+
+	[JSON breaking back button in Chrome, Reload Button in IE (Showing as naked data) - Stack Overflow](http://stackoverflow.com/questions/10715852/json-breaking-back-button-in-chrome-reload-button-in-ie-showing-as-naked-data)
+
+	Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+	Pragma: no-cache
+	Expires: Fri, 01 Jan 1990 00:00:00 GMT
+
+	IE sucks when using vary:
+	http://crisp.tweakblogs.net/blog/311/internet-explorer-and-cacheing-beware-of-the-vary.html
+
+	Chrome sucks for link rel="subresource":
+	https://code.google.com/p/chromium/issues/detail?id=312327
+	http://caffeinatetheweb.com/baking-acceleration-into-the-web-itself/
+	https://docs.google.com/document/d/1HeTVglnZHD_mGSaID1gUZPqLAa1lXWObV-Zkx6q_HF4/edit
+
+	*/
+
+	/*
+	- [XMLHttpRequest | MDN](https://developer.mozilla.org/en/docs/Web/API/XMLHttpRequest)
+	- [XMLHttpRequest wrapped into a promise](https://gist.github.com/matthewp/3099268)
+	 */
+
+	function getJSON(path) {
+		var req = new XMLHttpRequest();
+		req.open('GET', path);
+		req.setRequestHeader('Accept', 'application/json');
+		// req.dataType = 'json';
+
+		return new Promise(function(resolve, reject) {
+			req.onload = function(event)  {
+				try {
+					resolve(JSON.parse(req.response));
+				} catch(e) {
+					reject(e);
+				}
+			};
+			req.onerror = function(event)  { reject(new Error(req.status)); };
+			req.ontimeout = function(event)  { reject(new Error('Timed out')); };
+			// req.onabort
+			req.send();
+		});
+	}
+
+	exports.getJSON = getJSON;
 
 /***/ }
 /******/ ])
