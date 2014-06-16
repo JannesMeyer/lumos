@@ -3,26 +3,28 @@ exports.fn = function(callback) {
 	var gutil = require('gulp-util');
 	var webpack = require('webpack');
 	var notifier = new require('node-notifier')();
+	var config = require('./gulp.config.json');
 
-	// https://github.com/webpack/webpack-with-common-libs/blob/master/gulpfile.js
+	function getDir(dir) {
+		return path.join(__dirname, '..', dir);
+	}
+
 	var webpackConfig = {
 		cache: true,
-		entry: './src/components/page.jsx',
-		output: {
-		    path: './public/javascripts/',
-		    filename: '[name].bundle.js'
-		},
+		entry: config.webpack.entry,
+		output: config.webpack.output,
 		module: {
 	        loaders: [
-				{ test: /\.jsx$/, loader:  'es6?jsx' },
-				{ test: /\.js$/, loader: 'es6', exclude: [ path.join(__dirname, '..', 'node_modules') ] }
+				{ test: /\.jsx$/, loader:  'es6-loader?jsx' },
+				{ test: /\.js$/, loader: 'es6-loader', exclude: [ getDir('node_modules') ] }
 	        ]
 		},
 		resolve: {
-		    extensions: ['', '.js'],
-		    modulesDirectories: ['src', 'node_modules']
+		    root: getDir('src')
 		}
-	};
+	}
+
+	// https://github.com/webpack/webpack-with-common-libs/blob/master/gulpfile.js
 
     webpack(webpackConfig, function(err, stats) {
         if(err) {

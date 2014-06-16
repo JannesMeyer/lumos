@@ -1,15 +1,18 @@
 {
 	"src": {
-		"serverJS": "./src/**/*.+(js|jsx)",
-		"clientJS":   "./dist/client/index.js",
-		"components": "./components-jsx/**/*.jsx",
-		"styles":     "./assets/stylus/*.styl"
+		"javascripts":  "./src/**/*.+(js|jsx)",
+		"styles":       "./assets/stylus/*.styl"
 	},
 	"dest": {
-		"serverJS":   "./dist/",
-		"clientJS":   "./public/javascripts/",
-		"components": "./components-js/",
-		"styles":     "./public/stylesheets/"
+		"javascripts":   "./dist/",
+		"styles":        "./public/stylesheets/"
+	},
+	"webpack": {
+		"entry": "./src/components/page.jsx",
+		"output": {
+			"path": "./public/javascripts/",
+		    "filename": "[name].bundle.js"
+		}
 	},
 	"watch": {
 		"styles": "./assets/stylus/**",

@@ -3,52 +3,16 @@ exports.fn = function() {
 	var plumber = require('gulp-plumber');
 	var notify = require('gulp-notify');
 	var jstransform = require('./gulp-jstransform');
+	// var uglify = require('gulp-uglify');
+	// var streamify = require('gulp-streamify');
+	// var rename = require('gulp-rename');
 	var config = require('./gulp.config.json');
 
-	return gulp.src(config.src.serverJS)
+	return gulp.src(config.src.javascripts)
 		.pipe(plumber({ errorHandler: notify.onError(config.errorTemplate) }))
 		.pipe(jstransform())
-		.pipe(gulp.dest(config.dest.serverJS));
+		.pipe(gulp.dest(config.dest.javascripts));
+		// .pipe(rename({ suffix: '.min' }))
+		// .pipe(streamify(uglify()))
+		// .pipe(gulp.dest(config.dest.clientJS));
 };
-
-// exports.fn = function(callback) {
-// 	var webpack = require("webpack");
-// 	var path = require('path');
-
-// 	webpack({
-// 		cache: true,
-// 	    target: 'node',
-// 	    entry: {
-// 	    	app: './src/app',
-// 	    	open: './src/open'
-// 	    },
-// 	    output: {
-// 	        path: 'dist',
-// 	        filename: '[name].js',
-// 	        libraryTarget: 'commonjs2'
-// 	    },
-// 	    externals: [
-// 	    	/^([a-z\-\.0-9]+)$/,
-// 	    	/\.json$/
-//     	],
-// 		module: {
-// 	        loaders: [
-// 				{ test: /\.jsx$/, loader:  'es6?jsx' },
-// 				{ test: /\.js$/, loader: 'es6' }
-// 	        ]
-// 		},
-// 		resolve: {
-// 		    extensions: ['', '.js'],
-// 		    modulesDirectories: ['src', 'node_modules']
-// 		}
-// 	}, function(err, stats) {
-//         if(err) {
-// 			console.error(err);
-// 			throw err;
-//         }
-
-//     	console.error(stats.toString({ colors: true }));
-
-// 	    callback();
-// 	});
-// };

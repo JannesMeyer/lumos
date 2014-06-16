@@ -4,8 +4,8 @@ exports.fn = function() {
 	var plumber = require('gulp-plumber');
 	var notify = require('gulp-notify');
 	var autoprefixer = require('gulp-autoprefixer');
-	var minifycss = require('gulp-minify-css');
-	var rename = require('gulp-rename');
+	// var rename = require('gulp-rename');
+	// var minifycss = require('gulp-minify-css');
 	var config = require('./gulp.config.json');
 
 	return gulp.src(config.src.styles)

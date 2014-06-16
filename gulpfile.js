@@ -20,8 +20,12 @@ fs.readdirSync(path.join(__dirname, gulpDir))
 })
 .forEach(function(filename) {
 	var task = require(gulpDir + filename);
-	var taskName = path.basename(filename, '.js');
-	gulp.task(taskName, task.dep, task.fn);
+	if (task.dep || task.fn) {
+		var taskName = path.basename(filename, '.js');
+		gulp.task(taskName, task.dep, task.fn);
+	} else {
+		console.warn('File', filename, 'does not have the right format. Skipping.');
+	}
 });
 
 // Default task
