@@ -1,52 +1,54 @@
-exports.fn = function(callback) {
-	var webpack = require("webpack");
-	var path = require('path');
+exports.fn = function() {
+	var gulp = require('gulp');
+	var jstransform = require('../transform/gulp-jstransform');
+	var plumber = require('gulp-plumber');
+	var notify = require('gulp-notify');
+	var config = require('./gulp.config.json');
 
-	webpack({
-	    entry: "./bin/lumos",
-	    target: "node",
-	    output: {
-
-	        path: path.join(__dirname, 'assets'),
-	        filename: '../bin/lumos.generated.js',
-	        libraryTarget: 'commonjs'
-	    },
-	    externals: [
-	    	/^([a-z\-\.0-9]+)$/,
-	    	/.json$/
-    	],
-		module: {
-	        loaders: [
-				{ test: /\.jsx$/, loader:  'es6?jsx' },
-				{ test: /\.js$/, loader: 'es6', exclude: [ path.join(__dirname, '..', 'node_modules') ] }
-	        ]
-		},
-		resolve: {
-		    extensions: ['', '.js'],
-		    modulesDirectories: ['src', 'node_modules']
-		}
-	}, function(err, stats) {
-        if(err) {
-			console.error(err);
-			throw err;
-        }
-
-    	console.error(stats.toString({ colors: true }));
-
-	    callback();
-	});
+	return gulp.src(config.src.serverJS)
+		.pipe(plumber({ errorHandler: notify.onError(config.errorTemplate) }))
+		.pipe(jstransform())
+		.pipe(gulp.dest(config.dest.serverJS));
 };
 
-// exports.fn = function() {
-// 	var gulp = require('gulp');
-// 	var plumber = require('gulp-plumber');
-// 	var traceur = require('gulp-traceur');
-// 	// var changed = require('gulp-changed');
-// 	var notify = require('gulp-notify');
-// 	var config = require('./gulp.config.json');
+// exports.fn = function(callback) {
+// 	var webpack = require("webpack");
+// 	var path = require('path');
 
-// 	return gulp.src(config.src.serverJS)
-// 		.pipe(plumber({ errorHandler: notify.onError(config.errorTemplate) }))
-// 		.pipe(traceur())
-// 		.pipe(gulp.dest(config.dest.serverJS));
+// 	webpack({
+// 		cache: true,
+// 	    target: 'node',
+// 	    entry: {
+// 	    	app: './src/app',
+// 	    	open: './src/open'
+// 	    },
+// 	    output: {
+// 	        path: 'dist',
+// 	        filename: '[name].js',
+// 	        libraryTarget: 'commonjs2'
+// 	    },
+// 	    externals: [
+// 	    	/^([a-z\-\.0-9]+)$/,
+// 	    	/\.json$/
+//     	],
+// 		module: {
+// 	        loaders: [
+// 				{ test: /\.jsx$/, loader:  'es6?jsx' },
+// 				{ test: /\.js$/, loader: 'es6' }
+// 	        ]
+// 		},
+// 		resolve: {
+// 		    extensions: ['', '.js'],
+// 		    modulesDirectories: ['src', 'node_modules']
+// 		}
+// 	}, function(err, stats) {
+//         if(err) {
+// 			console.error(err);
+// 			throw err;
+//         }
+
+//     	console.error(stats.toString({ colors: true }));
+
+// 	    callback();
+// 	});
 // };

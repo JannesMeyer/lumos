@@ -4,15 +4,15 @@ module path from 'path'
 module fs from 'fs'
 module layout from './templates/layout'
 module denodeify from './denodeify'
-module React from 'react'
-
-var fsStat     = denodeify(fs, fs.stat);
-var fsReadDir  = denodeify(fs, fs.readdir);
-var fsReadFile = denodeify(fs, fs.readFile);
+// module React from 'react'
 
 import { config } from '../package.json'
 import { SegmentedPath } from './SegmentedPath'
 import { Directory } from './Directory'
+
+var fsStat     = denodeify(fs, fs.stat);
+var fsReadDir  = denodeify(fs, fs.readdir);
+var fsReadFile = denodeify(fs, fs.readFile);
 
 var baseDir = process.env.LUMOSPATH || process.cwd(); // Default to current working directory
 var baseDirName = path.basename(baseDir);
@@ -21,9 +21,9 @@ function renderToString(data) {
 	layout.render(data);
 }
 
-exports = function(req, res, next) {
+function handleRequest(req, res, next) {
 	var processedPath = decodeURIComponent(req.path);
-	var requestPath = new SegmentedPath(baseDir, processedPath);
+	var requestPath = new SegmentedPath(baseDir, [processedPath]);
 	if (!requestPath.verifyDescendance()) {
 	    next(mMakeError(400, 'Bad Request'));
 	    return;
@@ -62,9 +62,10 @@ exports = function(req, res, next) {
 					data.content = fileContentToHtml(file.content);
 				});
 			}
-		}, err => {
+		}/*, err => {
+			// TODO: act accordingly based on error type (ENOENT)
 			throw mHTTPError(404, 'Directory Not Found');
-		})
+		}*/)
 		.then(() => {
 			var acceptHeader = req.get('Accept');
 			if (acceptHeader === 'application/json') {
@@ -81,7 +82,7 @@ exports = function(req, res, next) {
 	} else {
 		requestPath.makeFile();
 		var requestPathMd = requestPath.makeClone();
-		requestPathMd.leaf += config.mdSuffix;
+		requestPathMd.setLeaf(requestPathMd.getLeaf() + config.mdSuffix);
 		requestPathMd.makeFile();
 		data.breadcrumbs = requestPathMd.makeBreadcrumbs();
 
@@ -204,3 +205,5 @@ function mHTTPError(status, message) {
 	error.status = status;
 	return error;
 }
+
+module.exports = handleRequest;

@@ -3,10 +3,11 @@ module path from 'path'
 module fs from 'fs'
 module crypto from 'crypto'
 module denodeify from './denodeify'
-var fsStat     = denodeify(fs, fs.stat);
-var fsReadDir  = denodeify(fs, fs.readdir);
 import { config } from '../package.json'
 import { SegmentedPath } from './SegmentedPath'
+
+var fsStat     = denodeify(fs, fs.stat);
+var fsReadDir  = denodeify(fs, fs.readdir);
 
 /* accepts parameters
  * h  Object = {h:x, s:y, v:z}
@@ -60,7 +61,7 @@ export class Directory {
 		var contents;
 		return fsReadDir(this.path.absolute)
 		.then(names => {
-			contents = names.map(name => new SegmentedPath(this.path.absolute, name));
+			contents = names.map(name => new SegmentedPath(this.path.absolute, [name]));
 			// Find out whether these are directories or files
 			var promises = contents.map(item => fsStat(item.absolute));
 			return Promise.all(promises);

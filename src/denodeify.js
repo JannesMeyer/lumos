@@ -17,4 +17,4 @@ function denodeify(thisArg, nodeFn) {
 	};
 };
 
-exports = denodeify;
+module.exports = denodeify;

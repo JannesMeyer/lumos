@@ -1,6 +1,6 @@
 var path = require('path');
 
-exports.name = function(filename) {
+export function name(filename) {
 	var basename = path.basename(filename);
 	return path.basename(basename, path.extname(basename));
 };

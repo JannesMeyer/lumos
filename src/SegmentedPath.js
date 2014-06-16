@@ -6,9 +6,16 @@ module path from 'path'
 export class SegmentedPath {
 
 	constructor(basePath, segments) {
+		if (!Array.isArray(segments)) {
+			throw new TypeError('segments needs to be an array');
+		}
+		if (typeof basePath !== 'string') {
+			throw new TypeError('basePath needs to be a string');
+		}
 		this.basePath = basePath;
 		this.baseDirName = path.basename(basePath);
 		this.segments = segments;
+		this.update();
 		// this.name = String
 		// this.extension = String
 		// this.basename = String
@@ -18,17 +25,12 @@ export class SegmentedPath {
 		// this.isDir = Boolean
 	}
 
-	set segments(array) {
-		this.segments_ = array;
-		this.update();
-	}
-
 	update() {
 		// Compute the absolute name
-		this.absolute = path.join.apply(path, this.basePath.concat(this.segments_));
+		this.absolute = path.join.apply(path, [this.basePath].concat(this.segments));
 
 		// Only use segments [2, ∞)
-		this.relative = path.join.apply(path, this.segments_);
+		this.relative = path.join.apply(path, this.segments);
 		this.name = path.basename(this.relative);
 		this.sortStr = this.name.toLowerCase();
 		this.isDir = this.relative.endsWith('/');
@@ -47,22 +49,18 @@ export class SegmentedPath {
 		return path.basename(filename, path.extname(filename));
 	}
 
-	get segments() {
-		return this.segments_;
-	}
-
 	makeParent() {
 		if (this.isDir) {
 
 		} else {
-			var segmentsJoined = path.join.apply(path, this.segments_);
-			return new SegmentedPath(this.basePath, path.dirname(segmentsJoined));
+			var segmentsJoined = path.join.apply(path, this.segments);
+			return new SegmentedPath(this.basePath, [path.dirname(segmentsJoined)]);
 		}
 	}
 
 	makeDescendant(name) {
 		// Clone segments
-		var segments = this.segments_.slice();
+		var segments = this.segments.slice();
 		// Add descendant
 		segments.push(name);
 		return new SegmentedPath(this.basePath, segments);
@@ -70,7 +68,7 @@ export class SegmentedPath {
 
 	makeClone() {
 		// Clone segments
-		var segments = this.segments_.slice();
+		var segments = this.segments.slice();
 		return new SegmentedPath(this.basePath, segments);
 	}
 
@@ -117,13 +115,13 @@ export class SegmentedPath {
 		return this.absolute.startsWith(this.basePath);
 	}
 
-	get leaf() {
-		var segments = this.segments_;
+	getLeaf() {
+		var segments = this.segments;
 		return segments[segments.length - 1];
 	}
 
-	set leaf(value) {
-		var segments = this.segments_;
+	setLeaf(value) {
+		var segments = this.segments;
 		segments[segments.length - 1] = value;
 		this.update();
 	}

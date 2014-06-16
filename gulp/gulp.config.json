@@ -1,6 +1,6 @@
 {
 	"src": {
-		"serverJS":   "./src/**/*.js",
+		"serverJS":   ["./src/**/*.js", "./src/**/*.jsx"],
 		"clientJS":   "./dist/client/index.js",
 		"components": "./components-jsx/**/*.jsx",
 		"styles":     "./assets/stylus/*.styl"
