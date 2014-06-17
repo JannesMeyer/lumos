@@ -18,17 +18,16 @@ exports.render = function(data, body) {
   <link rel="prev" href="">
   <link rel="next" href="">
   -->
-  <script>
-  var data = ${JSON.stringify(data)}
-  </script>
   <script defer src="/javascripts/vendor/react.js"></script>
   <script defer src="/javascripts/main.bundle.js"></script>
 </head>
-<body>
-${body}
-<!-- LiveReload
-<script src="http://notes:35729/livereload.js?snipver=1"></script>
- -->
+<body>${body}
+  <!-- LiveReload
+  <script src="http://notes:35729/livereload.js?snipver=1"></script>
+   -->
+  <script>
+  var data = ${JSON.stringify(data)}
+  </script>
 </body>
 </html>`
 
