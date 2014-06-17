@@ -44,18 +44,7 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var keypress = __webpack_require__(2);
-	var fullscreen = __webpack_require__(3);
-	var scroll = __webpack_require__(4);
-	var pageComponent = __webpack_require__(1);
-	// import Promise from 'bluebird';
-
-
-	/**
-	 * Navigation
-	 */
-
-	addEventListener('popstate', function(event)  {
+	var keypress = __webpack_require__(2);var fullscreen = __webpack_require__(3);var scroll = __webpack_require__(4);var pageComponent = __webpack_require__(1);addEventListener('popstate', function(event)  {
 		if (event.state) {
 			data = event.state;
 			pageComponent.renderToDocument(data, document.body);
@@ -124,18 +113,14 @@
 
 	/** @jsx React.DOM *//** @jsx React.DOM */
 
-	var React = __webpack_require__(5);
-
-	// TODO: use location.href if history api is not supported
-	// TODO: links inside the page
-	// TODO: replace this with state
-	function navigateTo(path) {
+	var React = __webpack_require__(5);function navigateTo(path) {
 		var xhr = __webpack_require__(6);
 		// TODO: Queue push state when in fullscreen, because it would exit fullscreen mode
 		history.pushState(undefined, undefined, path);
 		xhr.getJSON(path)
 		.then(function(newData)  {
 			history.replaceState(newData, undefined, path);
+			document.title = newData.title;
 			data = newData;
 			// TODO: Scroll to top
 			renderToDocument(data, document.body);

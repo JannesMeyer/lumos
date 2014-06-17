@@ -1,6 +1,6 @@
 /** @jsx React.DOM */
 
-module React from 'react';
+module React from 'react'
 
 // TODO: use location.href if history api is not supported
 // TODO: links inside the page
@@ -12,6 +12,7 @@ function navigateTo(path) {
 	xhr.getJSON(path)
 	.then(newData => {
 		history.replaceState(newData, undefined, path);
+		document.title = newData.title;
 		data = newData;
 		// TODO: Scroll to top
 		renderToDocument(data, document.body);

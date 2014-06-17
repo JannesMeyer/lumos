@@ -1,8 +1,8 @@
-module keypress from 'client-lib/keypress-tool';
-module fullscreen from 'client-lib/fullscreen-tool';
-module scroll from 'client-lib/scroll-tool';
-module pageComponent from './components/page';
-// import Promise from 'bluebird';
+module keypress from 'client-lib/keypress-tool'
+module fullscreen from 'client-lib/fullscreen-tool'
+module scroll from 'client-lib/scroll-tool'
+module pageComponent from './components/page'
+// import Promise from 'bluebird'
 
 
 /**
