@@ -16,7 +16,7 @@ exports.fn = function(callback) {
 		externals: {'react': 'React'},
 		module: {
 	        loaders: [
-				{ test: /\.jsx$/, loader:  'es6-loader?jsx' },
+				{ test: /\.jsx$/, loader:  'es6-loader' },
 				{ test: /\.js$/, loader: 'es6-loader', exclude: [ getDir('node_modules') ] }
 	        ]
 		},

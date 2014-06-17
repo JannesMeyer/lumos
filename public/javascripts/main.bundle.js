@@ -111,7 +111,7 @@
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/** @jsx React.DOM *//** @jsx React.DOM */
+	/** @jsx React.DOM */
 
 	var React = __webpack_require__(5);function navigateTo(path) {
 		var xhr = __webpack_require__(6);
