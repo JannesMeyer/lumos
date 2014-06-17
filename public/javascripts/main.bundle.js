@@ -47,6 +47,7 @@
 	var keypress = __webpack_require__(2);var fullscreen = __webpack_require__(3);var scroll = __webpack_require__(4);var pageComponent = __webpack_require__(1);addEventListener('popstate', function(event)  {
 		if (event.state) {
 			data = event.state;
+			document.title = data.title;
 			pageComponent.renderToDocument(data, document.body);
 		} else {
 			console.warn('state is null after popstate event');
@@ -113,14 +114,15 @@
 
 	/** @jsx React.DOM */
 
-	var React = __webpack_require__(5);function navigateTo(path) {
-		var xhr = __webpack_require__(6);
+	var React = __webpack_require__(5);function navigateTo(path, title) {
 		// TODO: Queue push state when in fullscreen, because it would exit fullscreen mode
 		history.pushState(undefined, undefined, path);
+		document.title = title;
+		var xhr = __webpack_require__(6);
+
 		xhr.getJSON(path)
 		.then(function(newData)  {
 			history.replaceState(newData, undefined, path);
-			document.title = newData.title;
 			data = newData;
 			// TODO: Scroll to top
 			renderToDocument(data, document.body);
@@ -144,8 +146,10 @@
 
 	var BreadcrumbList = React.createClass({displayName: 'BreadcrumbList',
 		handleClick:function(e) {
+			var title = e.currentTarget.firstChild.textContent;
+			var path = e.currentTarget.pathname;
+			navigateTo(path, title);
 			e.preventDefault();
-			navigateTo(e.currentTarget.pathname);
 		},
 		render:function() {
 			var breadcrumbs = this.props.breadcrumbs.map(function(item) 
@@ -189,7 +193,9 @@
 
 	var Navigation = React.createClass({displayName: 'Navigation',
 		handleClick:function(e) {
-			navigateTo(e.currentTarget.pathname);
+			var title = e.currentTarget.firstChild.textContent;
+			var path = e.currentTarget.pathname;
+			navigateTo(path, title);
 			e.preventDefault();
 		},
 		render:function() {
@@ -247,12 +253,13 @@
 
 	var LumosApplication = React.createClass({displayName: 'LumosApplication',
 		pickRandomColor:function() {
-			var colors = ['purple-mist', 'orange', 'blue', 'cyan']; // apple
+			var colors = ['purple-mist', 'orange', 'blue', 'cyan', 'apple'];
 			return colors[Math.floor(Math.random() * colors.length)];
 		},
 		getInitialState:function() {
+			// Can't have a random color because that would change the checksum on the client
 			return {
-				color: 'blue',
+				color: 'purple-mist',
 				path: ''
 			};
 		},

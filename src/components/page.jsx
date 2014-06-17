@@ -5,14 +5,15 @@ module React from 'react'
 // TODO: use location.href if history api is not supported
 // TODO: links inside the page
 // TODO: replace this with state
-function navigateTo(path) {
-	var xhr = require('client-lib/xhr-tool');
+function navigateTo(path, title) {
 	// TODO: Queue push state when in fullscreen, because it would exit fullscreen mode
 	history.pushState(undefined, undefined, path);
+	document.title = title;
+	var xhr = require('client-lib/xhr-tool');
+
 	xhr.getJSON(path)
 	.then(newData => {
 		history.replaceState(newData, undefined, path);
-		document.title = newData.title;
 		data = newData;
 		// TODO: Scroll to top
 		renderToDocument(data, document.body);
@@ -36,8 +37,10 @@ var Header = React.createClass({
 
 var BreadcrumbList = React.createClass({
 	handleClick(e) {
+		var title = e.currentTarget.firstChild.textContent;
+		var path = e.currentTarget.pathname;
+		navigateTo(path, title);
 		e.preventDefault();
-		navigateTo(e.currentTarget.pathname);
 	},
 	render() {
 		var breadcrumbs = this.props.breadcrumbs.map(item =>
@@ -81,7 +84,9 @@ var SearchBar = React.createClass({
 
 var Navigation = React.createClass({
 	handleClick(e) {
-		navigateTo(e.currentTarget.pathname);
+		var title = e.currentTarget.firstChild.textContent;
+		var path = e.currentTarget.pathname;
+		navigateTo(path, title);
 		e.preventDefault();
 	},
 	render() {
@@ -139,12 +144,13 @@ var PageButton = React.createClass({
 
 var LumosApplication = React.createClass({
 	pickRandomColor() {
-		var colors = ['purple-mist', 'orange', 'blue', 'cyan']; // apple
+		var colors = ['purple-mist', 'orange', 'blue', 'cyan', 'apple'];
 		return colors[Math.floor(Math.random() * colors.length)];
 	},
 	getInitialState() {
+		// Can't have a random color because that would change the checksum on the client
 		return {
-			color: 'blue',
+			color: 'purple-mist',
 			path: ''
 		};
 	},

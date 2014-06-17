@@ -12,6 +12,7 @@ module pageComponent from './components/page'
 addEventListener('popstate', event => {
 	if (event.state) {
 		data = event.state;
+		document.title = data.title;
 		pageComponent.renderToDocument(data, document.body);
 	} else {
 		console.warn('state is null after popstate event');
