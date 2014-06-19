@@ -5,6 +5,7 @@ module React from 'react'
 // TODO: use location.href if history api is not supported
 // TODO: links inside the page
 // TODO: replace this with state
+// TODO: Require a node (mid-tree or leaf) as argument
 function navigateTo(path, title) {
 	// TODO: Queue push state when in fullscreen, because it would exit fullscreen mode
 	history.pushState(undefined, undefined, path);
@@ -104,6 +105,9 @@ var Navigation = React.createClass({
 });
 
 var Page = React.createClass({
+	shouldComponentUpdate(nextProps) {
+		return nextProps.filePath !== this.props.filePath;
+	},
 	render() {
 		// TODO: no content: <p style="color: #999">+++ empty +++</p>
 		return (
@@ -172,7 +176,11 @@ var LumosApplication = React.createClass({
 			<div className={'m-container s-' + this.state.color}>
 				<Header breadcrumbs={data.breadcrumbs} dirs={data.dirs} />
 				<div>
-					<Page title={data.title} creationDate={data.creationDate} content={data.content} editURL={data.editURL} />
+					<Page filePath={data.filePath}
+					      title={data.title}
+					      creationDate={data.creationDate}
+					      content={data.content}
+					      editURL={data.editURL} />
 					<Navigation items={data.items} />
 				</div>
 			</div>

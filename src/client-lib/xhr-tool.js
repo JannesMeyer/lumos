@@ -1,3 +1,7 @@
+if (typeof Promise === 'undefined') {
+	Promise = require('bluebird');
+}
+
 /* Chrome sucks for this XHR stuff:
 
 https://code.google.com/p/chromium/issues/detail?id=108425

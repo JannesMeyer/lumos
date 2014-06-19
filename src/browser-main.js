@@ -2,7 +2,6 @@ module keypress from 'client-lib/keypress-tool'
 module fullscreen from 'client-lib/fullscreen-tool'
 module scroll from 'client-lib/scroll-tool'
 module pageComponent from './components/page'
-// import Promise from 'bluebird'
 
 
 /**
@@ -30,13 +29,13 @@ keypress.bind({}, 'e', event => {
 });
 function goToNext(e) {
 	if (data.nextItem) {
-		pageComponent.navigateTo(data.nextItem.link);
+		pageComponent.navigateTo(data.nextItem.link, data.nextItem.name);
 	}
 	e.preventDefault();
 }
 function goToPrevious(e) {
 	if (data.prevItem) {
-		pageComponent.navigateTo(data.prevItem.link);
+		pageComponent.navigateTo(data.prevItem.link, data.prevItem.name);
 	}
 	e.preventDefault();
 }

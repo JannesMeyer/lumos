@@ -31,7 +31,7 @@
     "react": "^0.10.0"
   },
   "devDependencies": {
-    "bluebird": "2.x",
+    "bluebird": "^2.1.3",
     "es6-shim": "0.x",
     "esprima-fb": "4001.x",
     "gulp": "3.x",
@@ -47,8 +47,8 @@
     "gulp-util": "2.x",
     "jstransform": "5.x",
     "node-notifier": "3.x",
-    "webpack": "1.x",
-    "react": "0.x"
+    "react": "0.x",
+    "webpack": "1.x"
   },
   "os": [
     "darwin"
