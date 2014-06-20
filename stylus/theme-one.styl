@@ -75,6 +75,11 @@ body
 		&.active
 			box-shadow: -2px 0 0 -1px $content-bg
 
+.m-colorpicker
+	position: absolute
+	top: 50px
+	right 15px
+
 .m-search
 	position: absolute
 	top: 11px
@@ -90,18 +95,19 @@ body
  * Custom colors
  *==========================================*/
 
-custom-color()
+custom-color($stripe, $nav-bg, $nav-border, $nav-link, $nav-link-active)
+
 	.m-header
-		border-bottom-color: $stripe-color
+		border-bottom-color: $stripe
 		a
 			color: #a0a0a0
 			transition: color 0.1s
 		a:hover,
 		a:focus
-			color: $stripe-color
+			color: $stripe
 
 	.m-search:focus
-		box-shadow: 0 0 2px 2px rgba($stripe-color, 0.75)
+		box-shadow: 0 0 2px 2px rgba($stripe, 0.75)
 		background: darken(#fff, 1)
 
 	.m-navigation
@@ -110,7 +116,7 @@ custom-color()
 
 		> ul > li
 			> a
-				color: $nav-link-color
+				color: $nav-link
 				&:hover,
 				&:focus
 					background: lighten($nav-bg, 2)
@@ -125,63 +131,66 @@ custom-color()
 				> a:hover,
 				> a:focus
 					background: $content-bg
-					color: $nav-link-color-active
+					color: $nav-link-active
 
 	.m-page-title > h1
-		color: $nav-link-color-active
+		color: $nav-link-active
 
-// None
-$stripe-color = hsl(0, 0, 62.75%) // #a0a0a0
-$nav-bg = hsl(0, 0, 92.16%) // #ebebeb
-$nav-border = hsl(0, 0, 80.39%) // #cdcdcd
-$nav-link-color = hsl(0, 0, 29.80%) // #4c4c4c
-$nav-link-color-active = hsl(0, 0, 49.02%) // #7d7d7d
-custom-color()
-
-// Purple Mist
-$stripe-color = #aa90d3
-$nav-bg = #ede9f5
-$nav-border = #d2c6e4
-$nav-link-color = #583589
-$nav-link-color-active = #8967bd
-.s-purple-mist
-	custom-color()
-
-// Orange
-$stripe-color = #ff9a29
-$nav-bg = #fdebdc
-$nav-border = #facba3
-$nav-link-color = #ba3f00
-$nav-link-color-active = #f27200
-.s-orange
-	custom-color()
-
-// Blue
-$stripe-color = #60aadf
-$nav-bg = #e2edf7
-$nav-border = #b3d2ea
-$nav-link-color = #005795
-$nav-link-color-active = #1f8aca
 .s-blue
-	custom-color()
+	custom-color(#60aadf, #e2edf7, #b3d2ea, #005795, #1f8aca)
 
-// Apple
-$stripe-color = #7fbf60
-$nav-bg = #e6f1e1
-$nav-border = #bfdbb2
-$nav-link-color = #146e00
-$nav-link-color-active = #50a226
-.s-apple
-	custom-color()
+.s-yellow
+	custom-color(#f9ba00, #fbf0d8, #f6d997, #b46800, #ec9b00)
 
-// Cyan
-$stripe-color = #17b7cf
-$nav-bg = #dcf0f4
-$nav-border = #a2d8e3
-$nav-link-color = #006582
-$nav-link-color-active = #0099b7
+.s-green
+	custom-color(#3fbf77, #dff1e5, #aadcbb, #006f12, #00a346)
+
+.s-red
+	custom-color(#ff6d61, #ffe4e2, #fdb8b4, #b90000, #f3301a)
+
+.s-purple
+	custom-color(#d886c8, #f6e7f3, #e7c2e0, #8c237b, #c059af)
+
 .s-cyan
-	custom-color()
+	custom-color(#17b7cf, #dcf0f4, #a2d8e3, #006582, #0099b7)
+
+.s-orange
+	custom-color(#ff9a29, #fdebdc, #facba3, #ba3f00, #f27200)
+
+.s-magenta
+	custom-color(#f37cba, #fce6f0, #f6bed9, #a9026b, #e1499d)
+
+.s-blue-mist
+	custom-color(#849ad5, #e7ebf5, #c0cbe6, #27448a, #5976bf)
+
+.s-purple-mist
+	custom-color(#aa90d3, #ede9f5, #d2c6e4, #583589, #8967bd)
+
+.s-tan
+	custom-color(#bba08d, #f0ebe8, #d9cdc5, #6d4c33, #9e7d65)
+
+.s-lemon-lime
+	custom-color(#b7bf27, #eff1db, #d8dc9f, #6a6e00, #9ba200)
+
+.s-apple
+	custom-color(#7fbf60, #e6f1e1, #bfdbb2, #146e00, #50a226)
+
+.s-teal
+	custom-color(#00b9a4, #d7f0ec, #94d9cf, #00674f, #009b81)
+
+.s-silver
+	custom-color(#9daebd, #ebeef1, #cbd3da, #475d6e, #798ea1)
+
+.s-red-chalk
+	custom-color(#f96285, #fde2e7, #f8b4c1, #ae0022, #e71858)
+
+.s-none
+	custom-color(#a0a0a0, #ebebeb, #cdcdcd, #4c4c4c, #7d7d7d)
+	// custom-color(hsl(0, 0, 62.75%),
+	//              hsl(0, 0, 92.16%),
+	//              hsl(0, 0, 80.39%),
+	//              hsl(0, 0, 29.80%),
+	//              hsl(0, 0, 49.02%))
 
 /*==========================================
  * Content

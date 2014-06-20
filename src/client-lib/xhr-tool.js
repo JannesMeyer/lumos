@@ -1,6 +1,4 @@
-if (typeof Promise === 'undefined') {
-	Promise = require('bluebird');
-}
+module Promise from 'bluebird'
 
 /* Chrome sucks for this XHR stuff:
 
@@ -34,21 +32,25 @@ function getJSON(path) {
 	var req = new XMLHttpRequest();
 	req.open('GET', path);
 	req.setRequestHeader('Accept', 'application/json');
-	// req.dataType = 'json';
 
 	return new Promise(function(resolve, reject) {
 		req.onload = event => {
 			try {
 				resolve(JSON.parse(req.response));
-			} catch(e) {
-				reject(e);
+			} catch(error) {
+				reject(error);
 			}
 		};
-		req.onerror = event => { reject(new Error(req.status)); };
-		req.ontimeout = event => { reject(new Error('Timed out')); };
-		// req.onabort
+		req.onerror = event => reject(new Error(req.status));
+		req.ontimeout = event => reject(new Error('Timed out'));
+		req.onabort = event => console.log('request aborted');
 		req.send();
-	});
+	})
+	.cancellable()
+	.catch(Promise.CancellationError, err => {
+        req.abort();
+        throw err;
+    });
 }
 
 exports.getJSON = getJSON;

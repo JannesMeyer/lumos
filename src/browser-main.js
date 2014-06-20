@@ -68,6 +68,7 @@ keypress.bind({inputEl: true}, 'esc', event => {
 	}
 });
 
-pageComponent.renderToDocument(data, document.body);
+var r = pageComponent.renderToDocument(data, document.body);
+// r.setProps({});
 
 // var isNode = typeof window === 'undefined' || !window.navigator;

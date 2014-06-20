@@ -15,7 +15,7 @@
 		}
 	},
 	"watch": {
-		"styles": "./assets/stylus/**",
+		"styles": "./stylus/**/*.styl",
 		"public": "./public/**"
 	},
 	"errorTemplate": {

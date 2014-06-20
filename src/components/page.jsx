@@ -2,6 +2,8 @@
 
 module React from 'react'
 
+var app;
+
 // TODO: use location.href if history api is not supported
 // TODO: links inside the page
 // TODO: replace this with state
@@ -27,11 +29,30 @@ function navigateTo(path, title) {
 
 var Header = React.createClass({
 	render() {
+		var colors = ['none', 'blue', 'yellow', 'green', 'red', 'purple', 'cyan', 'orange', 'magenta', 'blue-mist', 'purple-mist', 'tan', 'lemon-lime', 'apple', 'teal', 'silver', 'red-chalk'];
 		return (
 			<header className="m-header">
 				<BreadcrumbList breadcrumbs={this.props.breadcrumbs} dirs={this.props.dirs} />
+				<ColorPicker colors={colors} />
 				<SearchBar />
 			</header>
+		);
+	}
+});
+
+var ColorPicker = React.createClass({
+	handleChange(event) {
+		app.setState({ color: event.target.value });
+	},
+	render() {
+		var colors = this.props.colors;
+		var currentColor = app.state.color;
+		return (
+			<select value={currentColor} onChange={this.handleChange} className="m-colorpicker">
+			{colors.map(color =>
+				<option value={color}>{color}</option>
+			)}
+			</select>
 		);
 	}
 });
@@ -147,14 +168,10 @@ var PageButton = React.createClass({
 });
 
 var LumosApplication = React.createClass({
-	pickRandomColor() {
-		var colors = ['purple-mist', 'orange', 'blue', 'cyan', 'apple'];
-		return colors[Math.floor(Math.random() * colors.length)];
-	},
 	getInitialState() {
-		// Can't have a random color because that would change the checksum on the client
+		app = this;
 		return {
-			color: 'purple-mist',
+			color: 'blue',
 			path: ''
 		};
 	},
@@ -169,7 +186,6 @@ var LumosApplication = React.createClass({
 		document.body.scrollTop = 0;
 	},
 	render() {
-		// console.log('render');
 		var data = this.props.data;
 
 		return (

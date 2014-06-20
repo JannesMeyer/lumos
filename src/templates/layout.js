@@ -27,7 +27,7 @@ exports.render = function(data, body) {
   var data = ${JSON.stringify(data)}
   </script>
   <!-- LiveReload -->
-  <script src="http://notes:35729/livereload.js?snipver=1"></script>
+  <!-- <script src="http://notes:35729/livereload.js?snipver=1"></script> -->
 </body>
 </html>`
 
