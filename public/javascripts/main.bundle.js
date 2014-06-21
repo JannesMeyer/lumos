@@ -116,35 +116,38 @@
 	/** @jsx React.DOM */
 
 	var React = __webpack_require__(5);var app;
-
-	// TODO: use location.href if history api is not supported
-	// TODO: links inside the page
-	// TODO: replace this with state
-	// TODO: Require a node (mid-tree or leaf) as argument
-	function navigateTo(path, title) {
-		// TODO: Queue push state when in fullscreen, because it would exit fullscreen mode
-		history.pushState(undefined, undefined, path);
-		document.title = title;
-		var xhr = __webpack_require__(6);
-
-		xhr.getJSON(path)
-		.then(function(newData)  {
-			history.replaceState(newData, undefined, path);
-			data = newData;
-			// TODO: Scroll to top
-			renderToDocument(data, document.body);
-		})
-		.catch(function(err)  {
-			console.error(err);
-			throw err;
-		});
-	}
+	var links = {};
+	var currentIconColor;
+	var historyApiSupported = typeof window !== 'undefined' && window.history && !!window.history.pushState;
 
 	var Header = React.createClass({displayName: 'Header',
+		componentDidUpdate:function() {
+			// Change favicon color based on theme
+			var header = this.refs.header.getDOMNode();
+			var style = window.getComputedStyle(header);
+
+			// Skip if it's the same color again
+			if (style.borderBottomColor === currentIconColor) {
+				return;
+			}
+
+			var matches = style.borderBottomColor.match(/^rgb\((\d+), (\d+), (\d+)\)$/);
+			if (matches) {
+				currentIconColor = style.borderBottomColor;
+				var favicon = __webpack_require__(6);
+				favicon.load(links.icon.href, function(iconImg) {
+					var color = [matches[1], matches[2], matches[3]];
+					links.icon.href = favicon.colorize(iconImg, color);
+					links.icon.parentNode.replaceChild(links.icon, links.icon);
+				});
+			} else {
+				console.warn('Could not identify the theme color');
+			}
+		},
 		render:function() {
-			var colors = ['none', 'blue', 'yellow', 'green', 'red', 'purple', 'cyan', 'orange', 'magenta', 'blue-mist', 'purple-mist', 'tan', 'lemon-lime', 'apple', 'teal', 'silver', 'red-chalk'];
+			var colors = ['blue', 'yellow', 'green', 'red', 'purple', 'cyan', 'orange', 'magenta', 'blue-mist', 'purple-mist', 'tan', 'lemon-lime', 'apple', 'teal', 'silver', 'red-chalk', 'none'];
 			return (
-				React.DOM.header( {className:"m-header"}, 
+				React.DOM.header( {className:"m-header", ref:"header"}, 
 					BreadcrumbList( {breadcrumbs:this.props.breadcrumbs, dirs:this.props.dirs} ),
 					ColorPicker( {colors:colors} ),
 					SearchBar(null )
@@ -219,6 +222,11 @@
 
 	var Navigation = React.createClass({displayName: 'Navigation',
 		handleClick:function(e) {
+			// Only handle left button clicks
+			if (e.button !== 0) {
+				return;
+			}
+
 			var title = e.currentTarget.firstChild.textContent;
 			var path = e.currentTarget.pathname;
 			navigateTo(path, title);
@@ -284,16 +292,25 @@
 		getInitialState:function() {
 			app = this;
 			return {
-				color: 'blue',
+				color: 'tan',
 				path: ''
 			};
 		},
 		componentDidMount:function() {
 			console.log('componentDidMount');
 			history.replaceState(this.props.data, null, location.pathname);
+
+			// TODO: Render everything with React and get rid of this DOM searching
+			var linkNodes = document.getElementsByTagName('link');
+			for (var i = 0; i < linkNodes.length; ++i) {
+				var linkNode = linkNodes[i];
+				links[linkNode.rel] = linkNode;
+			}
 		},
 		componentWillUpdate:function() {
 			console.log('componentWillUpdate');
+
+
 			// TODO: Scroll to the top before
 			// module scroll from 'client-lib/scroll-tool';
 			document.body.scrollTop = 0;
@@ -317,12 +334,38 @@
 		}
 	});
 
+	// TODO: use location.href if history api is not supported
+	// TODO: links inside the page
+	// TODO: replace this with state
+	// TODO: Require a node (mid-tree or leaf) as argument
+	function navigateTo(path, title) {
+		// TODO: Queue push state when in fullscreen, because it would exit fullscreen mode
+		history.pushState(undefined, undefined, path);
+		document.title = title;
+		var xhr = __webpack_require__(7);
+
+		xhr.getJSON(path)
+		.then(function(newData)  {
+			history.replaceState(newData, undefined, path);
+			data = newData;
+			// TODO: Scroll to top
+			renderToDocument(data, document.body);
+		})
+		.catch(function(err)  {
+			console.error(err);
+			throw err;
+		});
+	}
+
 	function renderToDocument(data, mountNode) {
 		return React.renderComponent(LumosApplication( {data:data} ), mountNode);
 	}
 	function renderToString(data) {
 		return React.renderComponentToString(LumosApplication( {data:data} ));
 	}
+
+	// function navigateTo(target, name) {
+	// }
 
 	exports.navigateTo = navigateTo;
 	exports.renderToDocument = renderToDocument;
@@ -596,7 +639,130 @@
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var Promise = __webpack_require__(7);function getJSON(path) {
+	var ctx;
+	var faviconUrl;
+	var faviconImageData;
+
+	function load(url, callback) {
+		if (url === faviconUrl) {
+			callback(faviconImageData);
+			return;
+		}
+
+		// Load favicon
+		var img = document.createElement('img');
+		img.addEventListener('load', function() {
+			var canvas = document.createElement('canvas');
+			canvas.width = img.width;
+			canvas.height = img.height;
+			ctx = canvas.getContext('2d');
+			ctx.drawImage(img, 0, 0);
+			faviconImageData = ctx.getImageData(0, 0, img.width, img.height);
+			faviconUrl = url;
+			callback(faviconImageData);
+		});
+		img.src = url;
+	}
+
+	function colorize(srcImg, tintColor) {
+		// Create the destination image
+		var destImg = ctx.createImageData(srcImg.width, srcImg.height);
+
+		// Colorize
+		var t = 1;
+		var src = srcImg.data;
+		var dest = destImg.data;
+		for (var i = 0; i < src.length; ) {
+			dest[i] = src[i++] * (1-t) + tintColor[0] * t;
+			dest[i] = src[i++] * (1-t) + tintColor[1] * t;
+			dest[i] = src[i++] * (1-t) + tintColor[2] * t;
+			dest[i] = src[i++]; // alpha component
+		}
+
+		// Put it on the canvas
+		ctx.putImageData(destImg, 0, 0);
+
+		return ctx.canvas.toDataURL();
+	}
+
+	exports.load = load;
+	exports.colorize = colorize;
+
+	// http://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion
+
+	// /**
+	//  * Converts an HSL color value to RGB. Conversion formula
+	//  * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+	//  * Assumes h, s, and l are contained in the set [0, 1] and
+	//  * returns r, g, and b in the set [0, 255].
+	//  *
+	//  * @param   Number  h       The hue
+	//  * @param   Number  s       The saturation
+	//  * @param   Number  l       The lightness
+	//  * @return  Array           The RGB representation
+	//  */
+	// function hslToRgb(h, s, l){
+	// 	var r, g, b;
+
+	// 	if(s == 0){
+	// 		r = g = b = l; // achromatic
+	// 	}else{
+	// 		function hue2rgb(p, q, t){
+	// 			if(t < 0) t += 1;
+	// 			if(t > 1) t -= 1;
+	// 			if(t < 1/6) return p + (q - p) * 6 * t;
+	// 			if(t < 1/2) return q;
+	// 			if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
+	// 			return p;
+	// 		}
+
+	// 		var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+	// 		var p = 2 * l - q;
+	// 		r = hue2rgb(p, q, h + 1/3);
+	// 		g = hue2rgb(p, q, h);
+	// 		b = hue2rgb(p, q, h - 1/3);
+	// 	}
+
+	// 	return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255)];
+	// }
+
+	// /**
+	//  * Converts an RGB color value to HSL. Conversion formula
+	//  * adapted from http://en.wikipedia.org/wiki/HSL_color_space.
+	//  * Assumes r, g, and b are contained in the set [0, 255] and
+	//  * returns h, s, and l in the set [0, 1].
+	//  *
+	//  * @param   Number  r       The red color value
+	//  * @param   Number  g       The green color value
+	//  * @param   Number  b       The blue color value
+	//  * @return  Array           The HSL representation
+	//  */
+	// function rgbToHsl(r, g, b){
+	// 	r /= 255, g /= 255, b /= 255;
+	// 	var max = Math.max(r, g, b), min = Math.min(r, g, b);
+	// 	var h, s, l = (max + min) / 2;
+
+	// 	if(max == min){
+	// 		h = s = 0; // achromatic
+	// 	}else{
+	// 		var d = max - min;
+	// 		s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+	// 		switch(max){
+	// 			case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+	// 			case g: h = (b - r) / d + 2; break;
+	// 			case b: h = (r - g) / d + 4; break;
+	// 		}
+	// 		h /= 6;
+	// 	}
+
+	// 	return [h, s, l];
+	// }
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var Promise = __webpack_require__(8);function getJSON(path) {
 		var req = new XMLHttpRequest();
 		req.open('GET', path);
 		req.setRequestHeader('Accept', 'application/json');
@@ -624,7 +790,7 @@
 	exports.getJSON = getJSON;
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -650,11 +816,11 @@
 	 * 
 	 */
 	"use strict";
-	var Promise = __webpack_require__(8)();
+	var Promise = __webpack_require__(9)();
 	module.exports = Promise;
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -688,19 +854,19 @@
 	    return bluebird;
 	}
 	module.exports = function() {
-	var util = __webpack_require__(9);
-	var async = __webpack_require__(10);
-	var errors = __webpack_require__(11);
+	var util = __webpack_require__(10);
+	var async = __webpack_require__(11);
+	var errors = __webpack_require__(12);
 
 	var INTERNAL = function(){};
 	var APPLY = {};
 	var NEXT_FILTER = {e: null};
 
-	var cast = __webpack_require__(12)(Promise, INTERNAL);
-	var PromiseArray = __webpack_require__(13)(Promise, INTERNAL, cast);
-	var CapturedTrace = __webpack_require__(14)();
-	var CatchFilter = __webpack_require__(15)(NEXT_FILTER);
-	var PromiseResolver = __webpack_require__(16);
+	var cast = __webpack_require__(13)(Promise, INTERNAL);
+	var PromiseArray = __webpack_require__(14)(Promise, INTERNAL, cast);
+	var CapturedTrace = __webpack_require__(15)();
+	var CatchFilter = __webpack_require__(16)(NEXT_FILTER);
+	var PromiseResolver = __webpack_require__(17);
 
 	var isArray = util.isArray;
 
@@ -717,7 +883,7 @@
 	var markAsOriginatingFromRejection = errors.markAsOriginatingFromRejection;
 	var canAttach = errors.canAttach;
 	var thrower = util.thrower;
-	var apiRejection = __webpack_require__(17)(Promise);
+	var apiRejection = __webpack_require__(18)(Promise);
 
 
 	var makeSelfResolutionError = function Promise$_makeSelfResolutionError() {
@@ -1662,10 +1828,10 @@
 	}
 
 	Promise._makeSelfResolutionError = makeSelfResolutionError;
-	__webpack_require__(18)(Promise, NEXT_FILTER, cast);
-	__webpack_require__(19)(Promise);
+	__webpack_require__(19)(Promise, NEXT_FILTER, cast);
 	__webpack_require__(20)(Promise);
-	__webpack_require__(21)(Promise, PromiseArray, cast, INTERNAL);
+	__webpack_require__(21)(Promise);
+	__webpack_require__(22)(Promise, PromiseArray, cast, INTERNAL);
 	Promise.RangeError = RangeError;
 	Promise.CancellationError = CancellationError;
 	Promise.TimeoutError = TimeoutError;
@@ -1677,33 +1843,33 @@
 	util.toFastProperties(Promise);
 	util.toFastProperties(Promise.prototype);
 	Promise.Promise = Promise;
-	__webpack_require__(22)(Promise,INTERNAL,cast);
 	__webpack_require__(23)(Promise,INTERNAL,cast);
-	__webpack_require__(24)(Promise);
-	__webpack_require__(25)(Promise,apiRejection,INTERNAL,cast);
-	__webpack_require__(26)(Promise,PromiseArray,apiRejection,cast,INTERNAL);
-	__webpack_require__(27)(Promise);
-	__webpack_require__(28)(Promise,INTERNAL);
-	__webpack_require__(29)(Promise,PromiseArray,cast);
-	__webpack_require__(30)(Promise,PromiseArray,apiRejection,cast,INTERNAL);
-	__webpack_require__(31)(Promise,PromiseArray);
-	__webpack_require__(32)(Promise,PromiseArray,apiRejection);
-	__webpack_require__(33)(Promise,PromiseArray);
-	__webpack_require__(34)(Promise,INTERNAL);
+	__webpack_require__(24)(Promise,INTERNAL,cast);
+	__webpack_require__(25)(Promise);
+	__webpack_require__(26)(Promise,apiRejection,INTERNAL,cast);
+	__webpack_require__(27)(Promise,PromiseArray,apiRejection,cast,INTERNAL);
+	__webpack_require__(28)(Promise);
+	__webpack_require__(29)(Promise,INTERNAL);
+	__webpack_require__(30)(Promise,PromiseArray,cast);
+	__webpack_require__(31)(Promise,PromiseArray,apiRejection,cast,INTERNAL);
+	__webpack_require__(32)(Promise,PromiseArray);
+	__webpack_require__(33)(Promise,PromiseArray,apiRejection);
+	__webpack_require__(34)(Promise,PromiseArray);
 	__webpack_require__(35)(Promise,INTERNAL);
-	__webpack_require__(36)(Promise,PromiseArray);
-	__webpack_require__(37)(Promise,INTERNAL);
-	__webpack_require__(38)(Promise,apiRejection,cast);
+	__webpack_require__(36)(Promise,INTERNAL);
+	__webpack_require__(37)(Promise,PromiseArray);
+	__webpack_require__(38)(Promise,INTERNAL);
+	__webpack_require__(39)(Promise,apiRejection,cast);
 
 	Promise.prototype = Promise.prototype;
 	return Promise;
 
 	};
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(39)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(40)))
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -1729,7 +1895,7 @@
 	 * 
 	 */
 	"use strict";
-	var es5 = __webpack_require__(40);
+	var es5 = __webpack_require__(41);
 	var haveGetters = (function(){
 	    try {
 	        var o = {};
@@ -1977,7 +2143,7 @@
 
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -2003,10 +2169,10 @@
 	 * 
 	 */
 	"use strict";
-	var schedule = __webpack_require__(41);
-	var Queue = __webpack_require__(42);
-	var errorObj = __webpack_require__(9).errorObj;
-	var tryCatch1 = __webpack_require__(9).tryCatch1;
+	var schedule = __webpack_require__(42);
+	var Queue = __webpack_require__(43);
+	var errorObj = __webpack_require__(10).errorObj;
+	var tryCatch1 = __webpack_require__(10).tryCatch1;
 	var _process = typeof process !== "undefined" ? process : void 0;
 
 	function Async() {
@@ -2092,10 +2258,10 @@
 
 	module.exports = new Async();
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(39)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(40)))
 
 /***/ },
-/* 11 */
+/* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -2121,8 +2287,8 @@
 	 * 
 	 */
 	"use strict";
-	var Objectfreeze = __webpack_require__(40).freeze;
-	var util = __webpack_require__(9);
+	var Objectfreeze = __webpack_require__(41).freeze;
+	var util = __webpack_require__(10);
 	var inherits = util.inherits;
 	var notEnumerableProp = util.notEnumerableProp;
 
@@ -2246,7 +2412,7 @@
 
 
 /***/ },
-/* 12 */
+/* 13 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -2273,8 +2439,8 @@
 	 */
 	"use strict";
 	module.exports = function(Promise, INTERNAL) {
-	var util = __webpack_require__(9);
-	var canAttach = __webpack_require__(11).canAttach;
+	var util = __webpack_require__(10);
+	var canAttach = __webpack_require__(12).canAttach;
 	var errorObj = util.errorObj;
 	var isObject = util.isObject;
 
@@ -2385,7 +2551,7 @@
 
 
 /***/ },
-/* 13 */
+/* 14 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -2412,8 +2578,8 @@
 	 */
 	"use strict";
 	module.exports = function(Promise, INTERNAL, cast) {
-	var canAttach = __webpack_require__(11).canAttach;
-	var util = __webpack_require__(9);
+	var canAttach = __webpack_require__(12).canAttach;
+	var util = __webpack_require__(10);
 	var isArray = util.isArray;
 
 	function toResolutionValue(val) {
@@ -2593,7 +2759,7 @@
 
 
 /***/ },
-/* 14 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -2620,8 +2786,8 @@
 	 */
 	"use strict";
 	module.exports = function() {
-	var inherits = __webpack_require__(9).inherits;
-	var defineProperty = __webpack_require__(40).defineProperty;
+	var inherits = __webpack_require__(10).inherits;
+	var defineProperty = __webpack_require__(41).defineProperty;
 
 	var rignore = new RegExp(
 	    "\\b(?:[a-zA-Z0-9.]+\\$_\\w+|" +
@@ -2816,7 +2982,7 @@
 
 
 /***/ },
-/* 15 */
+/* 16 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -2843,11 +3009,11 @@
 	 */
 	"use strict";
 	module.exports = function(NEXT_FILTER) {
-	var util = __webpack_require__(9);
-	var errors = __webpack_require__(11);
+	var util = __webpack_require__(10);
+	var errors = __webpack_require__(12);
 	var tryCatch1 = util.tryCatch1;
 	var errorObj = util.errorObj;
-	var keys = __webpack_require__(40).keys;
+	var keys = __webpack_require__(41).keys;
 	var TypeError = errors.TypeError;
 
 	function CatchFilter(instances, callback, promise) {
@@ -2916,7 +3082,7 @@
 
 
 /***/ },
-/* 16 */
+/* 17 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -2942,14 +3108,14 @@
 	 * 
 	 */
 	"use strict";
-	var util = __webpack_require__(9);
+	var util = __webpack_require__(10);
 	var maybeWrapAsError = util.maybeWrapAsError;
-	var errors = __webpack_require__(11);
+	var errors = __webpack_require__(12);
 	var TimeoutError = errors.TimeoutError;
 	var OperationalError = errors.OperationalError;
-	var async = __webpack_require__(10);
+	var async = __webpack_require__(11);
 	var haveGetters = util.haveGetters;
-	var es5 = __webpack_require__(40);
+	var es5 = __webpack_require__(41);
 
 	function isUntypedError(obj) {
 	    return obj instanceof Error &&
@@ -3080,50 +3246,6 @@
 
 
 /***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright (c) 2014 Petka Antonov
-	 * 
-	 * Permission is hereby granted, free of charge, to any person obtaining a copy
-	 * of this software and associated documentation files (the "Software"), to deal
-	 * in the Software without restriction, including without limitation the rights
-	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-	 * copies of the Software, and to permit persons to whom the Software is
-	 * furnished to do so, subject to the following conditions:</p>
-	 * 
-	 * The above copyright notice and this permission notice shall be included in
-	 * all copies or substantial portions of the Software.
-	 * 
-	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
-	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-	 * THE SOFTWARE.
-	 * 
-	 */
-	"use strict";
-	module.exports = function(Promise) {
-	var TypeError = __webpack_require__(11).TypeError;
-
-	function apiRejection(msg) {
-	    var error = new TypeError(msg);
-	    var ret = Promise.rejected(error);
-	    var parent = ret._peekContext();
-	    if (parent != null) {
-	        parent._attachExtraTrace(error);
-	    }
-	    return ret;
-	}
-
-	return apiRejection;
-	};
-
-
-/***/ },
 /* 18 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -3150,8 +3272,52 @@
 	 * 
 	 */
 	"use strict";
+	module.exports = function(Promise) {
+	var TypeError = __webpack_require__(12).TypeError;
+
+	function apiRejection(msg) {
+	    var error = new TypeError(msg);
+	    var ret = Promise.rejected(error);
+	    var parent = ret._peekContext();
+	    if (parent != null) {
+	        parent._attachExtraTrace(error);
+	    }
+	    return ret;
+	}
+
+	return apiRejection;
+	};
+
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright (c) 2014 Petka Antonov
+	 * 
+	 * Permission is hereby granted, free of charge, to any person obtaining a copy
+	 * of this software and associated documentation files (the "Software"), to deal
+	 * in the Software without restriction, including without limitation the rights
+	 * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	 * copies of the Software, and to permit persons to whom the Software is
+	 * furnished to do so, subject to the following conditions:</p>
+	 * 
+	 * The above copyright notice and this permission notice shall be included in
+	 * all copies or substantial portions of the Software.
+	 * 
+	 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	 * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	 * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.  IN NO EVENT SHALL THE
+	 * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	 * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+	 * THE SOFTWARE.
+	 * 
+	 */
+	"use strict";
 	module.exports = function(Promise, NEXT_FILTER, cast) {
-	var util = __webpack_require__(9);
+	var util = __webpack_require__(10);
 	var wrapsPrimitiveReceiver = util.wrapsPrimitiveReceiver;
 	var isPrimitive = util.isPrimitive;
 	var thrower = util.thrower;
@@ -3250,7 +3416,7 @@
 
 
 /***/ },
-/* 19 */
+/* 20 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -3276,7 +3442,7 @@
 	 * 
 	 */
 	"use strict";
-	var util = __webpack_require__(9);
+	var util = __webpack_require__(10);
 	var isPrimitive = util.isPrimitive;
 	var wrapsPrimitiveReceiver = util.wrapsPrimitiveReceiver;
 
@@ -3334,7 +3500,7 @@
 
 
 /***/ },
-/* 20 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -3416,7 +3582,7 @@
 
 
 /***/ },
-/* 21 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -3444,7 +3610,7 @@
 	"use strict";
 	module.exports =
 	function(Promise, PromiseArray, cast, INTERNAL) {
-	var util = __webpack_require__(9);
+	var util = __webpack_require__(10);
 	var canEvaluate = util.canEvaluate;
 	var tryCatch1 = util.tryCatch1;
 	var errorObj = util.errorObj;
@@ -3544,7 +3710,7 @@
 
 
 /***/ },
-/* 22 */
+/* 23 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -3581,9 +3747,9 @@
 	};
 
 	module.exports = function(Promise, INTERNAL, cast) {
-	var util = __webpack_require__(9);
-	var errors = __webpack_require__(11);
-	var apiRejection = __webpack_require__(17)(Promise);
+	var util = __webpack_require__(10);
+	var errors = __webpack_require__(12);
+	var apiRejection = __webpack_require__(18)(Promise);
 	var TimeoutError = Promise.TimeoutError;
 
 	var afterTimeout = function Promise$_afterTimeout(promise, message, ms) {
@@ -3641,7 +3807,7 @@
 
 
 /***/ },
-/* 23 */
+/* 24 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -3668,8 +3834,8 @@
 	 */
 	"use strict";
 	module.exports = function(Promise, INTERNAL, cast) {
-	var apiRejection = __webpack_require__(17)(Promise);
-	var isArray = __webpack_require__(9).isArray;
+	var apiRejection = __webpack_require__(18)(Promise);
+	var isArray = __webpack_require__(10).isArray;
 
 	var raceLater = function Promise$_raceLater(promise) {
 	    return promise.then(function(array) {
@@ -3719,7 +3885,7 @@
 
 
 /***/ },
-/* 24 */
+/* 25 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -3750,7 +3916,7 @@
 	var getterCache = cr && cr(null);
 	callerCache[" size"] = getterCache[" size"] = 0;
 	module.exports = function(Promise) {
-	var util = __webpack_require__(9);
+	var util = __webpack_require__(10);
 	var canEvaluate = util.canEvaluate;
 	var isIdentifier = util.isIdentifier;
 
@@ -3841,7 +4007,7 @@
 
 
 /***/ },
-/* 25 */
+/* 26 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -3868,10 +4034,10 @@
 	 */
 	"use strict";
 	module.exports = function(Promise, apiRejection, INTERNAL, cast) {
-	var errors = __webpack_require__(11);
+	var errors = __webpack_require__(12);
 	var TypeError = errors.TypeError;
-	var deprecated = __webpack_require__(9).deprecated;
-	var util = __webpack_require__(9);
+	var deprecated = __webpack_require__(10).deprecated;
+	var util = __webpack_require__(10);
 	var errorObj = util.errorObj;
 	var tryCatch1 = util.tryCatch1;
 	var yieldHandlers = [];
@@ -3998,7 +4164,7 @@
 
 
 /***/ },
-/* 26 */
+/* 27 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4025,7 +4191,7 @@
 	 */
 	"use strict";
 	module.exports = function(Promise, PromiseArray, apiRejection, cast, INTERNAL) {
-	var util = __webpack_require__(9);
+	var util = __webpack_require__(10);
 	var tryCatch3 = util.tryCatch3;
 	var errorObj = util.errorObj;
 	var PENDING = {};
@@ -4153,7 +4319,7 @@
 
 
 /***/ },
-/* 27 */
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4180,8 +4346,8 @@
 	 */
 	"use strict";
 	module.exports = function(Promise) {
-	var util = __webpack_require__(9);
-	var async = __webpack_require__(10);
+	var util = __webpack_require__(10);
+	var async = __webpack_require__(11);
 	var tryCatch2 = util.tryCatch2;
 	var tryCatch1 = util.tryCatch1;
 	var errorObj = util.errorObj;
@@ -4235,7 +4401,7 @@
 
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4263,13 +4429,13 @@
 	"use strict";
 	module.exports = function(Promise, INTERNAL) {
 	var THIS = {};
-	var util = __webpack_require__(9);
-	var nodebackForPromise = __webpack_require__(16)
+	var util = __webpack_require__(10);
+	var nodebackForPromise = __webpack_require__(17)
 	    ._nodebackForPromise;
 	var withAppended = util.withAppended;
 	var maybeWrapAsError = util.maybeWrapAsError;
 	var canEvaluate = util.canEvaluate;
-	var TypeError = __webpack_require__(11).TypeError;
+	var TypeError = __webpack_require__(12).TypeError;
 	var defaultSuffix = "Async";
 	var defaultFilter = function(name, func) {
 	    return util.isIdentifier(name) &&
@@ -4567,7 +4733,7 @@
 
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4594,10 +4760,10 @@
 	 */
 	"use strict";
 	module.exports = function(Promise, PromiseArray, cast) {
-	var util = __webpack_require__(9);
-	var apiRejection = __webpack_require__(17)(Promise);
+	var util = __webpack_require__(10);
+	var apiRejection = __webpack_require__(18)(Promise);
 	var isObject = util.isObject;
-	var es5 = __webpack_require__(40);
+	var es5 = __webpack_require__(41);
 
 	function PropertiesPromiseArray(obj) {
 	    var keys = es5.keys(obj);
@@ -4681,7 +4847,7 @@
 
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4708,7 +4874,7 @@
 	 */
 	"use strict";
 	module.exports = function(Promise, PromiseArray, apiRejection, cast, INTERNAL) {
-	var util = __webpack_require__(9);
+	var util = __webpack_require__(10);
 	var tryCatch4 = util.tryCatch4;
 	var tryCatch3 = util.tryCatch3;
 	var errorObj = util.errorObj;
@@ -4845,7 +5011,7 @@
 
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4874,7 +5040,7 @@
 	module.exports =
 	    function(Promise, PromiseArray) {
 	var PromiseInspection = Promise.PromiseInspection;
-	var util = __webpack_require__(9);
+	var util = __webpack_require__(10);
 
 	function SettledPromiseArray(values) {
 	    this.constructor$(values);
@@ -4918,7 +5084,7 @@
 
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -4946,9 +5112,9 @@
 	"use strict";
 	module.exports =
 	function(Promise, PromiseArray, apiRejection) {
-	var util = __webpack_require__(9);
-	var RangeError = __webpack_require__(11).RangeError;
-	var AggregateError = __webpack_require__(11).AggregateError;
+	var util = __webpack_require__(10);
+	var RangeError = __webpack_require__(12).RangeError;
+	var AggregateError = __webpack_require__(12).AggregateError;
 	var isArray = util.isArray;
 
 
@@ -5075,7 +5241,7 @@
 
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5102,9 +5268,9 @@
 	 */
 	"use strict";
 	module.exports = function(Promise, PromiseArray) {
-	var util = __webpack_require__(9);
-	var async = __webpack_require__(10);
-	var errors = __webpack_require__(11);
+	var util = __webpack_require__(10);
+	var async = __webpack_require__(11);
+	var errors = __webpack_require__(12);
 	var tryCatch1 = util.tryCatch1;
 	var errorObj = util.errorObj;
 
@@ -5185,7 +5351,7 @@
 
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5212,9 +5378,9 @@
 	 */
 	"use strict";
 	module.exports = function(Promise, INTERNAL) {
-	var errors = __webpack_require__(11);
+	var errors = __webpack_require__(12);
 	var canAttach = errors.canAttach;
-	var async = __webpack_require__(10);
+	var async = __webpack_require__(11);
 	var CancellationError = errors.CancellationError;
 
 	Promise.prototype._cancel = function Promise$_cancel(reason) {
@@ -5266,7 +5432,7 @@
 
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5306,7 +5472,7 @@
 
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5358,7 +5524,7 @@
 
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5398,7 +5564,7 @@
 
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5425,8 +5591,8 @@
 	 */
 	"use strict";
 	module.exports = function (Promise, apiRejection, cast) {
-	    var TypeError = __webpack_require__(11).TypeError;
-	    var inherits = __webpack_require__(9).inherits;
+	    var TypeError = __webpack_require__(12).TypeError;
+	    var inherits = __webpack_require__(10).inherits;
 	    var PromiseInspection = Promise.PromiseInspection;
 
 	    function inspectionMapper(inspections) {
@@ -5578,7 +5744,7 @@
 
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// shim for using process in browser
@@ -5647,7 +5813,7 @@
 
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -5740,7 +5906,7 @@
 
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -5805,10 +5971,10 @@
 	else throw new Error("no async scheduler available");
 	module.exports = schedule;
 	
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(39)))
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(40)))
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**

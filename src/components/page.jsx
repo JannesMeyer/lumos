@@ -3,35 +3,38 @@
 module React from 'react'
 
 var app;
-
-// TODO: use location.href if history api is not supported
-// TODO: links inside the page
-// TODO: replace this with state
-// TODO: Require a node (mid-tree or leaf) as argument
-function navigateTo(path, title) {
-	// TODO: Queue push state when in fullscreen, because it would exit fullscreen mode
-	history.pushState(undefined, undefined, path);
-	document.title = title;
-	var xhr = require('client-lib/xhr-tool');
-
-	xhr.getJSON(path)
-	.then(newData => {
-		history.replaceState(newData, undefined, path);
-		data = newData;
-		// TODO: Scroll to top
-		renderToDocument(data, document.body);
-	})
-	.catch(err => {
-		console.error(err);
-		throw err;
-	});
-}
+var links = {};
+var currentIconColor;
+var historyApiSupported = typeof window !== 'undefined' && window.history && !!window.history.pushState;
 
 var Header = React.createClass({
+	componentDidUpdate() {
+		// Change favicon color based on theme
+		var header = this.refs.header.getDOMNode();
+		var style = window.getComputedStyle(header);
+
+		// Skip if it's the same color again
+		if (style.borderBottomColor === currentIconColor) {
+			return;
+		}
+
+		var matches = style.borderBottomColor.match(/^rgb\((\d+), (\d+), (\d+)\)$/);
+		if (matches) {
+			currentIconColor = style.borderBottomColor;
+			var favicon = require('client-lib/favicon-tool');
+			favicon.load(links.icon.href, function(iconImg) {
+				var color = [matches[1], matches[2], matches[3]];
+				links.icon.href = favicon.colorize(iconImg, color);
+				links.icon.parentNode.replaceChild(links.icon, links.icon);
+			});
+		} else {
+			console.warn('Could not identify the theme color');
+		}
+	},
 	render() {
-		var colors = ['none', 'blue', 'yellow', 'green', 'red', 'purple', 'cyan', 'orange', 'magenta', 'blue-mist', 'purple-mist', 'tan', 'lemon-lime', 'apple', 'teal', 'silver', 'red-chalk'];
+		var colors = ['blue', 'yellow', 'green', 'red', 'purple', 'cyan', 'orange', 'magenta', 'blue-mist', 'purple-mist', 'tan', 'lemon-lime', 'apple', 'teal', 'silver', 'red-chalk', 'none'];
 		return (
-			<header className="m-header">
+			<header className="m-header" ref="header">
 				<BreadcrumbList breadcrumbs={this.props.breadcrumbs} dirs={this.props.dirs} />
 				<ColorPicker colors={colors} />
 				<SearchBar />
@@ -106,6 +109,11 @@ var SearchBar = React.createClass({
 
 var Navigation = React.createClass({
 	handleClick(e) {
+		// Only handle left button clicks
+		if (e.button !== 0) {
+			return;
+		}
+
 		var title = e.currentTarget.firstChild.textContent;
 		var path = e.currentTarget.pathname;
 		navigateTo(path, title);
@@ -171,16 +179,25 @@ var LumosApplication = React.createClass({
 	getInitialState() {
 		app = this;
 		return {
-			color: 'blue',
+			color: 'tan',
 			path: ''
 		};
 	},
 	componentDidMount() {
 		console.log('componentDidMount');
 		history.replaceState(this.props.data, null, location.pathname);
+
+		// TODO: Render everything with React and get rid of this DOM searching
+		var linkNodes = document.getElementsByTagName('link');
+		for (var i = 0; i < linkNodes.length; ++i) {
+			var linkNode = linkNodes[i];
+			links[linkNode.rel] = linkNode;
+		}
 	},
 	componentWillUpdate() {
 		console.log('componentWillUpdate');
+
+
 		// TODO: Scroll to the top before
 		// module scroll from 'client-lib/scroll-tool';
 		document.body.scrollTop = 0;
@@ -204,12 +221,38 @@ var LumosApplication = React.createClass({
 	}
 });
 
+// TODO: use location.href if history api is not supported
+// TODO: links inside the page
+// TODO: replace this with state
+// TODO: Require a node (mid-tree or leaf) as argument
+function navigateTo(path, title) {
+	// TODO: Queue push state when in fullscreen, because it would exit fullscreen mode
+	history.pushState(undefined, undefined, path);
+	document.title = title;
+	var xhr = require('client-lib/xhr-tool');
+
+	xhr.getJSON(path)
+	.then(newData => {
+		history.replaceState(newData, undefined, path);
+		data = newData;
+		// TODO: Scroll to top
+		renderToDocument(data, document.body);
+	})
+	.catch(err => {
+		console.error(err);
+		throw err;
+	});
+}
+
 function renderToDocument(data, mountNode) {
 	return React.renderComponent(<LumosApplication data={data} />, mountNode);
 }
 function renderToString(data) {
 	return React.renderComponentToString(<LumosApplication data={data} />);
 }
+
+// function navigateTo(target, name) {
+// }
 
 exports.navigateTo = navigateTo;
 exports.renderToDocument = renderToDocument;
