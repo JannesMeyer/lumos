@@ -225,12 +225,13 @@ var LumosApplication = React.createClass({
 // TODO: links inside the page
 // TODO: replace this with state
 // TODO: Require a node (mid-tree or leaf) as argument
+// https://code.google.com/p/chromium/issues/detail?id=50298
 function navigateTo(path, title) {
 	// TODO: Queue push state when in fullscreen, because it would exit fullscreen mode
-	history.pushState(undefined, undefined, path);
+	history.pushState({}, undefined, path);
 	document.title = title;
-	var xhr = require('client-lib/xhr-tool');
 
+	var xhr = require('client-lib/xhr-tool');
 	xhr.getJSON(path)
 	.then(newData => {
 		history.replaceState(newData, undefined, path);
