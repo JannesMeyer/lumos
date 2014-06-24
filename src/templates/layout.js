@@ -11,7 +11,7 @@ exports.render = function(data, body) {
   <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
   <link rel="stylesheet" href="/stylesheets/theme-one.css">
   <link rel="stylesheet" href="/stylesheets/hljs/github.css">
-  <link rel="icon" href="/images/favicon.png">
+  <link rel="icon" href="/images/favicon-template.png">
   <!-- Doesn't work in most browsers -->
   <link rel="preload" href="/fonts/glyphicons-halflings-regular.woff" type="font/woff">
   <!--
@@ -23,11 +23,11 @@ exports.render = function(data, body) {
   <script defer src="/javascripts/main.bundle.js"></script>
 </head>
 <body>${body}
-  <script>
-  var data = ${JSON.stringify(data)}
-  </script>
-  <!-- LiveReload -->
-  <!-- <script src="http://notes:35729/livereload.js?snipver=1"></script> -->
+<script>
+var data = ${JSON.stringify(data)}
+</script>
+<!-- LiveReload -->
+<!-- <script src="http://notes:35729/livereload.js?snipver=1"></script> -->
 </body>
 </html>`
 

@@ -62,10 +62,13 @@ var ColorPicker = React.createClass({
 
 var BreadcrumbList = React.createClass({
 	handleClick(e) {
-		var title = e.currentTarget.firstChild.textContent;
-		var path = e.currentTarget.pathname;
-		navigateTo(path, title);
-		e.preventDefault();
+		if (e.button === 0) {
+			var title = e.target.firstChild.data;
+			var path = e.target.pathname;
+			navigateTo(path, title);
+
+			e.preventDefault();
+		}
 	},
 	render() {
 		var breadcrumbs = this.props.breadcrumbs.map(item =>
@@ -108,16 +111,17 @@ var SearchBar = React.createClass({
 });
 
 var Navigation = React.createClass({
-	handleClick(e) {
-		// Only handle left button clicks
-		if (e.button !== 0) {
-			return;
+	handleMouseDown(e) {
+		if (e.button === 0) {
+			var title = e.target.firstChild.data;
+			var path = e.target.pathname;
+			navigateTo(path, title);
 		}
-
-		var title = e.currentTarget.firstChild.textContent;
-		var path = e.currentTarget.pathname;
-		navigateTo(path, title);
-		e.preventDefault();
+	},
+	handleClick(e) {
+		if (e.button === 0) {
+			e.preventDefault();
+		}
 	},
 	render() {
 		var items = this.props.items;
@@ -125,7 +129,7 @@ var Navigation = React.createClass({
 			<nav className="m-navigation">
 				<ul>{items.map((item, i) =>
 					<li className={item.isActive ? 'active' : ''} key={item.name}>
-						<a href={item.link} onClick={this.handleClick}>{item.name}</a>
+						<a href={item.link} onMouseDown={this.handleMouseDown} onClick={this.handleClick}>{item.name}</a>
 					</li>
 				)}</ul>
 			</nav>
@@ -179,7 +183,7 @@ var LumosApplication = React.createClass({
 	getInitialState() {
 		app = this;
 		return {
-			color: 'tan',
+			color: 'blue',
 			path: ''
 		};
 	},

@@ -175,10 +175,13 @@
 
 	var BreadcrumbList = React.createClass({displayName: 'BreadcrumbList',
 		handleClick:function(e) {
-			var title = e.currentTarget.firstChild.textContent;
-			var path = e.currentTarget.pathname;
-			navigateTo(path, title);
-			e.preventDefault();
+			if (e.button === 0) {
+				var title = e.target.firstChild.data;
+				var path = e.target.pathname;
+				navigateTo(path, title);
+
+				e.preventDefault();
+			}
 		},
 		render:function() {
 			var breadcrumbs = this.props.breadcrumbs.map(function(item) 
@@ -221,16 +224,17 @@
 	});
 
 	var Navigation = React.createClass({displayName: 'Navigation',
-		handleClick:function(e) {
-			// Only handle left button clicks
-			if (e.button !== 0) {
-				return;
+		handleMouseDown:function(e) {
+			if (e.button === 0) {
+				var title = e.target.firstChild.data;
+				var path = e.target.pathname;
+				navigateTo(path, title);
 			}
-
-			var title = e.currentTarget.firstChild.textContent;
-			var path = e.currentTarget.pathname;
-			navigateTo(path, title);
-			e.preventDefault();
+		},
+		handleClick:function(e) {
+			if (e.button === 0) {
+				e.preventDefault();
+			}
 		},
 		render:function() {
 			var items = this.props.items;
@@ -238,7 +242,7 @@
 				React.DOM.nav( {className:"m-navigation"}, 
 					React.DOM.ul(null, items.map(function(item, i) 
 						{return React.DOM.li( {className:item.isActive ? 'active' : '', key:item.name}, 
-							React.DOM.a( {href:item.link, onClick:this.handleClick}, item.name)
+							React.DOM.a( {href:item.link, onMouseDown:this.handleMouseDown, onClick:this.handleClick}, item.name)
 						);}.bind(this)
 					))
 				)
@@ -292,7 +296,7 @@
 		getInitialState:function() {
 			app = this;
 			return {
-				color: 'tan',
+				color: 'blue',
 				path: ''
 			};
 		},
