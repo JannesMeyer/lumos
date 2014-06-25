@@ -63,22 +63,16 @@ var keyCodeMap = {
 var bindings = {};
 var handlerAdded = false;
 
-export function bind(conditions, char, fn) {
-	if (fn === undefined) {
-		throw new Error('missing callback function');
-	}
+export function on(conditions, char, fn) {
 	if (char === undefined) {
 		throw new Error('missing char condition');
 	}
-	if (conditions === undefined) {
-		conditions = {};
+	if (fn === undefined) {
+		throw new Error('missing callback function');
 	}
-	conditions.inputEl = (conditions.inputEl === true);
-	conditions.ctrl = (conditions.ctrl === true);
-	conditions.shift = (conditions.shift === true);
-	conditions.alt = (conditions.alt === true);
-	conditions.meta = (conditions.meta === true);
-	conditions.executeDefault = (conditions.executeDefault === true);
+	if (!Array.isArray(conditions)) {
+		throw new Error('conditions has to be an array');
+	}
 
 	// Parse char parameter
 	var keyCode = keyCodeMap[char];
@@ -89,23 +83,29 @@ export function bind(conditions, char, fn) {
 		throw new Error('unknown char condition ' + char)
 	}
 
-	// Re-use the conditions object for the binding
-	conditions.fn = fn;
-
-	// If this is the first binding
 	if (!handlerAdded) {
+		// If this is the first binding
 		addEventListener('keydown', handleDown);
 		handlerAdded = true;
 	}
 
-	// Do the binding
+	var binding = {
+		fn,
+		inputEl: arrayContains(conditions, 'inputEl'),
+		ctrl: arrayContains(conditions, 'ctrl'),
+		shift: arrayContains(conditions, 'shift'),
+		alt: arrayContains(conditions, 'alt'),
+		meta: arrayContains(conditions, 'meta'),
+		executeDefault: arrayContains(conditions, 'executeDefault')
+	};
+
 	if (bindings[keyCode] === undefined) {
-		bindings[keyCode] = [conditions];
-	} else {
-		bindings[keyCode].push(conditions);
+		bindings[keyCode] = [];
 	}
+	bindings[keyCode].push(binding);
 }
 
+// TODO: Should multiple handlers for the same event conditions work?
 function handleDown(e) {
 	var bucket = bindings[e.keyCode];
 	if (bucket === undefined) {
@@ -113,20 +113,20 @@ function handleDown(e) {
 	}
 
 	var target = e.target;
-	var inputEl =
-		target.tagName === 'INPUT' ||
-		target.tagName === 'TEXTAREA' ||
-		target.tagName === 'SELECT' ||
-		target.isContentEditable;
+	var inputEl = target.tagName === 'INPUT' ||
+	              target.tagName === 'TEXTAREA' ||
+	              target.tagName === 'SELECT' ||
+	              target.isContentEditable;
 
 	for (var i = 0; i < bucket.length; ++i) {
 		var binding = bucket[i];
-		if (binding.inputEl === inputEl &&
-			binding.ctrl === e.ctrlKey &&
-			binding.shift === e.shiftKey &&
-			binding.alt === e.altKey &&
-			binding.meta === e.metaKey) {
-			// Match found
+		var match = binding.inputEl === inputEl &&
+		            binding.ctrl === e.ctrlKey &&
+		            binding.shift === e.shiftKey &&
+		            binding.alt === e.altKey &&
+		            binding.meta === e.metaKey;
+		if (match) {
+			// TODO: fn.apply?
 			binding.fn(e);
 			if (!binding.executeDefault) {
 				e.preventDefault();
@@ -134,4 +134,8 @@ function handleDown(e) {
 			break;
 		}
 	}
+}
+
+function arrayContains(arr, value) {
+	return arr.indexOf(value) !== -1;
 }

@@ -143,7 +143,7 @@
 
 	var SearchBar = React.createClass({displayName: 'SearchBar',
 		componentDidMount:function() {
-			keypress.bind({}, '/', function()  {
+			keypress.on([], '/', function()  {
 				this.refs.searchBox.getDOMNode().focus();
 			}.bind(this));
 		},
@@ -344,28 +344,28 @@
 			}.bind(this)
 
 			// Key bindings
-			keypress.bind({}, 'e', function()  {
+			keypress.on([], 'e', function()  {
 				if (this.props.data.editURL) {
 					location.href = this.props.data.editURL;
 				}
 			}.bind(this));
-			keypress.bind({}, 'j', goToNext);
-			keypress.bind({}, 'k', goToPrevious);
-			keypress.bind({}, 'right', goToNext);
-			keypress.bind({}, 'left', goToPrevious);
-			keypress.bind({}, 'enter', goToNext);
-			keypress.bind({ shift: true }, 'enter', goToPrevious);
-			keypress.bind({}, 'down', scroll.ifAtBottom(goToNext));
-			keypress.bind({}, 'space', scroll.ifAtBottom(goToNext));
-			keypress.bind({ shift: true }, 'space', scroll.ifAtTop(goToPrevious));
-			keypress.bind({}, 'up', scroll.ifAtTop(goToPrevious));
-			keypress.bind({ meta: true }, 'up', navigateTo.bind(this, '..', 'TODO Title'));
+			keypress.on([], 'j', goToNext);
+			keypress.on([], 'k', goToPrevious);
+			keypress.on([], 'right', goToNext);
+			keypress.on([], 'left', goToPrevious);
+			keypress.on([], 'enter', goToNext);
+			keypress.on(['shift'], 'enter', goToPrevious);
+			keypress.on([], 'down', scroll.ifAtBottom(goToNext));
+			keypress.on([], 'space', scroll.ifAtBottom(goToNext));
+			keypress.on(['shift'], 'space', scroll.ifAtTop(goToPrevious));
+			keypress.on([], 'up', scroll.ifAtTop(goToPrevious));
+			keypress.on(['meta'], 'up', navigateTo.bind(this, '..', 'TODO Title'));
 
-			keypress.bind({}, 'r', navigateTo.bind(this, '/', 'TODO Title'));
-			keypress.bind({}, 'f', function()  {
+			keypress.on([], 'r', navigateTo.bind(this, '/', 'TODO Title'));
+			keypress.on([], 'f', function()  {
 				fullscreen.toggle(this.getDOMNode());
 			}.bind(this));
-			keypress.bind({ inputEl: true }, 'esc', function(e)  {
+			keypress.on(['inputEl'], 'esc', function(e)  {
 				if (e.target.blur) {
 					e.target.blur();
 				}
@@ -642,22 +642,16 @@
 	var bindings = {};
 	var handlerAdded = false;
 
-	function bind(conditions, char, fn) {
-		if (fn === undefined) {
-			throw new Error('missing callback function');
-		}
+	function on(conditions, char, fn) {
 		if (char === undefined) {
 			throw new Error('missing char condition');
 		}
-		if (conditions === undefined) {
-			conditions = {};
+		if (fn === undefined) {
+			throw new Error('missing callback function');
 		}
-		conditions.inputEl = (conditions.inputEl === true);
-		conditions.ctrl = (conditions.ctrl === true);
-		conditions.shift = (conditions.shift === true);
-		conditions.alt = (conditions.alt === true);
-		conditions.meta = (conditions.meta === true);
-		conditions.executeDefault = (conditions.executeDefault === true);
+		if (!Array.isArray(conditions)) {
+			throw new Error('conditions has to be an array');
+		}
 
 		// Parse char parameter
 		var keyCode = keyCodeMap[char];
@@ -668,23 +662,29 @@
 			throw new Error('unknown char condition ' + char)
 		}
 
-		// Re-use the conditions object for the binding
-		conditions.fn = fn;
-
-		// If this is the first binding
 		if (!handlerAdded) {
+			// If this is the first binding
 			addEventListener('keydown', handleDown);
 			handlerAdded = true;
 		}
 
-		// Do the binding
-		if (bindings[keyCode] === undefined) {
-			bindings[keyCode] = [conditions];
-		} else {
-			bindings[keyCode].push(conditions);
-		}
-	} module.exports.bind = bind;
+		var binding = {
+			fn:fn,
+			inputEl: arrayContains(conditions, 'inputEl'),
+			ctrl: arrayContains(conditions, 'ctrl'),
+			shift: arrayContains(conditions, 'shift'),
+			alt: arrayContains(conditions, 'alt'),
+			meta: arrayContains(conditions, 'meta'),
+			executeDefault: arrayContains(conditions, 'executeDefault')
+		};
 
+		if (bindings[keyCode] === undefined) {
+			bindings[keyCode] = [];
+		}
+		bindings[keyCode].push(binding);
+	} module.exports.on = on;
+
+	// TODO: Should multiple handlers for the same event conditions work?
 	function handleDown(e) {
 		var bucket = bindings[e.keyCode];
 		if (bucket === undefined) {
@@ -692,20 +692,20 @@
 		}
 
 		var target = e.target;
-		var inputEl =
-			target.tagName === 'INPUT' ||
-			target.tagName === 'TEXTAREA' ||
-			target.tagName === 'SELECT' ||
-			target.isContentEditable;
+		var inputEl = target.tagName === 'INPUT' ||
+		              target.tagName === 'TEXTAREA' ||
+		              target.tagName === 'SELECT' ||
+		              target.isContentEditable;
 
 		for (var i = 0; i < bucket.length; ++i) {
 			var binding = bucket[i];
-			if (binding.inputEl === inputEl &&
-				binding.ctrl === e.ctrlKey &&
-				binding.shift === e.shiftKey &&
-				binding.alt === e.altKey &&
-				binding.meta === e.metaKey) {
-				// Match found
+			var match = binding.inputEl === inputEl &&
+			            binding.ctrl === e.ctrlKey &&
+			            binding.shift === e.shiftKey &&
+			            binding.alt === e.altKey &&
+			            binding.meta === e.metaKey;
+			if (match) {
+				// TODO: fn.apply?
 				binding.fn(e);
 				if (!binding.executeDefault) {
 					e.preventDefault();
@@ -713,6 +713,10 @@
 				break;
 			}
 		}
+	}
+
+	function arrayContains(arr, value) {
+		return arr.indexOf(value) !== -1;
 	}
 
 /***/ },

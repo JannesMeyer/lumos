@@ -91,7 +91,7 @@ var BreadcrumbList = React.createClass({
 
 var SearchBar = React.createClass({
 	componentDidMount() {
-		keypress.bind({}, '/', () => {
+		keypress.on([], '/', () => {
 			this.refs.searchBox.getDOMNode().focus();
 		});
 	},
@@ -292,28 +292,28 @@ var MyHTML = React.createClass({
 		}
 
 		// Key bindings
-		keypress.bind({}, 'e', () => {
+		keypress.on([], 'e', () => {
 			if (this.props.data.editURL) {
 				location.href = this.props.data.editURL;
 			}
 		});
-		keypress.bind({}, 'j', goToNext);
-		keypress.bind({}, 'k', goToPrevious);
-		keypress.bind({}, 'right', goToNext);
-		keypress.bind({}, 'left', goToPrevious);
-		keypress.bind({}, 'enter', goToNext);
-		keypress.bind({ shift: true }, 'enter', goToPrevious);
-		keypress.bind({}, 'down', scroll.ifAtBottom(goToNext));
-		keypress.bind({}, 'space', scroll.ifAtBottom(goToNext));
-		keypress.bind({ shift: true }, 'space', scroll.ifAtTop(goToPrevious));
-		keypress.bind({}, 'up', scroll.ifAtTop(goToPrevious));
-		keypress.bind({ meta: true }, 'up', navigateTo.bind(this, '..', 'TODO Title'));
+		keypress.on([], 'j', goToNext);
+		keypress.on([], 'k', goToPrevious);
+		keypress.on([], 'right', goToNext);
+		keypress.on([], 'left', goToPrevious);
+		keypress.on([], 'enter', goToNext);
+		keypress.on(['shift'], 'enter', goToPrevious);
+		keypress.on([], 'down', scroll.ifAtBottom(goToNext));
+		keypress.on([], 'space', scroll.ifAtBottom(goToNext));
+		keypress.on(['shift'], 'space', scroll.ifAtTop(goToPrevious));
+		keypress.on([], 'up', scroll.ifAtTop(goToPrevious));
+		keypress.on(['meta'], 'up', navigateTo.bind(this, '..', 'TODO Title'));
 
-		keypress.bind({}, 'r', navigateTo.bind(this, '/', 'TODO Title'));
-		keypress.bind({}, 'f', () => {
+		keypress.on([], 'r', navigateTo.bind(this, '/', 'TODO Title'));
+		keypress.on([], 'f', () => {
 			fullscreen.toggle(this.getDOMNode());
 		});
-		keypress.bind({ inputEl: true }, 'esc', (e) => {
+		keypress.on(['inputEl'], 'esc', (e) => {
 			if (e.target.blur) {
 				e.target.blur();
 			}
