@@ -73,11 +73,12 @@ export function bind(conditions, char, fn) {
 	if (conditions === undefined) {
 		conditions = {};
 	}
-	conditions.inputEl = !!conditions.inputEl;
-	conditions.ctrl = !!conditions.ctrl;
-	conditions.shift = !!conditions.shift;
-	conditions.alt = !!conditions.alt;
-	conditions.meta = !!conditions.meta;
+	conditions.inputEl = (conditions.inputEl === true);
+	conditions.ctrl = (conditions.ctrl === true);
+	conditions.shift = (conditions.shift === true);
+	conditions.alt = (conditions.alt === true);
+	conditions.meta = (conditions.meta === true);
+	conditions.executeDefault = (conditions.executeDefault === true);
 
 	// Parse char parameter
 	var keyCode = keyCodeMap[char];
@@ -93,7 +94,7 @@ export function bind(conditions, char, fn) {
 
 	// If this is the first binding
 	if (!handlerAdded) {
-		window.addEventListener('keydown', handleDown);
+		addEventListener('keydown', handleDown);
 		handlerAdded = true;
 	}
 
@@ -127,6 +128,9 @@ function handleDown(e) {
 			binding.meta === e.metaKey) {
 			// Match found
 			binding.fn(e);
+			if (!binding.executeDefault) {
+				e.preventDefault();
+			}
 			break;
 		}
 	}

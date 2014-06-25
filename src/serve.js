@@ -4,8 +4,8 @@ module path from 'path'
 module fs from 'fs'
 module denodeify from './denodeify'
 
-module layoutTemplate from './templates/layout'
-module pageComponent from './components/page'
+module layout from './templates/layout'
+
 
 import { config } from '../package.json'
 import { SegmentedPath } from './SegmentedPath'
@@ -17,12 +17,6 @@ var fsReadFile = denodeify(fs, fs.readFile);
 
 var baseDir = process.env.LUMOSPATH || process.cwd(); // Default to current working directory
 var baseDirName = path.basename(baseDir);
-
-
-function renderPage(data, body) {
-	var body = pageComponent.renderToString(data);
-	return layoutTemplate.render(data, body);
-}
 
 
 function handleRequest(req, res, next) {
@@ -79,7 +73,7 @@ function handleRequest(req, res, next) {
 				});
 				res.json(data);
 			} else {
-				res.end(renderPage(data));
+				res.end(layout.render(data));
 				// res.render('document', data);
 			}
 		})
@@ -144,7 +138,7 @@ function handleRequest(req, res, next) {
 					res.json(data);
 				} else {
 					// res.render('document', data);
-					res.end(renderPage(data));
+					res.end(layout.render(data));
 				}
 			})
 			.catch(err => next(err));

@@ -13,7 +13,6 @@ exports.fn = function(callback) {
 		cache: true,
 		entry: config.webpack.entry,
 		output: config.webpack.output,
-		externals: {'react': 'React'},
 		module: {
 	        loaders: [
 				{ test: /\.jsx$/, loader:  'es6-loader' },

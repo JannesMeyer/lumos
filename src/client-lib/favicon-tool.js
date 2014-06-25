@@ -4,8 +4,8 @@ var faviconImageData;
 
 function load(url, callback) {
 	if (url === faviconUrl) {
-		callback(faviconImageData);
-		return;
+		console.log('using cache');
+		return callback(faviconImageData);
 	}
 
 	// Load favicon

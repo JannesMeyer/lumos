@@ -1,9 +1,8 @@
 var html = document.documentElement;
 var body = document.body;
 
-
 export function isAtTop() {
-	// var scrollY = document.body.scrollTop || document.documentElement.scrollTop;
+	// var scrollY = body.scrollTop || html.scrollTop;
 	return window.scrollY <= 0;
 }
 
@@ -16,18 +15,18 @@ export function isAtBottom() {
 	return html.scrollHeight - html.clientHeight - window.scrollY <= 0;
 }
 
-export function ifAtTop(callback) {
-	return function(event) {
+export function ifAtTop(fn) {
+	return function() {
 		if (isAtTop()) {
-			callback(event);
+			fn.apply(undefined, arguments);
 		}
 	};
 }
 
-export function ifAtBottom(callback) {
-	return function(event) {
+export function ifAtBottom(fn) {
+	return function() {
 		if (isAtBottom()) {
-			callback(event);
+			fn.apply(undefined, arguments);
 		}
 	};
 }
