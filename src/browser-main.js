@@ -1,7 +1,10 @@
-module page from './components/page'
-module dataSource from 'client-lib/data-source'
+var page = require('./components/page');
+var dataSource = require('client-lib/data-source');
 
-dataSource.get(location.pathname)
-.then(data => {
-	page.renderToDOM(data);
+addEventListener('load', event => {
+	dataSource.get(location.pathname)
+	.then(data => {
+		// Initialize React
+		page.renderToDOM(data);
+	});
 });

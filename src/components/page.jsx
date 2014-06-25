@@ -259,7 +259,7 @@ var MyHTML = React.createClass({
 
 	getInitialState() {
 		return {
-			color: 'blue'
+			color: 'tan'
 		};
 	},
 
@@ -339,11 +339,11 @@ var MyHTML = React.createClass({
 					<link rel="stylesheet" href="/stylesheets/theme-one.css" />
 					<link rel="stylesheet" href="/stylesheets/hljs/github.css" />
 					<Favicon color={this.state.color} template="/images/favicon-template.png" />
+					<script defer src="/javascripts/main.bundle.js"></script>
 				</head>
 
 				<body>
 					<LumosApplication data={data} colors={this.colors} color={this.state.color} />
-					<script defer src="/javascripts/main.bundle.js"></script>
 				</body>
 			</html>
 		);

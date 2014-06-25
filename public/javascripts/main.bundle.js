@@ -44,9 +44,15 @@
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var page = __webpack_require__(1);var dataSource = __webpack_require__(2);dataSource.get(location.pathname)
-	.then(function(data)  {
-		page.renderToDOM(data);
+	var page = __webpack_require__(1);
+	var dataSource = __webpack_require__(2);
+
+	addEventListener('load', function(event)  {
+		dataSource.get(location.pathname)
+		.then(function(data)  {
+			// Initialize React
+			page.renderToDOM(data);
+		});
 	});
 
 /***/ },
@@ -311,7 +317,7 @@
 
 		getInitialState:function() {
 			return {
-				color: 'blue'
+				color: 'tan'
 			};
 		},
 
@@ -390,12 +396,12 @@
 						React.DOM.link( {rel:"stylesheet", href:"/stylesheets/bootstrap.min.css"} ),
 						React.DOM.link( {rel:"stylesheet", href:"/stylesheets/theme-one.css"} ),
 						React.DOM.link( {rel:"stylesheet", href:"/stylesheets/hljs/github.css"} ),
-						Favicon( {color:this.state.color, template:"/images/favicon-template.png"} )
+						Favicon( {color:this.state.color, template:"/images/favicon-template.png"} ),
+						React.DOM.script( {defer:true, src:"/javascripts/main.bundle.js"})
 					),
 
 					React.DOM.body(null, 
-						LumosApplication( {data:data, colors:this.colors, color:this.state.color} ),
-						React.DOM.script( {defer:true, src:"/javascripts/main.bundle.js"})
+						LumosApplication( {data:data, colors:this.colors, color:this.state.color} )
 					)
 				)
 			);
