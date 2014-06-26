@@ -1,31 +1,29 @@
-var ctx;
-var faviconUrl;
-var faviconImageData;
+module Promise from 'bluebird'
 
-function load(url, callback) {
-	if (url === faviconUrl) {
-		console.log('using cache');
-		return callback(faviconImageData);
-	}
+export function load(url) {
+	return new Promise(function(resolve, reject) {
+		var img = document.createElement('img');
+		img.addEventListener('load', () => {
+			var canvas = document.createElement('canvas');
+			canvas.width = img.width;
+			canvas.height = img.height;
 
-	// Load favicon
-	var img = document.createElement('img');
-	img.addEventListener('load', function() {
-		var canvas = document.createElement('canvas');
-		canvas.width = img.width;
-		canvas.height = img.height;
-		ctx = canvas.getContext('2d');
-		ctx.drawImage(img, 0, 0);
-		faviconImageData = ctx.getImageData(0, 0, img.width, img.height);
-		faviconUrl = url;
-		callback(faviconImageData);
+			var context = canvas.getContext('2d');
+			context.drawImage(img, 0, 0);
+			var imageData = context.getImageData(0, 0, img.width, img.height);
+
+			resolve([context, imageData]);
+		});
+		img.addEventListener('error', () => {
+			reject(new Error('Image could not be loaded'));
+		});
+		img.src = url;
 	});
-	img.src = url;
 }
 
-function colorize(srcImg, tintColor) {
+export function colorize(context, srcImg, tintColor) {
 	// Create the destination image
-	var destImg = ctx.createImageData(srcImg.width, srcImg.height);
+	var destImg = context.createImageData(srcImg.width, srcImg.height);
 
 	// Colorize
 	var t = 1;
@@ -39,13 +37,10 @@ function colorize(srcImg, tintColor) {
 	}
 
 	// Put it on the canvas
-	ctx.putImageData(destImg, 0, 0);
+	context.putImageData(destImg, 0, 0);
 
-	return ctx.canvas.toDataURL();
+	return context.canvas.toDataURL();
 }
-
-exports.load = load;
-exports.colorize = colorize;
 
 // http://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion
 

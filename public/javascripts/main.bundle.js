@@ -97,26 +97,6 @@
 	};
 
 	/*
-	 * Client-side helpers
-	 */
-
-	function colorizeFavicon(color) {
-		favicon.load(links.icon.href, function(img) {
-			links.icon.href = favicon.colorize(img, color);
-			links.icon.parentNode.replaceChild(links.icon, links.icon);
-		});
-	}
-
-	function parseColorString(colorString) {
-		var results = colorString.match(/^rgb\((\d+), (\d+), (\d+)\)$/);
-		if (results) {
-			return [results[1], results[2], results[3]];
-		} else {
-			throw new Error('Could not parse the color');
-		}
-	}
-
-	/*
 	 * React components
 	 */
 
@@ -186,16 +166,6 @@
 	});
 
 	var Header = React.createClass({displayName: 'Header',
-		// componentDidUpdate() {
-		// 	// Change favicon color based on theme
-		// 	var header = this.refs.header.getDOMNode();
-		// 	var style = getComputedStyle(header);
-
-		// 	if (accentColor !== style.borderBottomColor) {
-		// 		accentColor = style.borderBottomColor;
-		// 		colorizeFavicon(parseColorString(accentColor));
-		// 	}
-		// },
 		render:function() {
 			return (
 				React.DOM.header( {className:"m-header", ref:"header"}, 
@@ -305,7 +275,36 @@
 		}
 	});
 
+	// TODO: Render the icon on the server-side, too
 	var Favicon = React.createClass({displayName: 'Favicon',
+		colorize:function() {
+			if (!supported.canvas2D) {
+				throw new Error('Canvas2D not supported');
+			}
+
+			this.faviconTemplate.then(function(result)  {
+				var context = result[0];
+				var imageData = result[1];
+				var node = this.getDOMNode();
+				var colorName = this.props.color;
+				var color = colors[colorName];
+
+				node.href = favicon.colorize(context, imageData, color);
+				node.parentNode.replaceChild(node, node);
+			}.bind(this));
+		},
+		shouldComponentUpdate:function(nextProps) {
+			return nextProps.color !== this.props.color;
+		},
+		componentDidMount:function() {
+			if (supported.canvas2D) {
+				this.faviconTemplate = favicon.load(this.props.template);
+			}
+			this.colorize();
+		},
+		componentDidUpdate:function() {
+			this.colorize();
+		},
 		render:function() {
 			return React.DOM.link( {rel:"icon", href:this.props.template} );
 		}
@@ -317,7 +316,7 @@
 
 		getInitialState:function() {
 			return {
-				color: 'tan'
+				color: 'apple'
 			};
 		},
 
@@ -460,34 +459,30 @@
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var ctx;
-	var faviconUrl;
-	var faviconImageData;
+	var Promise = __webpack_require__(10);function load(url) {
+		return new Promise(function(resolve, reject) {
+			var img = document.createElement('img');
+			img.addEventListener('load', function()  {
+				var canvas = document.createElement('canvas');
+				canvas.width = img.width;
+				canvas.height = img.height;
 
-	function load(url, callback) {
-		if (url === faviconUrl) {
-			console.log('using cache');
-			return callback(faviconImageData);
-		}
+				var context = canvas.getContext('2d');
+				context.drawImage(img, 0, 0);
+				var imageData = context.getImageData(0, 0, img.width, img.height);
 
-		// Load favicon
-		var img = document.createElement('img');
-		img.addEventListener('load', function() {
-			var canvas = document.createElement('canvas');
-			canvas.width = img.width;
-			canvas.height = img.height;
-			ctx = canvas.getContext('2d');
-			ctx.drawImage(img, 0, 0);
-			faviconImageData = ctx.getImageData(0, 0, img.width, img.height);
-			faviconUrl = url;
-			callback(faviconImageData);
+				resolve([context, imageData]);
+			});
+			img.addEventListener('error', function()  {
+				reject(new Error('Image could not be loaded'));
+			});
+			img.src = url;
 		});
-		img.src = url;
-	}
+	} module.exports.load = load;
 
-	function colorize(srcImg, tintColor) {
+	function colorize(context, srcImg, tintColor) {
 		// Create the destination image
-		var destImg = ctx.createImageData(srcImg.width, srcImg.height);
+		var destImg = context.createImageData(srcImg.width, srcImg.height);
 
 		// Colorize
 		var t = 1;
@@ -501,13 +496,10 @@
 		}
 
 		// Put it on the canvas
-		ctx.putImageData(destImg, 0, 0);
+		context.putImageData(destImg, 0, 0);
 
-		return ctx.canvas.toDataURL();
-	}
-
-	exports.load = load;
-	exports.colorize = colorize;
+		return context.canvas.toDataURL();
+	} module.exports.colorize = colorize;
 
 	// http://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion
 

@@ -39,26 +39,6 @@ var supported = {
 };
 
 /*
- * Client-side helpers
- */
-
-function colorizeFavicon(color) {
-	favicon.load(links.icon.href, function(img) {
-		links.icon.href = favicon.colorize(img, color);
-		links.icon.parentNode.replaceChild(links.icon, links.icon);
-	});
-}
-
-function parseColorString(colorString) {
-	var results = colorString.match(/^rgb\((\d+), (\d+), (\d+)\)$/);
-	if (results) {
-		return [results[1], results[2], results[3]];
-	} else {
-		throw new Error('Could not parse the color');
-	}
-}
-
-/*
  * React components
  */
 
@@ -128,16 +108,6 @@ var ColorPicker = React.createClass({
 });
 
 var Header = React.createClass({
-	// componentDidUpdate() {
-	// 	// Change favicon color based on theme
-	// 	var header = this.refs.header.getDOMNode();
-	// 	var style = getComputedStyle(header);
-
-	// 	if (accentColor !== style.borderBottomColor) {
-	// 		accentColor = style.borderBottomColor;
-	// 		colorizeFavicon(parseColorString(accentColor));
-	// 	}
-	// },
 	render() {
 		return (
 			<header className="m-header" ref="header">
@@ -247,7 +217,36 @@ var LumosApplication = React.createClass({
 	}
 });
 
+// TODO: Render the icon on the server-side, too
 var Favicon = React.createClass({
+	colorize() {
+		if (!supported.canvas2D) {
+			throw new Error('Canvas2D not supported');
+		}
+
+		this.faviconTemplate.then(result => {
+			var context = result[0];
+			var imageData = result[1];
+			var node = this.getDOMNode();
+			var colorName = this.props.color;
+			var color = colors[colorName];
+
+			node.href = favicon.colorize(context, imageData, color);
+			node.parentNode.replaceChild(node, node);
+		});
+	},
+	shouldComponentUpdate(nextProps) {
+		return nextProps.color !== this.props.color;
+	},
+	componentDidMount() {
+		if (supported.canvas2D) {
+			this.faviconTemplate = favicon.load(this.props.template);
+		}
+		this.colorize();
+	},
+	componentDidUpdate() {
+		this.colorize();
+	},
 	render() {
 		return <link rel="icon" href={this.props.template} />;
 	}
@@ -259,7 +258,7 @@ var MyHTML = React.createClass({
 
 	getInitialState() {
 		return {
-			color: 'tan'
+			color: 'apple'
 		};
 	},
 
