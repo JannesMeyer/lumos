@@ -113,6 +113,9 @@ article .callout > li {
 body {
   background: #fff;
 }
+.hidden {
+  display: none;
+}
 /*==========================================
  * Breadcrumbs
  *==========================================*/

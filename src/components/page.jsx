@@ -149,8 +149,21 @@ var Page = React.createClass({
 	shouldComponentUpdate(nextProps) {
 		return nextProps.filePath !== this.props.filePath;
 	},
+	componentDidMount() {
+		keypress.on([], 'x', event => {
+			var section = this.getDOMNode();
+			if (scroll.isAtElement(section)) {
+				scroll.to(0);
+			} else {
+				scroll.toElement(section);
+			}
+		});
+	},
 	componentWillUpdate() {
-		scroll.to(0);
+		var section = this.getDOMNode();
+		if (!scroll.isAtElement(section)) {
+			scroll.to(0);
+		}
 	},
 	render() {
 		// TODO: no content: <p style="color: #999">+++ empty +++</p>
@@ -333,7 +346,7 @@ var MyHTML = React.createClass({
 		keypress.on([], 'r', event => navigateTo('/', 'Title'));
 
 		keypress.on(['inputEl'], 'esc', event => {
-			var el = e.target;
+			var el = event.target;
 			if (el.blur) { el.blur(); }
 		});
 	},

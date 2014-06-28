@@ -207,8 +207,21 @@
 		shouldComponentUpdate:function(nextProps) {
 			return nextProps.filePath !== this.props.filePath;
 		},
+		componentDidMount:function() {
+			keypress.on([], 'x', function(event)  {
+				var section = this.getDOMNode();
+				if (scroll.isAtElement(section)) {
+					scroll.to(0);
+				} else {
+					scroll.toElement(section);
+				}
+			}.bind(this));
+		},
 		componentWillUpdate:function() {
-			scroll.to(0);
+			var section = this.getDOMNode();
+			if (!scroll.isAtElement(section)) {
+				scroll.to(0);
+			}
 		},
 		render:function() {
 			// TODO: no content: <p style="color: #999">+++ empty +++</p>
@@ -391,7 +404,7 @@
 			keypress.on([], 'r', function(event)  {return navigateTo('/', 'Title');});
 
 			keypress.on(['inputEl'], 'esc', function(event)  {
-				var el = e.target;
+				var el = event.target;
 				if (el.blur) { el.blur(); }
 			});
 		},
@@ -744,17 +757,27 @@
 	var body = document.body;
 
 	function isAtTop() {
-		// No part of any standard:
+		// Not part of any standard:
 		return window.scrollY <= 0;
 		// return (body.scrollTop || html.scrollTop) <= 0;
 	} module.exports.isAtTop = isAtTop;
 
 	// TODO: this cannot determined accurately until the document has finished loading
 	function isAtBottom() {
-		// html.getBoundingClientRect()
-		// html.getClientRects()
 		return html.scrollHeight - html.clientHeight - window.scrollY <= 0;
 	} module.exports.isAtBottom = isAtBottom;
+
+	function isAtElement(element) {
+		var elemRect = element.getBoundingClientRect();
+		var bodyRect = body.getBoundingClientRect();
+	    return window.scrollY === Math.round(elemRect.top - bodyRect.top);
+	} module.exports.isAtElement = isAtElement;
+
+	// export function isAtElementOrLess(element) {
+	// 	var elemRect = element.getBoundingClientRect();
+	// 	var bodyRect = body.getBoundingClientRect();
+	//     return window.scrollY <= Math.round(elemRect.top - bodyRect.top);
+	// }
 
 	function ifAtTop(fn) {
 		return function() {
@@ -772,6 +795,14 @@
 		};
 	} module.exports.ifAtBottom = ifAtBottom;
 
+	// export function ifAtElementOrLess(element, fn) {
+	// 	return function() {
+	// 		if (isAtElementOrLess(element)) {
+	// 			fn.apply(undefined, arguments);
+	// 		}
+	// 	};
+	// }
+
 	function to(y) {
 		if (y === 0 && isAtTop()) {
 			return;
@@ -781,6 +812,10 @@
 		// html.scrollTop = y;
 		// body.scrollTop = y;
 	} module.exports.to = to;
+
+	function toElement(el) {
+		el.scrollIntoView(true);
+	} module.exports.toElement = toElement;
 
 /***/ },
 /* 6 */

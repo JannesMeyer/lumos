@@ -2,17 +2,27 @@ var html = document.documentElement;
 var body = document.body;
 
 export function isAtTop() {
-	// No part of any standard:
+	// Not part of any standard:
 	return window.scrollY <= 0;
 	// return (body.scrollTop || html.scrollTop) <= 0;
 }
 
 // TODO: this cannot determined accurately until the document has finished loading
 export function isAtBottom() {
-	// html.getBoundingClientRect()
-	// html.getClientRects()
 	return html.scrollHeight - html.clientHeight - window.scrollY <= 0;
 }
+
+export function isAtElement(element) {
+	var elemRect = element.getBoundingClientRect();
+	var bodyRect = body.getBoundingClientRect();
+    return window.scrollY === Math.round(elemRect.top - bodyRect.top);
+}
+
+// export function isAtElementOrLess(element) {
+// 	var elemRect = element.getBoundingClientRect();
+// 	var bodyRect = body.getBoundingClientRect();
+//     return window.scrollY <= Math.round(elemRect.top - bodyRect.top);
+// }
 
 export function ifAtTop(fn) {
 	return function() {
@@ -30,6 +40,14 @@ export function ifAtBottom(fn) {
 	};
 }
 
+// export function ifAtElementOrLess(element, fn) {
+// 	return function() {
+// 		if (isAtElementOrLess(element)) {
+// 			fn.apply(undefined, arguments);
+// 		}
+// 	};
+// }
+
 export function to(y) {
 	if (y === 0 && isAtTop()) {
 		return;
@@ -38,4 +56,8 @@ export function to(y) {
 	window.scroll(0, y);
 	// html.scrollTop = y;
 	// body.scrollTop = y;
+}
+
+export function toElement(el) {
+	el.scrollIntoView(true);
 }
