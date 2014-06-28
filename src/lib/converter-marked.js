@@ -5,7 +5,7 @@ module hljs from 'highlight.js'
 marked.setOptions({
 	gfm: true,
 	breaks: true,
-	highlight: (code, lang) => lang ? hljs.highlight(lang, code).value : code
+	highlight: (code, lang) => (lang ? hljs.highlight(lang, code).value : code)
 });
 
 export function convert(content) {

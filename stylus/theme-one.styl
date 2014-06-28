@@ -1,5 +1,3 @@
-// @require 'includes/base.styl'
-
 $link-color = #00a5e6
 $hover-link-color = darken(saturate($link-color, 20), 20)
 
@@ -93,17 +91,15 @@ body
 
 .m-navigation
 	border-left: 1px solid transparent // color later
-	padding-top: 12px
-	padding-bottom: 12px
 
 	> ul > li
+		&:first-child
+			margin-top: 12px
+
 		> a
 			border-top: 1px solid transparent
 			border-bottom: 1px solid transparent
 			cursor: default
-
-		&.active
-			box-shadow: -2px 0 0 -1px $content-bg
 
 .m-colorpicker
 	position: absolute
@@ -154,6 +150,8 @@ custom-color($stripe, $nav-bg, $nav-border, $nav-link, $nav-link-active)
 					background: lighten($nav-bg, 4)
 
 			&.active
+				box-shadow: -2px 0 0 -1px $content-bg
+
 				> a
 					border-top-color: $nav-border
 					border-bottom-color: $nav-border
@@ -394,13 +392,15 @@ article
 
 .m-navigation > ul
 	padding-left: 0
-	list-style: none
+	margin-bottom: 0
 
 	> li
 		display: block
 
 		> a
-			display: block
+			// inline-block is needed, otherwise Chrome bugs on small widths
+			display: inline-block
+			width: 100%
 			padding: 10px 22px
 
 		> a:hover,
@@ -420,6 +420,9 @@ article
 		> nav
 			flex-basis: auto
 			border: none
+
+		> section
+			flex-basis: auto
 
 	.m-search,
 	.m-colorpicker
