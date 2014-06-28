@@ -157,7 +157,7 @@ var Page = React.createClass({
 			<section className="m-page" role="content">
 				<div className="m-page-buttons">
 					<PageButton name="edit" icon="pencil" href={this.props.editURL} title="Edit page (E)" />
-					<PageButton name="fullscreen" icon="resize-full" href="" title="Toggle fullscreen (F)" />
+					<FullscreenButton />
 				</div>
 				<div className="m-page-title">
 					<h1>{this.props.title}</h1>
@@ -171,22 +171,37 @@ var Page = React.createClass({
 });
 
 var PageButton = React.createClass({
-	handleClick(event) {
-		if (this.props.name === 'fullscreen') {
-			// TODO: fullscreen as state
-			fullscreen.toggle(document.documentElement);
-			event.currentTarget.blur();
-			event.preventDefault();
-		}
+	render() {
+		var props = this.props;
+		return (
+			<a className={'button-' + props.name} href={props.href} title={props.title} onClick={props.clickHandler}>
+				<span className={'glyphicon glyphicon-' + props.icon}></span>
+			</a>
+		);
+	}
+});
+
+var FullscreenButton = React.createClass({
+	getInitialState() {
+		return {
+			isFullscreen: false
+		};
+	},
+	componentDidMount() {
+		keypress.on([], 'f', this.toggleFullscreen);
+	},
+	toggleFullscreen(e) {
+		fullscreen.toggle(document.documentElement);
+		this.setState({ isFullscreen: !this.state.isFullscreen });
+		e.preventDefault();
 	},
 	render() {
 		return (
-			<a className={'button-' + this.props.name}
-			   href={this.props.href}
-			   title={this.props.title}
-			   onClick={this.handleClick}>
-				<span className={'glyphicon glyphicon-' + this.props.icon}></span>
-			</a>
+			<PageButton name="fullscreen"
+			            icon={this.state.isFullscreen ? 'resize-small' : 'resize-full'}
+			            href=""
+			            title="Toggle fullscreen (F)"
+			            clickHandler={this.toggleFullscreen} />
 		);
 	}
 });
@@ -314,8 +329,6 @@ var MyHTML = React.createClass({
 		// TODO: fix titles
 		keypress.on(['meta'], 'up', event => navigateTo('..', 'Title'));
 		keypress.on([], 'r', event => navigateTo('/', 'Title'));
-
-		keypress.on([], 'f', event => fullscreen.toggle(this.getDOMNode()));
 
 		keypress.on(['inputEl'], 'esc', event => {
 			var el = e.target;

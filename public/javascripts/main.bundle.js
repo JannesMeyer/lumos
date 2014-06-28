@@ -215,7 +215,7 @@
 				React.DOM.section( {className:"m-page", role:"content"}, 
 					React.DOM.div( {className:"m-page-buttons"}, 
 						PageButton( {name:"edit", icon:"pencil", href:this.props.editURL, title:"Edit page (E)"} ),
-						PageButton( {name:"fullscreen", icon:"resize-full", href:"", title:"Toggle fullscreen (F)"} )
+						FullscreenButton(null )
 					),
 					React.DOM.div( {className:"m-page-title"}, 
 						React.DOM.h1(null, this.props.title),
@@ -229,22 +229,37 @@
 	});
 
 	var PageButton = React.createClass({displayName: 'PageButton',
-		handleClick:function(event) {
-			if (this.props.name === 'fullscreen') {
-				// TODO: fullscreen as state
-				fullscreen.toggle(document.documentElement);
-				event.currentTarget.blur();
-				event.preventDefault();
-			}
+		render:function() {
+			var props = this.props;
+			return (
+				React.DOM.a( {className:'button-' + props.name, href:props.href, title:props.title, onClick:props.clickHandler}, 
+					React.DOM.span( {className:'glyphicon glyphicon-' + props.icon})
+				)
+			);
+		}
+	});
+
+	var FullscreenButton = React.createClass({displayName: 'FullscreenButton',
+		getInitialState:function() {
+			return {
+				isFullscreen: false
+			};
+		},
+		componentDidMount:function() {
+			keypress.on([], 'f', this.toggleFullscreen);
+		},
+		toggleFullscreen:function(e) {
+			fullscreen.toggle(document.documentElement);
+			this.setState({ isFullscreen: !this.state.isFullscreen });
+			e.preventDefault();
 		},
 		render:function() {
 			return (
-				React.DOM.a( {className:'button-' + this.props.name,
-				   href:this.props.href,
-				   title:this.props.title,
-				   onClick:this.handleClick}, 
-					React.DOM.span( {className:'glyphicon glyphicon-' + this.props.icon})
-				)
+				PageButton( {name:"fullscreen",
+				            icon:this.state.isFullscreen ? 'resize-small' : 'resize-full',
+				            href:"",
+				            title:"Toggle fullscreen (F)",
+				            clickHandler:this.toggleFullscreen} )
 			);
 		}
 	});
@@ -372,8 +387,6 @@
 			// TODO: fix titles
 			keypress.on(['meta'], 'up', function(event)  {return navigateTo('..', 'Title');});
 			keypress.on([], 'r', function(event)  {return navigateTo('/', 'Title');});
-
-			keypress.on([], 'f', function(event)  {return fullscreen.toggle(this.getDOMNode());}.bind(this));
 
 			keypress.on(['inputEl'], 'esc', function(event)  {
 				var el = e.target;
