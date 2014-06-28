@@ -1,12 +1,12 @@
+/*==========================================
+ * POSITIONING
+ *==========================================*/
 body {
   -webkit-font-smoothing: antialiased;
 }
 html,
 body {
   height: 100%;
-}
-#instantclick {
-  display: none;
 }
 .m-container {
   display: -webkit-box;
@@ -47,74 +47,11 @@ body {
   -ms-flex: 0 0 250px;
   flex: 0 0 250px;
 }
-article > h1:first-child,
-article > h2:first-child,
-article > h3:first-child,
-article > h4:first-child,
-article > h5:first-child,
-article > h6:first-child {
-  margin-top: 0;
-}
-article code,
-article kbd,
-article pre,
-article samp {
-  font-family: Inconsolata, monospace;
-  font-size: 1em;
-  color: inherit;
-}
-article blockquote {
-  font-size: 1em;
-}
-article .callout {
-  margin: 20px 0;
-  padding: 20px;
-  border-left: 3px solid #5bc0de;
-  background-color: #f4f8fa;
-}
-article .callout h4 {
-  margin-top: 0;
-  margin-bottom: 5px;
-  color: #5bc0de;
-}
-article .callout p:last-child {
-  margin-bottom: 0;
-}
-article .callout code {
-  background-color: #fff;
-}
-article .callout > li {
-  white-space: pre;
-}
-.m-navigation > ul {
-  padding-left: 0;
-  list-style: none;
-}
-.m-navigation > ul > li {
-  display: block;
-}
-.m-navigation > ul > li > a {
-  display: block;
-  padding: 10px 22px;
-}
-.m-navigation > ul > li > a:hover,
-.m-navigation > ul > li > a:focus {
-  text-decoration: none;
-  outline: 0;
-}
-@media (max-width: 767px) {
-  .m-navigation {
-    display: none;
-  }
-}
 /*==========================================
  * THEME
  *==========================================*/
 body {
   background: #fff;
-}
-.hidden {
-  display: none;
 }
 /*==========================================
  * Breadcrumbs
@@ -938,6 +875,45 @@ body {
 /*==========================================
  * Content
  *==========================================*/
+article > h1:first-child,
+article > h2:first-child,
+article > h3:first-child,
+article > h4:first-child,
+article > h5:first-child,
+article > h6:first-child {
+  margin-top: 0;
+}
+article code,
+article kbd,
+article pre,
+article samp {
+  font-family: Inconsolata, monospace;
+  font-size: 1em;
+  color: inherit;
+}
+article blockquote {
+  font-size: 1em;
+}
+article .callout {
+  margin: 20px 0;
+  padding: 20px;
+  border-left: 3px solid #5bc0de;
+  background-color: #f4f8fa;
+}
+article .callout h4 {
+  margin-top: 0;
+  margin-bottom: 5px;
+  color: #5bc0de;
+}
+article .callout p:last-child {
+  margin-bottom: 0;
+}
+article .callout code {
+  background-color: #fff;
+}
+article .callout > li {
+  white-space: pre;
+}
 .m-page {
   font-size: 14px;
   padding: 2em 3.5em;
@@ -1077,4 +1053,46 @@ article a:active {
 }
 article a:active:hover {
   outline: 2px solid #006897;
+}
+/*==========================================
+ * Navigation
+ *==========================================*/
+.m-navigation > ul {
+  padding-left: 0;
+  list-style: none;
+}
+.m-navigation > ul > li {
+  display: block;
+}
+.m-navigation > ul > li > a {
+  display: block;
+  padding: 10px 22px;
+}
+.m-navigation > ul > li > a:hover,
+.m-navigation > ul > li > a:focus {
+  text-decoration: none;
+  outline: 0;
+}
+/*==========================================
+ * Smaller screens
+ *==========================================*/
+@media (max-width: 767px) {
+  .m-container > div {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: reverse;
+    -webkit-flex-direction: column-reverse;
+    -ms-flex-direction: column-reverse;
+    flex-direction: column-reverse;
+  }
+  .m-container > div > nav {
+    -webkit-flex-basis: auto;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+    border: none;
+  }
+  .m-search,
+  .m-colorpicker {
+    position: initial;
+    margin-top: 10px;
+  }
 }

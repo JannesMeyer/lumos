@@ -1,11 +1,8 @@
-module util from 'util'
-module marked from 'marked'
 module path from 'path'
 module fs from 'fs'
+module converter from './lib/converter-marked'
 module denodeify from './denodeify'
-
 module layout from './templates/layout'
-
 
 import { config } from '../package.json'
 import { SegmentedPath } from './SegmentedPath'
@@ -57,7 +54,7 @@ function handleRequest(req, res, next) {
 					data.filePath = indexPath.absolute;
 					// Can't have spaces or quotes in AppleScript
 					data.editURL = encodeURI(config.editURLProtocol + indexPath.absolute).replace(/'/g, '%27');
-					data.content = fileContentToHtml(file.content);
+					data.content = converter.convert(file.content);
 				});
 			}
 		}/*, err => {
@@ -92,7 +89,7 @@ function handleRequest(req, res, next) {
 			data.filePath = requestPathMd.absolute;
 			// Can't have spaces or quotes in AppleScript
 			data.editURL = encodeURI(config.editURLProtocol + requestPathMd.absolute).replace(/'/g, '%27');
-			data.content = fileContentToHtml(file.content);
+			data.content = converter.convert(file.content);
 
 			var datetool = require('./lib/date-tool');
 			var creationDate = datetool.dateInCustomFormat(file.stat.birthtime);
@@ -180,24 +177,6 @@ function readFile(filePath) {
 }
 
 /**
- * This function is used to convert the plain text to HTML
- * Read: https://github.com/chjj/marked/blob/master/README.md
- */
-var hljs = require('highlight.js');
-marked.setOptions({
-		gfm: true,
-		breaks: true,
-		highlight: (code, lang) => lang ? hljs.highlight(lang, code).value : code
-	});
-function fileContentToHtml(content) {
-	var md = marked(content);
-	// TODO: Fix html
-	md = md.replace(/(<table>)/g, '<div class="table-responsive"><table class="table table-hover"></div>');
-	// md = md.replace(/(<pre>)/g, '<pre class="hljs">');
-	return md;
-}
-
-/**
  * Shorthand to create an Error object with a status code
  */
 function mHTTPError(status, message) {
@@ -207,96 +186,3 @@ function mHTTPError(status, message) {
 }
 
 module.exports = handleRequest;
-
-
-
-/*
-var data = { baseDirName: 'Notes',
-    breadcrumbs: [ { name: 'Notes', path: '/', isActive: false } ],
-    title: 'Google',
-    filePath: '/Users/jannes/Dropbox/Notes/Google.md',
-    editURL: 'lumos-connect:///Users/jannes/Dropbox/Notes/Google.md',
-    content: '<h1 id="list-of-google-searches-to-carry-out">List of Google searches to carry out</h1>\n<ul>\n<li>Konkurrenz von Mobilinga<ul>\n<li>Repetico</li>\n<li><a href="http://www.phase-6.com/">Phase 6</a></li>\n<li><a href="http://babbel.com/">Babbel</a></li>\n</ul>\n</li>\n<li>OmniFocus 2</li>\n</ul>\n',
-    creationDate: '24.05.2014',
-    creationTime: '',
-    items:
-     [ { absolute: '/Users/jannes/Dropbox/Notes/Bookmarks.md',
-         relative: 'Bookmarks.md',
-         name: 'Bookmarks',
-         link: 'Bookmarks',
-         isActive: false },
-       { absolute: '/Users/jannes/Dropbox/Notes/Find launch items.md',
-         relative: 'Find launch items.md',
-         name: 'Find launch items',
-         link: 'Find%20launch%20items',
-         isActive: false },
-       { absolute: '/Users/jannes/Dropbox/Notes/Finds.md',
-         relative: 'Finds.md',
-         name: 'Finds',
-         link: 'Finds',
-         isActive: false },
-       { absolute: '/Users/jannes/Dropbox/Notes/Google.md',
-         relative: 'Google.md',
-         name: 'Google',
-         link: '.',
-         isActive: true },
-       { absolute: '/Users/jannes/Dropbox/Notes/Lumos.md',
-         relative: 'Lumos.md',
-         name: 'Lumos',
-         link: 'Lumos',
-         isActive: false },
-       { absolute: '/Users/jannes/Dropbox/Notes/OSX TODO.md',
-         relative: 'OSX TODO.md',
-         name: 'OSX TODO',
-         link: 'OSX%20TODO',
-         isActive: false },
-       { absolute: '/Users/jannes/Dropbox/Notes/Snippets.md',
-         relative: 'Snippets.md',
-         name: 'Snippets',
-         link: 'Snippets',
-         isActive: false },
-       { absolute: '/Users/jannes/Dropbox/Notes/TabAttack.md',
-         relative: 'TabAttack.md',
-         name: 'TabAttack',
-         link: 'TabAttack',
-         isActive: false },
-       { absolute: '/Users/jannes/Dropbox/Notes/TV and Movies.md',
-         relative: 'TV and Movies.md',
-         name: 'TV and Movies',
-         link: 'TV%20and%20Movies',
-         isActive: false } ],
-    dirs:
-     [ { absolute: '/Users/jannes/Dropbox/Notes/Archive',
-         relative: 'Archive',
-         link: 'Archive/' },
-       { absolute: '/Users/jannes/Dropbox/Notes/Computer',
-         relative: 'Computer',
-         link: 'Computer/' },
-       { absolute: '/Users/jannes/Dropbox/Notes/GTD',
-         relative: 'GTD',
-         link: 'GTD/' },
-       { absolute: '/Users/jannes/Dropbox/Notes/Learning',
-         relative: 'Learning',
-         link: 'Learning/' },
-       { absolute: '/Users/jannes/Dropbox/Notes/Material',
-         relative: 'Material',
-         link: 'Material/' },
-       { absolute: '/Users/jannes/Dropbox/Notes/Programming',
-         relative: 'Programming',
-         link: 'Programming/' },
-       { absolute: '/Users/jannes/Dropbox/Notes/Tagebuch',
-         relative: 'Tagebuch',
-         link: 'Tagebuch/' },
-       { absolute: '/Users/jannes/Dropbox/Notes/Temporary',
-         relative: 'Temporary',
-         link: 'Temporary/' } ],
-    prevItem:
-     { absolute: '/Users/jannes/Dropbox/Notes/Finds.md',
-       relative: 'Finds.md',
-       link: 'Finds' },
-    nextItem:
-     { absolute: '/Users/jannes/Dropbox/Notes/Lumos.md',
-       relative: 'Lumos.md',
-       link: 'Lumos' } };
-
-*/

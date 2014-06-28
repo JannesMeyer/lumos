@@ -1,4 +1,4 @@
-@require 'includes/base.styl'
+// @require 'includes/base.styl'
 
 $link-color = #00a5e6
 $hover-link-color = darken(saturate($link-color, 20), 20)
@@ -6,13 +6,40 @@ $hover-link-color = darken(saturate($link-color, 20), 20)
 $content-bg = #fff
 
 /*==========================================
+ * POSITIONING
+ *==========================================*/
+
+body
+	-webkit-font-smoothing: antialiased
+	// text-rendering: optimizeLegibility
+
+html, body
+	height: 100%
+
+.m-container
+	display: flex
+	flex-direction: column
+	min-height: 100%
+
+	> .m-header
+		flex-shrink: 0
+
+	> div
+		flex: 1
+		display: flex
+
+		> section
+			flex: 1
+
+		> nav
+			flex: 0 0 250px
+
+/*==========================================
  * THEME
  *==========================================*/
+
 body
 	background: $content-bg
-
-.hidden
-	display: none
 
 /*==========================================
  * Breadcrumbs
@@ -199,6 +226,58 @@ custom-color($stripe, $nav-bg, $nav-border, $nav-link, $nav-link-active)
  * Content
  *==========================================*/
 
+article
+	> h1:first-child,
+	> h2:first-child,
+	> h3:first-child,
+	> h4:first-child,
+	> h5:first-child,
+	> h6:first-child
+		margin-top: 0
+
+	// Link URL in lists
+	// ul > li > a[href]:first-child
+	// 	font-weight: bold
+	// 	&::after
+	// 		content: attr(href)
+	// 		display: table
+	// 		width: auto
+	// 		font-size: 0.8em
+	// 		line-height: 1
+	// 		color: #999
+	// 		font-weight: normal
+
+	code, kbd, pre, samp
+		font-family: Inconsolata, monospace
+		font-size: 1em
+		color: inherit
+
+	blockquote
+		font-size: 1em
+
+	// Callout boxes
+	.callout
+		margin: 20px 0
+		padding: 20px
+		border-left: 3px solid #5bc0de // #f0ad4e
+		background-color: #f4f8fa // #fcf8f2
+
+		h4
+			margin-top: 0
+			margin-bottom: 5px
+			color: #5bc0de // #f0ad4e
+
+		p:last-child
+			margin-bottom: 0
+
+		code
+			background-color: #fff
+
+		> li
+			white-space: pre
+
+
+
 .m-page
 	font-size: 14px
 	padding: 2em 3.5em
@@ -308,3 +387,41 @@ article
 			outline: 2px solid $link-color
 			&:hover
 				outline: 2px solid $hover-link-color
+
+/*==========================================
+ * Navigation
+ *==========================================*/
+
+.m-navigation > ul
+	padding-left: 0
+	list-style: none
+
+	> li
+		display: block
+
+		> a
+			display: block
+			padding: 10px 22px
+
+		> a:hover,
+		> a:focus
+			text-decoration: none // Override Bootstrap
+			outline: 0            // Override Firefox
+
+/*==========================================
+ * Smaller screens
+ *==========================================*/
+
+@media (max-width: 767px)
+
+	.m-container > div
+		flex-direction: column-reverse
+
+		> nav
+			flex-basis: auto
+			border: none
+
+	.m-search,
+	.m-colorpicker
+		position: initial
+		margin-top: 10px
