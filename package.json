@@ -15,10 +15,7 @@
     "indexFile": "index.md",
     "editURLProtocol": "lumos-connect://",
     "editor": "subl",
-    "editorArgs": [
-      "--project",
-      "/Users/jannes/Dropbox/Notes/notes.sublime-project"
-    ],
+    "editorArgs": [],
     "diaryBaseDir": "/Users/jannes/Dropbox/Notes/Tagebuch"
   },
   "dependencies": {

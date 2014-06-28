@@ -129,8 +129,9 @@
 
 	var SearchBar = React.createClass({displayName: 'SearchBar',
 		componentDidMount:function() {
-			keypress.on([], '/', function()  {
-				this.refs.searchBox.getDOMNode().focus();
+			keypress.on([], '/', function(event)  {
+				var el = this.refs.searchBox.getDOMNode();
+				el.focus();
 			}.bind(this));
 		},
 		render:function() {
@@ -335,21 +336,23 @@
 			}
 
 			// Helper functions
-			var goToNext = function()  {
+			var goToNext = function(e)  {
 				var target = this.props.data.nextItem;
 				if (target) {
 					navigateTo(target.link, target.name);
+					e.preventDefault();
 				}
 			}.bind(this)
-			var goToPrevious = function()  {
+			var goToPrevious = function(e)  {
 				var target = this.props.data.prevItem;
 				if (target) {
 					navigateTo(target.link, target.name);
+					e.preventDefault();
 				}
 			}.bind(this)
 
 			// Key bindings
-			keypress.on([], 'e', function()  {
+			keypress.on([], 'e', function(event)  {
 				if (this.props.data.editURL) {
 					location.href = this.props.data.editURL;
 				}
@@ -360,20 +363,21 @@
 			keypress.on([], 'left', goToPrevious);
 			keypress.on([], 'enter', goToNext);
 			keypress.on(['shift'], 'enter', goToPrevious);
-			keypress.on([], 'down', scroll.ifAtBottom(goToNext));
-			keypress.on([], 'space', scroll.ifAtBottom(goToNext));
-			keypress.on(['shift'], 'space', scroll.ifAtTop(goToPrevious));
-			keypress.on([], 'up', scroll.ifAtTop(goToPrevious));
-			keypress.on(['meta'], 'up', navigateTo.bind(this, '..', 'TODO Title'));
 
-			keypress.on([], 'r', navigateTo.bind(this, '/', 'TODO Title'));
-			keypress.on([], 'f', function()  {
-				fullscreen.toggle(this.getDOMNode());
-			}.bind(this));
-			keypress.on(['inputEl'], 'esc', function(e)  {
-				if (e.target.blur) {
-					e.target.blur();
-				}
+			keypress.on(['executeDefault'], 'down', scroll.ifAtBottom(goToNext));
+			keypress.on(['executeDefault'], 'up', scroll.ifAtTop(goToPrevious));
+			keypress.on(['executeDefault'], 'space', scroll.ifAtBottom(goToNext));
+			keypress.on(['executeDefault', 'shift'], 'space', scroll.ifAtTop(goToPrevious));
+
+			// TODO: fix titles
+			keypress.on(['meta'], 'up', function(event)  {return navigateTo('..', 'Title');});
+			keypress.on([], 'r', function(event)  {return navigateTo('/', 'Title');});
+
+			keypress.on([], 'f', function(event)  {return fullscreen.toggle(this.getDOMNode());}.bind(this));
+
+			keypress.on(['inputEl'], 'esc', function(event)  {
+				var el = e.target;
+				if (el.blur) { el.blur(); }
 			});
 		},
 

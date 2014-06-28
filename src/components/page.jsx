@@ -71,8 +71,9 @@ var BreadcrumbList = React.createClass({
 
 var SearchBar = React.createClass({
 	componentDidMount() {
-		keypress.on([], '/', () => {
-			this.refs.searchBox.getDOMNode().focus();
+		keypress.on([], '/', event => {
+			var el = this.refs.searchBox.getDOMNode();
+			el.focus();
 		});
 	},
 	render() {
@@ -277,21 +278,23 @@ var MyHTML = React.createClass({
 		}
 
 		// Helper functions
-		var goToNext = () => {
+		var goToNext = (e) => {
 			var target = this.props.data.nextItem;
 			if (target) {
 				navigateTo(target.link, target.name);
+				e.preventDefault();
 			}
 		}
-		var goToPrevious = () => {
+		var goToPrevious = (e) => {
 			var target = this.props.data.prevItem;
 			if (target) {
 				navigateTo(target.link, target.name);
+				e.preventDefault();
 			}
 		}
 
 		// Key bindings
-		keypress.on([], 'e', () => {
+		keypress.on([], 'e', event => {
 			if (this.props.data.editURL) {
 				location.href = this.props.data.editURL;
 			}
@@ -302,20 +305,21 @@ var MyHTML = React.createClass({
 		keypress.on([], 'left', goToPrevious);
 		keypress.on([], 'enter', goToNext);
 		keypress.on(['shift'], 'enter', goToPrevious);
-		keypress.on([], 'down', scroll.ifAtBottom(goToNext));
-		keypress.on([], 'space', scroll.ifAtBottom(goToNext));
-		keypress.on(['shift'], 'space', scroll.ifAtTop(goToPrevious));
-		keypress.on([], 'up', scroll.ifAtTop(goToPrevious));
-		keypress.on(['meta'], 'up', navigateTo.bind(this, '..', 'TODO Title'));
 
-		keypress.on([], 'r', navigateTo.bind(this, '/', 'TODO Title'));
-		keypress.on([], 'f', () => {
-			fullscreen.toggle(this.getDOMNode());
-		});
-		keypress.on(['inputEl'], 'esc', (e) => {
-			if (e.target.blur) {
-				e.target.blur();
-			}
+		keypress.on(['executeDefault'], 'down', scroll.ifAtBottom(goToNext));
+		keypress.on(['executeDefault'], 'up', scroll.ifAtTop(goToPrevious));
+		keypress.on(['executeDefault'], 'space', scroll.ifAtBottom(goToNext));
+		keypress.on(['executeDefault', 'shift'], 'space', scroll.ifAtTop(goToPrevious));
+
+		// TODO: fix titles
+		keypress.on(['meta'], 'up', event => navigateTo('..', 'Title'));
+		keypress.on([], 'r', event => navigateTo('/', 'Title'));
+
+		keypress.on([], 'f', event => fullscreen.toggle(this.getDOMNode()));
+
+		keypress.on(['inputEl'], 'esc', event => {
+			var el = e.target;
+			if (el.blur) { el.blur(); }
 		});
 	},
 
