@@ -13,16 +13,13 @@ export function isAtBottom() {
 }
 
 export function isAtElement(element) {
+	if (!element) {
+		return false;
+	}
 	var elemRect = element.getBoundingClientRect();
 	var bodyRect = body.getBoundingClientRect();
     return window.scrollY === Math.round(elemRect.top - bodyRect.top);
 }
-
-// export function isAtElementOrLess(element) {
-// 	var elemRect = element.getBoundingClientRect();
-// 	var bodyRect = body.getBoundingClientRect();
-//     return window.scrollY <= Math.round(elemRect.top - bodyRect.top);
-// }
 
 export function ifAtTop(fn) {
 	return function() {
@@ -39,14 +36,6 @@ export function ifAtBottom(fn) {
 		}
 	};
 }
-
-// export function ifAtElementOrLess(element, fn) {
-// 	return function() {
-// 		if (isAtElementOrLess(element)) {
-// 			fn.apply(undefined, arguments);
-// 		}
-// 	};
-// }
 
 export function to(y) {
 	if (y === 0 && isAtTop()) {

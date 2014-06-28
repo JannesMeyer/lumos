@@ -208,14 +208,15 @@
 			return nextProps.filePath !== this.props.filePath;
 		},
 		componentDidMount:function() {
+			var section = this.getDOMNode();
+
 			keypress.on([], 'x', function(event)  {
-				var section = this.getDOMNode();
 				if (scroll.isAtElement(section)) {
 					scroll.to(0);
 				} else {
 					scroll.toElement(section);
 				}
-			}.bind(this));
+			});
 		},
 		componentWillUpdate:function() {
 			var section = this.getDOMNode();
@@ -395,8 +396,8 @@
 			keypress.on(['shift'], 'enter', goToPrevious);
 
 			keypress.on(['executeDefault'], 'down', scroll.ifAtBottom(goToNext));
-			keypress.on(['executeDefault'], 'up', scroll.ifAtTop(goToPrevious));
 			keypress.on(['executeDefault'], 'space', scroll.ifAtBottom(goToNext));
+			keypress.on(['executeDefault'], 'up', scroll.ifAtTop(goToPrevious));
 			keypress.on(['executeDefault', 'shift'], 'space', scroll.ifAtTop(goToPrevious));
 
 			// TODO: fix titles
@@ -768,16 +769,13 @@
 	} module.exports.isAtBottom = isAtBottom;
 
 	function isAtElement(element) {
+		if (!element) {
+			return false;
+		}
 		var elemRect = element.getBoundingClientRect();
 		var bodyRect = body.getBoundingClientRect();
 	    return window.scrollY === Math.round(elemRect.top - bodyRect.top);
 	} module.exports.isAtElement = isAtElement;
-
-	// export function isAtElementOrLess(element) {
-	// 	var elemRect = element.getBoundingClientRect();
-	// 	var bodyRect = body.getBoundingClientRect();
-	//     return window.scrollY <= Math.round(elemRect.top - bodyRect.top);
-	// }
 
 	function ifAtTop(fn) {
 		return function() {
@@ -794,14 +792,6 @@
 			}
 		};
 	} module.exports.ifAtBottom = ifAtBottom;
-
-	// export function ifAtElementOrLess(element, fn) {
-	// 	return function() {
-	// 		if (isAtElementOrLess(element)) {
-	// 			fn.apply(undefined, arguments);
-	// 		}
-	// 	};
-	// }
 
 	function to(y) {
 		if (y === 0 && isAtTop()) {

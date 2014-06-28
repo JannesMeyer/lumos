@@ -150,8 +150,9 @@ var Page = React.createClass({
 		return nextProps.filePath !== this.props.filePath;
 	},
 	componentDidMount() {
+		var section = this.getDOMNode();
+
 		keypress.on([], 'x', event => {
-			var section = this.getDOMNode();
 			if (scroll.isAtElement(section)) {
 				scroll.to(0);
 			} else {
@@ -337,8 +338,8 @@ var MyHTML = React.createClass({
 		keypress.on(['shift'], 'enter', goToPrevious);
 
 		keypress.on(['executeDefault'], 'down', scroll.ifAtBottom(goToNext));
-		keypress.on(['executeDefault'], 'up', scroll.ifAtTop(goToPrevious));
 		keypress.on(['executeDefault'], 'space', scroll.ifAtBottom(goToNext));
+		keypress.on(['executeDefault'], 'up', scroll.ifAtTop(goToPrevious));
 		keypress.on(['executeDefault', 'shift'], 'space', scroll.ifAtTop(goToPrevious));
 
 		// TODO: fix titles
