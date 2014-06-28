@@ -147,9 +147,13 @@ var Navigation = React.createClass({
 	}
 });
 
+// TODO: update twice for each page load (loading, loaded)
 var Page = React.createClass({
 	shouldComponentUpdate(nextProps) {
 		return nextProps.filePath !== this.props.filePath;
+	},
+	componentWillUpdate() {
+		scroll.to(0);
 	},
 	render() {
 		// TODO: no content: <p style="color: #999">+++ empty +++</p>
@@ -174,7 +178,7 @@ var PageButton = React.createClass({
 	render() {
 		var props = this.props;
 		return (
-			<a className={'button-' + props.name} href={props.href} title={props.title} onClick={props.clickHandler}>
+			<a className={'button-' + props.name} href={props.href} title={props.title} onClick={props.onClick}>
 				<span className={'glyphicon glyphicon-' + props.icon}></span>
 			</a>
 		);
@@ -201,16 +205,12 @@ var FullscreenButton = React.createClass({
 			            icon={this.state.isFullscreen ? 'resize-small' : 'resize-full'}
 			            href=""
 			            title="Toggle fullscreen (F)"
-			            clickHandler={this.toggleFullscreen} />
+			            onClick={this.toggleFullscreen} />
 		);
 	}
 });
 
 var LumosApplication = React.createClass({
-	// componentWillUpdate() {
-	// 	// TODO: Scroll to the top before
-	// 	document.body.scrollTop = 0;
-	// },
 	render() {
 		var data = this.props.data;
 

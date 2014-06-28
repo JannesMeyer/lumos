@@ -205,9 +205,13 @@
 		}
 	});
 
+	// TODO: update twice for each page load (loading, loaded)
 	var Page = React.createClass({displayName: 'Page',
 		shouldComponentUpdate:function(nextProps) {
 			return nextProps.filePath !== this.props.filePath;
+		},
+		componentWillUpdate:function() {
+			scroll.to(0);
 		},
 		render:function() {
 			// TODO: no content: <p style="color: #999">+++ empty +++</p>
@@ -232,7 +236,7 @@
 		render:function() {
 			var props = this.props;
 			return (
-				React.DOM.a( {className:'button-' + props.name, href:props.href, title:props.title, onClick:props.clickHandler}, 
+				React.DOM.a( {className:'button-' + props.name, href:props.href, title:props.title, onClick:props.onClick}, 
 					React.DOM.span( {className:'glyphicon glyphicon-' + props.icon})
 				)
 			);
@@ -259,16 +263,12 @@
 				            icon:this.state.isFullscreen ? 'resize-small' : 'resize-full',
 				            href:"",
 				            title:"Toggle fullscreen (F)",
-				            clickHandler:this.toggleFullscreen} )
+				            onClick:this.toggleFullscreen} )
 			);
 		}
 	});
 
 	var LumosApplication = React.createClass({displayName: 'LumosApplication',
-		// componentWillUpdate() {
-		// 	// TODO: Scroll to the top before
-		// 	document.body.scrollTop = 0;
-		// },
 		render:function() {
 			var data = this.props.data;
 
@@ -742,16 +742,15 @@
 	var body = document.body;
 
 	function isAtTop() {
-		// var scrollY = body.scrollTop || html.scrollTop;
+		// No part of any standard:
 		return window.scrollY <= 0;
+		// return (body.scrollTop || html.scrollTop) <= 0;
 	} module.exports.isAtTop = isAtTop;
 
 	// TODO: this cannot determined accurately until the document has finished loading
 	function isAtBottom() {
-		// Don't work well with html and body at 100% height:
 		// html.getBoundingClientRect()
 		// html.getClientRects()
-
 		return html.scrollHeight - html.clientHeight - window.scrollY <= 0;
 	} module.exports.isAtBottom = isAtBottom;
 
@@ -770,6 +769,16 @@
 			}
 		};
 	} module.exports.ifAtBottom = ifAtBottom;
+
+	function to(y) {
+		if (y === 0 && isAtTop()) {
+			return;
+		}
+		// Not part of any standard:
+		window.scroll(0, y);
+		// html.scrollTop = y;
+		// body.scrollTop = y;
+	} module.exports.to = to;
 
 /***/ },
 /* 6 */
