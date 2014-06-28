@@ -1,3 +1,4 @@
+// module Promise from 'bluebird'
 // TODO: lazy-loading of denodified functions
 
 // Convert node.js async functions into Promises

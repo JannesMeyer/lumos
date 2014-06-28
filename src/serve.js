@@ -1,12 +1,12 @@
 module path from 'path'
 module fs from 'fs'
 module converter from './lib/converter-marked'
-module denodeify from './denodeify'
+module denodeify from './lib/denodeify'
 module layout from './templates/layout'
 
 import { config } from '../package.json'
-import { SegmentedPath } from './SegmentedPath'
-import { Directory } from './Directory'
+import { SegmentedPath } from './classes/SegmentedPath'
+import { Directory } from './classes/Directory'
 
 var fsStat     = denodeify(fs, fs.stat);
 var fsReadDir  = denodeify(fs, fs.readdir);
@@ -54,7 +54,7 @@ function handleRequest(req, res, next) {
 					data.filePath = indexPath.absolute;
 					// Can't have spaces or quotes in AppleScript
 					data.editURL = encodeURI(config.editURLProtocol + indexPath.absolute).replace(/'/g, '%27');
-					data.content = converter.convert(file.content);
+					data.content = converter.makeHtml(file.content);
 				});
 			}
 		}/*, err => {
@@ -71,7 +71,6 @@ function handleRequest(req, res, next) {
 				res.json(data);
 			} else {
 				res.end(layout.render(data));
-				// res.render('document', data);
 			}
 		})
 		.catch(err => next(err));
@@ -89,7 +88,7 @@ function handleRequest(req, res, next) {
 			data.filePath = requestPathMd.absolute;
 			// Can't have spaces or quotes in AppleScript
 			data.editURL = encodeURI(config.editURLProtocol + requestPathMd.absolute).replace(/'/g, '%27');
-			data.content = converter.convert(file.content);
+			data.content = converter.makeHtml(file.content);
 
 			var datetool = require('./lib/date-tool');
 			var creationDate = datetool.dateInCustomFormat(file.stat.birthtime);
@@ -134,7 +133,6 @@ function handleRequest(req, res, next) {
 					});
 					res.json(data);
 				} else {
-					// res.render('document', data);
 					res.end(layout.render(data));
 				}
 			})

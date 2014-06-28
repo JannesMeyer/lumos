@@ -1,4 +1,4 @@
-/**
+/*
 	Only some keys work in Safari in fullscreen mode
 	9	tab
 	13	enter

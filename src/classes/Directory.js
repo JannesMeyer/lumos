@@ -2,8 +2,8 @@ module path from 'path'
 
 module fs from 'fs'
 module crypto from 'crypto'
-module denodeify from './denodeify'
-import { config } from '../package.json'
+module denodeify from '../lib/denodeify'
+import { config } from '../../package.json'
 import { SegmentedPath } from './SegmentedPath'
 
 var fsStat     = denodeify(fs, fs.stat);

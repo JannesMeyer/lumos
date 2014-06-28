@@ -2,7 +2,7 @@ module fs from 'fs'
 module path from 'path'
 import { spawn } from 'child_process'
 
-module denodeify from './denodeify';
+module denodeify from './lib/denodeify';
 var fsStat = denodeify(fs, fs.stat);
 var fsMkdir = denodeify(fs, fs.mkdir);
 import { config } from '../package.json'

@@ -2,7 +2,6 @@ module path from 'path';
 module express from 'express';
 module morgan from 'morgan';
 module serve from './serve';
-module api from './api';
 module errorTemplate from './templates/error';
 
 var app = express();

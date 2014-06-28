@@ -8,7 +8,7 @@ marked.setOptions({
 	highlight: (code, lang) => (lang ? hljs.highlight(lang, code).value : code)
 });
 
-export function convert(content) {
+export function makeHtml(content) {
 	var out = marked(content);
 
 	out = out.replace(/(<table>)/g, '<div class="table-responsive"><table class="table table-hover">');
