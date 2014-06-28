@@ -5,9 +5,6 @@ module React from 'react'
 // Master component
 var app;
 
-// Cache the accent color to avoid re-rendering the favicon
-var accentColor;
-
 // hex.colorrrs.com
 var colors = {
 	'blue': [96, 170, 223],         // #60aadf
@@ -32,7 +29,7 @@ var colors = {
 // Client-side libraries
 var dataSource, favicon, keypress, scroll, fullscreen;
 
-// Feature detection
+// Feature detection (client-side features)
 var supported = {
 	history: typeof window !== 'undefined' && Boolean(window.history) && Boolean(window.history.pushState),
 	canvas2D: typeof window !== 'undefined' && Boolean(window.CanvasRenderingContext2D)
@@ -193,11 +190,16 @@ var FullscreenButton = React.createClass({
 	},
 	componentDidMount() {
 		keypress.on([], 'f', this.toggleFullscreen);
+
+		// TODO: Use CSS selectors for this instead?
+		fullscreen.onChange(state => {
+			this.setState({ isFullscreen: state });
+		});
 	},
 	toggleFullscreen(e) {
 		fullscreen.toggle(document.documentElement);
-		this.setState({ isFullscreen: !this.state.isFullscreen });
 		e.preventDefault();
+		// e.currentTarget.blur()
 	},
 	render() {
 		return (

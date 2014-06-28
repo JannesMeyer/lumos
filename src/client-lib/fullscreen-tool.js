@@ -1,76 +1,84 @@
-var handlerAdded = false;
+// Current fullscreen element
+var fullscreenElement;
 
-// webkitRequestFullScreen fails when passing Element.ALLOW_KEYBOARD_INPUT in Safari 5.1.2
-// http://stackoverflow.com/questions/8427413/webkitrequestfullscreen-fails-when-passing-element-allow-keyboard-input-in-safar
+// Event listeners
+var onChangeListeners = [];
 
-var fullscreenEnabled = getEnabled();
-var exitFullscreen = getExitFunc();
+// Feature detection
+var supported = {
+	fullscreen: document.fullscreenEnabled ||
+		document.mozFullScreenEnabled ||
+		document.webkitFullscreenEnabled ||
+		document.msFullscreenEnabled
+};
 
-function errorHandler() {
-	alert('Fullscreen operation failed');
+if (supported.fullscreen) {
+	/*
+		Event handlers
+	 */
+
+	function stateChangeHandler() {
+		fullscreenElement = getElement();
+
+		onChangeListeners.forEach(listener => {
+			listener(fullscreenElement !== undefined);
+		});
+	}
+	document.addEventListener('fullscreenchange', stateChangeHandler);
+	document.addEventListener('webkitfullscreenchange', stateChangeHandler);
+	document.addEventListener('mozfullscreenchange', stateChangeHandler);
+	document.addEventListener('MSFullscreenChange', stateChangeHandler);
+
+	function errorHandler() {
+		alert('Fullscreen operation failed');
+	}
+	document.addEventListener('fullscreenerror', errorHandler);
+	document.addEventListener('webkitfullscreenerror', errorHandler);
+	document.addEventListener('mozfullscreenerror', errorHandler);
+	document.addEventListener('MSFullscreenError', errorHandler);
+
+	/*
+		Helper functions
+	 */
+
+	function getElement() {
+		return document.fullscreenElement ||
+		       document.mozFullScreenElement ||
+		       document.webkitFullscreenElement ||
+		       document.msFullscreenElement;
+	}
+
+	// http://stackoverflow.com/questions/8427413/webkitrequestfullscreen-fails-when-passing-element-allow-keyboard-input-in-safar
+	function getRequestFullscreen(el) {
+		return (el.requestFullscreen ||
+		        el.mozRequestFullScreen ||
+		        el.webkitRequestFullscreen ||
+		        el.msRequestFullscreen)
+		       .bind(el);
+	}
+
+	var exitFullscreen = (document.exitFullscreen ||
+	                      document.mozCancelFullScreen ||
+	                      document.webkitExitFullscreen ||
+	                      document.msExitFullscreen)
+	                     .bind(document);
 }
 
-// function stateChangeHandler() {
-// 	state = getElement() !== undefined;
-// }
-
-function getElement() {
-	return document.fullscreenElement ||
-	       document.mozFullScreenElement ||
-	       document.webkitFullscreenElement ||
-	       document.msFullscreenElement;
-}
-
-function getRequestFunc(element) {
-	var fn = element.requestFullscreen ||
-	         element.mozRequestFullScreen ||
-	         element.webkitRequestFullscreen ||
-	         element.msRequestFullscreen;
-	return fn.bind(element);
-}
-
-function getExitFunc() {
-	var fn = document.exitFullscreen ||
-	         document.mozCancelFullScreen ||
-	         document.webkitExitFullscreen ||
-	         document.msExitFullscreen;
-	return fn.bind(document);
-}
-
-function getEnabled() {
-	return document.fullscreenEnabled ||
-	       document.mozFullScreenEnabled ||
-	       document.webkitFullscreenEnabled ||
-	       document.msFullscreenEnabled;
-}
-
-export function getState() {
-	return getElement() !== undefined;
-}
-
-export function toggle(element) {
-	if (!fullscreenEnabled) {
-		console.warn('no fullscreen capability');
+export function toggle(el) {
+	if (!supported.fullscreen) {
+		console.warn('No fullscreen capability');
 		return;
 	}
 
-	// If this is the first time
-	if (!handlerAdded) {
-		document.addEventListener('fullscreenerror', errorHandler);
-		document.addEventListener('webkitfullscreenerror', errorHandler);
-		document.addEventListener('mozfullscreenerror', errorHandler);
-		document.addEventListener('MSFullscreenError', errorHandler);
-		// document.addEventListener('fullscreenchange', stateChangeHandler);
-		// document.addEventListener('webkitfullscreenchange', stateChangeHandler);
-		// document.addEventListener('mozfullscreenchange', stateChangeHandler);
-		// document.addEventListener('MSFullscreenChange', stateChangeHandler);
-		handlerAdded = true;
-	}
-
-	// Toggle fullscreen
-	if (getElement() !== element) {
-		getRequestFunc(element)(); // Element.ALLOW_KEYBOARD_INPUT
+	if (el !== fullscreenElement) {
+		getRequestFullscreen(el)();
+		return true;
 	} else {
 		exitFullscreen();
+		return false;
 	}
+}
+
+export function onChange(fn) {
+	onChangeListeners.push(fn);
 }

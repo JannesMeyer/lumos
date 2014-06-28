@@ -63,9 +63,6 @@
 
 	var React = __webpack_require__(8);var app;
 
-	// Cache the accent color to avoid re-rendering the favicon
-	var accentColor;
-
 	// hex.colorrrs.com
 	var colors = {
 		'blue': [96, 170, 223],         // #60aadf
@@ -90,7 +87,7 @@
 	// Client-side libraries
 	var dataSource, favicon, keypress, scroll, fullscreen;
 
-	// Feature detection
+	// Feature detection (client-side features)
 	var supported = {
 		history: typeof window !== 'undefined' && Boolean(window.history) && Boolean(window.history.pushState),
 		canvas2D: typeof window !== 'undefined' && Boolean(window.CanvasRenderingContext2D)
@@ -251,11 +248,16 @@
 		},
 		componentDidMount:function() {
 			keypress.on([], 'f', this.toggleFullscreen);
+
+			// TODO: Use CSS selectors for this instead?
+			fullscreen.onChange(function(state)  {
+				this.setState({ isFullscreen: state });
+			}.bind(this));
 		},
 		toggleFullscreen:function(e) {
 			fullscreen.toggle(document.documentElement);
-			this.setState({ isFullscreen: !this.state.isFullscreen });
 			e.preventDefault();
+			// e.currentTarget.blur()
 		},
 		render:function() {
 			return (
@@ -784,82 +786,90 @@
 /* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var handlerAdded = false;
+	// Current fullscreen element
+	var fullscreenElement;
 
-	// webkitRequestFullScreen fails when passing Element.ALLOW_KEYBOARD_INPUT in Safari 5.1.2
-	// http://stackoverflow.com/questions/8427413/webkitrequestfullscreen-fails-when-passing-element-allow-keyboard-input-in-safar
+	// Event listeners
+	var onChangeListeners = [];
 
-	var fullscreenEnabled = getEnabled();
-	var exitFullscreen = getExitFunc();
+	// Feature detection
+	var supported = {
+		fullscreen: document.fullscreenEnabled ||
+			document.mozFullScreenEnabled ||
+			document.webkitFullscreenEnabled ||
+			document.msFullscreenEnabled
+	};
 
-	function errorHandler() {
-		alert('Fullscreen operation failed');
+	if (supported.fullscreen) {
+		/*
+			Event handlers
+		 */
+
+		function stateChangeHandler() {
+			fullscreenElement = getElement();
+
+			onChangeListeners.forEach(function(listener)  {
+				listener(fullscreenElement !== undefined);
+			});
+		}
+		document.addEventListener('fullscreenchange', stateChangeHandler);
+		document.addEventListener('webkitfullscreenchange', stateChangeHandler);
+		document.addEventListener('mozfullscreenchange', stateChangeHandler);
+		document.addEventListener('MSFullscreenChange', stateChangeHandler);
+
+		function errorHandler() {
+			alert('Fullscreen operation failed');
+		}
+		document.addEventListener('fullscreenerror', errorHandler);
+		document.addEventListener('webkitfullscreenerror', errorHandler);
+		document.addEventListener('mozfullscreenerror', errorHandler);
+		document.addEventListener('MSFullscreenError', errorHandler);
+
+		/*
+			Helper functions
+		 */
+
+		function getElement() {
+			return document.fullscreenElement ||
+			       document.mozFullScreenElement ||
+			       document.webkitFullscreenElement ||
+			       document.msFullscreenElement;
+		}
+
+		// http://stackoverflow.com/questions/8427413/webkitrequestfullscreen-fails-when-passing-element-allow-keyboard-input-in-safar
+		function getRequestFullscreen(el) {
+			return (el.requestFullscreen ||
+			        el.mozRequestFullScreen ||
+			        el.webkitRequestFullscreen ||
+			        el.msRequestFullscreen)
+			       .bind(el);
+		}
+
+		var exitFullscreen = (document.exitFullscreen ||
+		                      document.mozCancelFullScreen ||
+		                      document.webkitExitFullscreen ||
+		                      document.msExitFullscreen)
+		                     .bind(document);
 	}
 
-	// function stateChangeHandler() {
-	// 	state = getElement() !== undefined;
-	// }
-
-	function getElement() {
-		return document.fullscreenElement ||
-		       document.mozFullScreenElement ||
-		       document.webkitFullscreenElement ||
-		       document.msFullscreenElement;
-	}
-
-	function getRequestFunc(element) {
-		var fn = element.requestFullscreen ||
-		         element.mozRequestFullScreen ||
-		         element.webkitRequestFullscreen ||
-		         element.msRequestFullscreen;
-		return fn.bind(element);
-	}
-
-	function getExitFunc() {
-		var fn = document.exitFullscreen ||
-		         document.mozCancelFullScreen ||
-		         document.webkitExitFullscreen ||
-		         document.msExitFullscreen;
-		return fn.bind(document);
-	}
-
-	function getEnabled() {
-		return document.fullscreenEnabled ||
-		       document.mozFullScreenEnabled ||
-		       document.webkitFullscreenEnabled ||
-		       document.msFullscreenEnabled;
-	}
-
-	function getState() {
-		return getElement() !== undefined;
-	} module.exports.getState = getState;
-
-	function toggle(element) {
-		if (!fullscreenEnabled) {
-			console.warn('no fullscreen capability');
+	function toggle(el) {
+		if (!supported.fullscreen) {
+			console.warn('No fullscreen capability');
 			return;
 		}
 
-		// If this is the first time
-		if (!handlerAdded) {
-			document.addEventListener('fullscreenerror', errorHandler);
-			document.addEventListener('webkitfullscreenerror', errorHandler);
-			document.addEventListener('mozfullscreenerror', errorHandler);
-			document.addEventListener('MSFullscreenError', errorHandler);
-			// document.addEventListener('fullscreenchange', stateChangeHandler);
-			// document.addEventListener('webkitfullscreenchange', stateChangeHandler);
-			// document.addEventListener('mozfullscreenchange', stateChangeHandler);
-			// document.addEventListener('MSFullscreenChange', stateChangeHandler);
-			handlerAdded = true;
-		}
-
-		// Toggle fullscreen
-		if (getElement() !== element) {
-			getRequestFunc(element)(); // Element.ALLOW_KEYBOARD_INPUT
+		if (el !== fullscreenElement) {
+			getRequestFullscreen(el)();
+			return true;
 		} else {
 			exitFullscreen();
+			return false;
 		}
 	} module.exports.toggle = toggle;
+
+	function onChange(fn) {
+		onChangeListeners.push(fn);
+	} module.exports.onChange = onChange;
 
 /***/ },
 /* 7 */
