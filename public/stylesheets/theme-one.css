@@ -993,6 +993,18 @@ body {
 :root:fullscreen .m-page {
   font-size: 36px;
 }
+:root:-webkit-full-screen .m-page > .m-page-buttons {
+  position: fixed;
+}
+:root:-moz-full-screen .m-page > .m-page-buttons {
+  position: fixed;
+}
+:root:-ms-fullscreen .m-page > .m-page-buttons {
+  position: fixed;
+}
+:root:fullscreen .m-page > .m-page-buttons {
+  position: fixed;
+}
 :root:-webkit-full-screen .m-header,
 :root:-webkit-full-screen .m-navigation,
 :root:-webkit-full-screen .m-page-title > p {

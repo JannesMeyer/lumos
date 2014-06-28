@@ -246,13 +246,16 @@ custom-color($stripe, $nav-bg, $nav-border, $nav-link, $nav-link-active)
 	.m-page
 		font-size: 36px
 
+		> .m-page-buttons
+			position: fixed
+
 	.m-header,
 	.m-navigation,
 	.m-page-title > p
 		display: none
 
 // Can't use this as long as browser vendors don't allow
-// scrolling of the element
+// scrolling of the element in fullscreen mode
 // .m-page:fullscreen
 // 	font-size: 36px
 // 	width: 100%
