@@ -55,7 +55,7 @@ body {
  * THEME
  *==========================================*/
 body {
-  background: #fff;
+  background: #fff url("/images/bg_congruent_pentagon.png");
 }
 /*==========================================
  * Breadcrumbs
@@ -170,16 +170,6 @@ body {
 .s-blue .m-navigation > ul > li > a:focus {
   background: #eaf2f9;
 }
-.s-blue .m-navigation > ul > li > a:active:hover {
-  background: #f2f7fb;
-}
-.s-blue .m-navigation > ul > li.active {
-  box-shadow: -2px 0 0 -1px #fff;
-}
-.s-blue .m-navigation > ul > li.active > a {
-  border-top-color: #b3d2ea;
-  border-bottom-color: #b3d2ea;
-}
 .s-blue .m-navigation > ul > li.active > a,
 .s-blue .m-navigation > ul > li.active > a:hover,
 .s-blue .m-navigation > ul > li.active > a:focus {
@@ -215,16 +205,6 @@ body {
 .s-yellow .m-navigation > ul > li > a:hover,
 .s-yellow .m-navigation > ul > li > a:focus {
   background: #fcf4e1;
-}
-.s-yellow .m-navigation > ul > li > a:active:hover {
-  background: #fdf7eb;
-}
-.s-yellow .m-navigation > ul > li.active {
-  box-shadow: -2px 0 0 -1px #fff;
-}
-.s-yellow .m-navigation > ul > li.active > a {
-  border-top-color: #f6d997;
-  border-bottom-color: #f6d997;
 }
 .s-yellow .m-navigation > ul > li.active > a,
 .s-yellow .m-navigation > ul > li.active > a:hover,
@@ -262,16 +242,6 @@ body {
 .s-green .m-navigation > ul > li > a:focus {
   background: #e6f4eb;
 }
-.s-green .m-navigation > ul > li > a:active:hover {
-  background: #edf7f1;
-}
-.s-green .m-navigation > ul > li.active {
-  box-shadow: -2px 0 0 -1px #fff;
-}
-.s-green .m-navigation > ul > li.active > a {
-  border-top-color: #aadcbb;
-  border-bottom-color: #aadcbb;
-}
 .s-green .m-navigation > ul > li.active > a,
 .s-green .m-navigation > ul > li.active > a:hover,
 .s-green .m-navigation > ul > li.active > a:focus {
@@ -307,16 +277,6 @@ body {
 .s-red .m-navigation > ul > li > a:hover,
 .s-red .m-navigation > ul > li > a:focus {
   background: #ffedec;
-}
-.s-red .m-navigation > ul > li > a:active:hover {
-  background: #fff7f6;
-}
-.s-red .m-navigation > ul > li.active {
-  box-shadow: -2px 0 0 -1px #fff;
-}
-.s-red .m-navigation > ul > li.active > a {
-  border-top-color: #fdb8b4;
-  border-bottom-color: #fdb8b4;
 }
 .s-red .m-navigation > ul > li.active > a,
 .s-red .m-navigation > ul > li.active > a:hover,
@@ -354,16 +314,6 @@ body {
 .s-purple .m-navigation > ul > li > a:focus {
   background: #f9eef7;
 }
-.s-purple .m-navigation > ul > li > a:active:hover {
-  background: #fcf6fa;
-}
-.s-purple .m-navigation > ul > li.active {
-  box-shadow: -2px 0 0 -1px #fff;
-}
-.s-purple .m-navigation > ul > li.active > a {
-  border-top-color: #e7c2e0;
-  border-bottom-color: #e7c2e0;
-}
 .s-purple .m-navigation > ul > li.active > a,
 .s-purple .m-navigation > ul > li.active > a:hover,
 .s-purple .m-navigation > ul > li.active > a:focus {
@@ -399,16 +349,6 @@ body {
 .s-cyan .m-navigation > ul > li > a:hover,
 .s-cyan .m-navigation > ul > li > a:focus {
   background: #e4f3f6;
-}
-.s-cyan .m-navigation > ul > li > a:active:hover {
-  background: #ecf7f9;
-}
-.s-cyan .m-navigation > ul > li.active {
-  box-shadow: -2px 0 0 -1px #fff;
-}
-.s-cyan .m-navigation > ul > li.active > a {
-  border-top-color: #a2d8e3;
-  border-bottom-color: #a2d8e3;
 }
 .s-cyan .m-navigation > ul > li.active > a,
 .s-cyan .m-navigation > ul > li.active > a:hover,
@@ -446,16 +386,6 @@ body {
 .s-orange .m-navigation > ul > li > a:focus {
   background: #fef1e6;
 }
-.s-orange .m-navigation > ul > li > a:active:hover {
-  background: #fef6ef;
-}
-.s-orange .m-navigation > ul > li.active {
-  box-shadow: -2px 0 0 -1px #fff;
-}
-.s-orange .m-navigation > ul > li.active > a {
-  border-top-color: #facba3;
-  border-bottom-color: #facba3;
-}
 .s-orange .m-navigation > ul > li.active > a,
 .s-orange .m-navigation > ul > li.active > a:hover,
 .s-orange .m-navigation > ul > li.active > a:focus {
@@ -491,16 +421,6 @@ body {
 .s-magenta .m-navigation > ul > li > a:hover,
 .s-magenta .m-navigation > ul > li > a:focus {
   background: #fdeff5;
-}
-.s-magenta .m-navigation > ul > li > a:active:hover {
-  background: #fef8fb;
-}
-.s-magenta .m-navigation > ul > li.active {
-  box-shadow: -2px 0 0 -1px #fff;
-}
-.s-magenta .m-navigation > ul > li.active > a {
-  border-top-color: #f6bed9;
-  border-bottom-color: #f6bed9;
 }
 .s-magenta .m-navigation > ul > li.active > a,
 .s-magenta .m-navigation > ul > li.active > a:hover,
@@ -538,16 +458,6 @@ body {
 .s-blue-mist .m-navigation > ul > li > a:focus {
   background: #eef1f8;
 }
-.s-blue-mist .m-navigation > ul > li > a:active:hover {
-  background: #f5f7fb;
-}
-.s-blue-mist .m-navigation > ul > li.active {
-  box-shadow: -2px 0 0 -1px #fff;
-}
-.s-blue-mist .m-navigation > ul > li.active > a {
-  border-top-color: #c0cbe6;
-  border-bottom-color: #c0cbe6;
-}
 .s-blue-mist .m-navigation > ul > li.active > a,
 .s-blue-mist .m-navigation > ul > li.active > a:hover,
 .s-blue-mist .m-navigation > ul > li.active > a:focus {
@@ -583,16 +493,6 @@ body {
 .s-purple-mist .m-navigation > ul > li > a:hover,
 .s-purple-mist .m-navigation > ul > li > a:focus {
   background: #f3f0f8;
-}
-.s-purple-mist .m-navigation > ul > li > a:active:hover {
-  background: #f8f7fb;
-}
-.s-purple-mist .m-navigation > ul > li.active {
-  box-shadow: -2px 0 0 -1px #fff;
-}
-.s-purple-mist .m-navigation > ul > li.active > a {
-  border-top-color: #d2c6e4;
-  border-bottom-color: #d2c6e4;
 }
 .s-purple-mist .m-navigation > ul > li.active > a,
 .s-purple-mist .m-navigation > ul > li.active > a:hover,
@@ -630,16 +530,6 @@ body {
 .s-tan .m-navigation > ul > li > a:focus {
   background: #f4f0ee;
 }
-.s-tan .m-navigation > ul > li > a:active:hover {
-  background: #f8f6f4;
-}
-.s-tan .m-navigation > ul > li.active {
-  box-shadow: -2px 0 0 -1px #fff;
-}
-.s-tan .m-navigation > ul > li.active > a {
-  border-top-color: #d9cdc5;
-  border-bottom-color: #d9cdc5;
-}
 .s-tan .m-navigation > ul > li.active > a,
 .s-tan .m-navigation > ul > li.active > a:hover,
 .s-tan .m-navigation > ul > li.active > a:focus {
@@ -675,16 +565,6 @@ body {
 .s-lemon-lime .m-navigation > ul > li > a:hover,
 .s-lemon-lime .m-navigation > ul > li > a:focus {
   background: #f2f4e2;
-}
-.s-lemon-lime .m-navigation > ul > li > a:active:hover {
-  background: #f6f7ea;
-}
-.s-lemon-lime .m-navigation > ul > li.active {
-  box-shadow: -2px 0 0 -1px #fff;
-}
-.s-lemon-lime .m-navigation > ul > li.active > a {
-  border-top-color: #d8dc9f;
-  border-bottom-color: #d8dc9f;
 }
 .s-lemon-lime .m-navigation > ul > li.active > a,
 .s-lemon-lime .m-navigation > ul > li.active > a:hover,
@@ -722,16 +602,6 @@ body {
 .s-apple .m-navigation > ul > li > a:focus {
   background: #ecf4e8;
 }
-.s-apple .m-navigation > ul > li > a:active:hover {
-  background: #f2f7ef;
-}
-.s-apple .m-navigation > ul > li.active {
-  box-shadow: -2px 0 0 -1px #fff;
-}
-.s-apple .m-navigation > ul > li.active > a {
-  border-top-color: #bfdbb2;
-  border-bottom-color: #bfdbb2;
-}
 .s-apple .m-navigation > ul > li.active > a,
 .s-apple .m-navigation > ul > li.active > a:hover,
 .s-apple .m-navigation > ul > li.active > a:focus {
@@ -767,16 +637,6 @@ body {
 .s-teal .m-navigation > ul > li > a:hover,
 .s-teal .m-navigation > ul > li > a:focus {
   background: #def3f0;
-}
-.s-teal .m-navigation > ul > li > a:active:hover {
-  background: #e6f6f3;
-}
-.s-teal .m-navigation > ul > li.active {
-  box-shadow: -2px 0 0 -1px #fff;
-}
-.s-teal .m-navigation > ul > li.active > a {
-  border-top-color: #94d9cf;
-  border-bottom-color: #94d9cf;
 }
 .s-teal .m-navigation > ul > li.active > a,
 .s-teal .m-navigation > ul > li.active > a:hover,
@@ -814,16 +674,6 @@ body {
 .s-silver .m-navigation > ul > li > a:focus {
   background: #f1f3f5;
 }
-.s-silver .m-navigation > ul > li > a:active:hover {
-  background: #f7f8f9;
-}
-.s-silver .m-navigation > ul > li.active {
-  box-shadow: -2px 0 0 -1px #fff;
-}
-.s-silver .m-navigation > ul > li.active > a {
-  border-top-color: #cbd3da;
-  border-bottom-color: #cbd3da;
-}
 .s-silver .m-navigation > ul > li.active > a,
 .s-silver .m-navigation > ul > li.active > a:hover,
 .s-silver .m-navigation > ul > li.active > a:focus {
@@ -860,16 +710,6 @@ body {
 .s-red-chalk .m-navigation > ul > li > a:focus {
   background: #feecef;
 }
-.s-red-chalk .m-navigation > ul > li > a:active:hover {
-  background: #fef5f7;
-}
-.s-red-chalk .m-navigation > ul > li.active {
-  box-shadow: -2px 0 0 -1px #fff;
-}
-.s-red-chalk .m-navigation > ul > li.active > a {
-  border-top-color: #f8b4c1;
-  border-bottom-color: #f8b4c1;
-}
 .s-red-chalk .m-navigation > ul > li.active > a,
 .s-red-chalk .m-navigation > ul > li.active > a:hover,
 .s-red-chalk .m-navigation > ul > li.active > a:focus {
@@ -905,16 +745,6 @@ body {
 .s-none .m-navigation > ul > li > a:hover,
 .s-none .m-navigation > ul > li > a:focus {
   background: #f0f0f0;
-}
-.s-none .m-navigation > ul > li > a:active:hover {
-  background: #f5f5f5;
-}
-.s-none .m-navigation > ul > li.active {
-  box-shadow: -2px 0 0 -1px #fff;
-}
-.s-none .m-navigation > ul > li.active > a {
-  border-top-color: #cdcdcd;
-  border-bottom-color: #cdcdcd;
 }
 .s-none .m-navigation > ul > li.active > a,
 .s-none .m-navigation > ul > li.active > a:hover,
