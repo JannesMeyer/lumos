@@ -54,8 +54,11 @@ body {
 /*==========================================
  * THEME
  *==========================================*/
-body {
+html {
   background: #fff url("/images/bg_congruent_pentagon.png");
+}
+body {
+  background: initial;
 }
 /*==========================================
  * Breadcrumbs

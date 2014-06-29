@@ -290,7 +290,7 @@ var MyHTML = React.createClass({
 
 	getInitialState() {
 		return {
-			color: 'apple'
+			color: 'purple-mist'
 		};
 	},
 
