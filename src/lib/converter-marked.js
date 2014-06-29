@@ -1,7 +1,14 @@
 module marked from 'marked'
 module hljs from 'highlight.js'
 
-// https://github.com/chjj/marked/blob/master/README.md
+/*
+	Marked:
+	https://github.com/chjj/marked
+
+	Other parsers:
+	https://github.com/evilstreak/markdown-js
+*/
+
 marked.setOptions({
 	gfm: true,
 	breaks: true,

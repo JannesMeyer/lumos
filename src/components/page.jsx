@@ -367,7 +367,7 @@ var MyHTML = React.createClass({
 					<title>{data.title}</title>
 					<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 					<meta name="viewport" content="width=device-width, initial-scale=1" />
-					<link rel="stylesheet" href="/stylesheets/bootstrap.min.css" />
+					<link rel="stylesheet" href="/stylesheets/bootstrap.css" />
 					<link rel="stylesheet" href="/stylesheets/theme-one.css" />
 					<link rel="stylesheet" href="/stylesheets/hljs/github.css" />
 					<Favicon color={this.state.color} template="/images/favicon-template.png" />
