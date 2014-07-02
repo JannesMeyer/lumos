@@ -183,14 +183,21 @@ When installing chokidar/fsevents:
 
 # Inspired by
 
-- Theme
-	- OneNote
-	- [maxvoltar](http://maxvoltar.com/)
-	- [warpedvisions](http://warpedvisions.org/)
-- Functionality
-	- OneNote
-	- [Luminos](https://menteslibres.net/luminos/)
-	- [werc](http://werc.cat-v.org/)
-	- [Tagspaces](http://www.tagspaces.org/)
-	- [Laverna](https://laverna.cc/)
-	- [nodewiki](https://www.npmjs.org/package/nodewiki)
+Theme
+
+- OneNote
+- [maxvoltar](http://maxvoltar.com/)
+- [warpedvisions](http://warpedvisions.org/)
+
+Functionality
+
+- OneNote
+- [Luminos](https://menteslibres.net/luminos/)
+- [werc](http://werc.cat-v.org/)
+- [Tagspaces](http://www.tagspaces.org/)
+- [Laverna](https://laverna.cc/)
+- [nodewiki](https://www.npmjs.org/package/nodewiki)
+- [mil/markdown-tree](https://github.com/mil/markdown-tree)
+	- [Markdown Tree Example Site](http://markdown-tree.bladdo.net/)
+	- [Miles' Notes System](http://notes.bladdo.net/)
+- [khays/markdown-tree](https://github.com/khays/markdown-tree)
