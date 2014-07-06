@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "bluebird": "2.x",
+    "debug": "^1.0.2",
     "envify": "1.x",
     "express": "4.x",
     "highlight.js": "8.x",

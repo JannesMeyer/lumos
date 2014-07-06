@@ -1,102 +1,26 @@
 #!/usr/bin/env node --harmony
-'use strict';
 
-var config = require('../package.json').config;
-var baseUrl = 'http://notes';
-
-// Understand command line arguments
 var commands = {
-	serve: function(args) {
-		var app = require('../dist/app');
-
-		// TODO: make the port a command line argument
-		var port = process.env.PORT || config.defaultPort;
-		app.listen(port, 'localhost', function() {
-			console.log('Listening on port', port);
-		});
-	},
-
-	view: function(args) {
-		var argv = require('minimist')(args);
-		var spawn = require('child_process').spawn;
-
-		if (argv._.length === 0) {
-			throw new Error('Not enough arguments');
-		}
-
-		var pathname;
-		// convert to pathname
-		if (argv['base-path']) {
-			var basePath = argv['base-path'];
-			var absPath = argv._[0];
-
-			if (absPath.startsWith(basePath)) {
-				var baseStripped = absPath.substring(basePath.length);
-				pathname = (baseStripped.startsWith('/') ? '' : '/') + baseStripped;
-			} else {
-				throw new Error('The provided path does not start with <base-path>');
-			}
-		} else {
-			pathname = '/' + argv._[0];
-		}
-
-		// Strip "(index).md" from the end
-		if (pathname.endsWith(config.indexFile)) {
-			pathname = pathname.slice(0, -config.indexFile.length);
-		} else if (pathname.endsWith(config.mdSuffix)) {
-			pathname = pathname.slice(0, -config.mdSuffix.length);
-		}
-
-		// Open URL in browser
-		var url = baseUrl + pathname;
-		console.log('Opening...', url);
-		// TODO: make this cross-platform, but without exec()
-		// https://www.npmjs.org/package/open
-		spawn('open', [url], {stdio: 'inherit'});
-	},
-
-	edit: function(args) {
-		var open = require('../dist/open');
-		var argv = require('minimist')(args);
-
-		if (argv._.length === 0) {
-			open.openEditor();
-		} else {
-			var filePath = argv._[0];
-			// escape() will not encode: @*/+
-			// (encodes Unicode characters to Unicode escape sequences, too)
-			// encodeURI() will not encode: ~!@#$&*()=:/,;?+'
-			// encodeURIComponent() will not encode: ~!*()'
-			if (argv['decode-url']) {
-				filePath = decodeURI(filePath);
-			}
-
-			open.openEditor(filePath);
-		}
-	},
-
-	diary: function(days) {
-		require('../dist/open').openDiary(days);
-	}
+	serve: '../dist/cmd-serve',
+	view: '../dist/cmd-view',
+	edit: '../dist/cmd-edit',
+	diary: '../dist/cmd-diary'
 };
 
-function showBaseHelp() {
-	console.log('usage: lumos <command> [<args>]\n');
-	console.log('Available commands:');
-	Object.keys(commands).forEach(function(command) {
-		console.log('   ', command)
-	});
+function getHelp() {
+	return 'usage: lumos <command> [<args>]\n'
+	     + '\n'
+	     + 'Available commands:\n'
+	     + '   ' + Object.keys(commands).join('\n   ');
 }
 
-// Parse command line arguments
-function parseArgs(args) {
-	if (args.length < 1 || !commands.hasOwnProperty(args[0])) {
-		showBaseHelp();
-		return;
-	}
-	// Execute function
-	var command = args.shift();
-	commands[command](args);
-}
+// Main
+var args = process.argv.slice(2);
+var commandPath = commands[args.shift()];
 
-parseArgs(process.argv.slice(2));
+if (commandPath) {
+	// Execute command
+	require(commandPath).cmd(args);
+} else {
+	console.log(getHelp());
+}

@@ -39,7 +39,7 @@ html, body
  *==========================================*/
 
 html
-	background: $content-bg url('/images/bg_congruent_pentagon.png')
+	background: $content-bg //url('/images/bg_congruent_pentagon.png')
 
 body
 	background: initial // override Bootstrap
@@ -153,11 +153,11 @@ custom-color($stripe, $nav-bg, $nav-border, $nav-link, $nav-link-active)
 					background: lighten($nav-bg, 2)
 
 			&.active
-				// box-shadow: -2px 0 0 -1px $content-bg
+				box-shadow: -2px 0 0 -1px $content-bg
 
 				> a
-					// border-top-color: $nav-border
-					// border-bottom-color: $nav-border
+					border-top-color: $nav-border
+					border-bottom-color: $nav-border
 				> a,
 				> a:hover,
 				> a:focus

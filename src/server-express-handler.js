@@ -2,6 +2,7 @@ module path from 'path'
 module fs from 'fs'
 module converter from './lib/converter-marked'
 module denodeify from './lib/denodeify'
+module dateTool from './lib/date-tool';
 module layout from './templates/layout'
 
 import { config } from '../package.json'
@@ -90,9 +91,8 @@ function handleRequest(req, res, next) {
 			data.editURL = encodeURI(config.editURLProtocol + requestPathMd.absolute).replace(/'/g, '%27');
 			data.content = converter.makeHtml(file.content);
 
-			var datetool = require('./lib/date-tool');
-			var creationDate = datetool.dateInCustomFormat(file.stat.birthtime);
-			data.creationDate = datetool.dayAsString(creationDate);
+			var creationDate = dateTool.createFromDate(file.stat.birthtime);
+			data.creationDate = dateTool.toString(creationDate);
 			data.creationTime = '';
 
 			// Read directory
@@ -183,4 +183,4 @@ function mHTTPError(status, message) {
 	return error;
 }
 
-module.exports = handleRequest;
+export default handleRequest;

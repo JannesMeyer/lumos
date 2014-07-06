@@ -1,7 +1,7 @@
 module path from 'path';
 module express from 'express';
 module morgan from 'morgan';
-module serve from './serve';
+module requestHandler from './server-express-handler';
 module errorTemplate from './templates/error';
 
 var app = express();
@@ -13,8 +13,8 @@ app.use(morgan(':method :url :status (done after :response-time ms)'));
 var oneYear = 31557600000;
 app.use(express.static(path.join(__dirname, '../public'), { maxAge: oneYear }));
 
-// the app
-app.use(serve);
+// the lumos app
+app.use(requestHandler);
 
 // development error handler
 app.use(function(err, req, res, next) {
@@ -22,4 +22,4 @@ app.use(function(err, req, res, next) {
     res.end(errorTemplate.render(err));
 });
 
-module.exports = app;
+export default app;

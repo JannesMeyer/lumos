@@ -1,7 +1,7 @@
+var spawn = require('child_process').spawn;
+
 var child;
 function startNode() {
-	var spawn = require('child_process').spawn;
-
 	process.env.LUMOSPATH = '/Users/jannes/Dropbox/Notes';
 	var options = {
 		env: process.env,
@@ -14,13 +14,13 @@ function stopNode() {
 		child.kill();
 	}
 }
+process.on('exit', stopNode);
 
 exports.dep = ['build-js-server'];
 exports.fn = function() {
 	stopNode();
 	startNode();
 };
-process.on('exit', stopNode);
 
 
 // gulp.task('node-inspector', function() {

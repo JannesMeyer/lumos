@@ -18,4 +18,4 @@ function denodeify(thisArg, nodeFn) {
 	};
 };
 
-module.exports = denodeify;
+export default denodeify;

@@ -1,4 +1,4 @@
-exports.dep = ['build-all', 'node', 'livereload'];
+exports.dep = ['build-all', 'node'];
 exports.fn = function() {
 	var gulp = require('gulp');
 	var config = require('./gulp.config.json');
