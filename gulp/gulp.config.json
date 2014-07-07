@@ -15,8 +15,8 @@
 		}
 	},
 	"watch": {
-		"styles": "./stylus/**/*.styl",
-		"public": "./public/**"
+		"styles": "./stylus/",
+		"javascripts": "./src/"
 	},
 	"errorTemplate": {
 		"title": "<%= error.plugin %>",
