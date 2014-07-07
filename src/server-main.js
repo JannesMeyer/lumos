@@ -1,25 +1,31 @@
 module path from 'path';
 module express from 'express';
+module http from 'http';
 module morgan from 'morgan';
 module requestHandler from './server-express-handler';
 module errorTemplate from './templates/error';
 
-var app = express();
+function startServer(options) {
+	// options.directory
+	// options.port
 
-// logger
-app.use(morgan(':method :url :status (done after :response-time ms)'));
+	var app = express();
 
-// static routes
-var oneYear = 31557600000;
-app.use(express.static(path.join(__dirname, '../public'), { maxAge: oneYear }));
+	app.use(morgan(':method :url :status (done after :response-time ms)'));
 
-// the lumos app
-app.use(requestHandler);
+	app.use(express.static(path.join(__dirname, '../public'), { maxAge: 31557600000 }));
 
-// development error handler
-app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.end(errorTemplate.render(err));
-});
+	app.use(requestHandler(options.directory));
 
-export default app;
+	// development error handler
+	app.use(function(err, req, res, next) {
+		res.status(err.status || 500);
+		res.end(errorTemplate.render(err));
+	});
+
+	var server = http.createServer(app);
+	server.listen(options.port);
+	return server;
+}
+
+export default startServer;

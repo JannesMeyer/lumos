@@ -28,7 +28,7 @@ exports.fn = function(callback) {
 	// https://github.com/webpack/webpack-with-common-libs/blob/master/gulpfile.js
 
     webpack(webpackConfig, function(err, stats) {
-        if(err) {
+        if (err) {
 			console.error(err);
 			throw err;
         }
@@ -45,8 +45,8 @@ exports.fn = function(callback) {
 
     	// TODO: configuration error instead of compilation error
 
-        // Log error
-    	console.error(stats.toString({ colors: true }));
+        // debug:
+    	// console.error(stats.toString({ colors: true }));
 
         callback();
     });

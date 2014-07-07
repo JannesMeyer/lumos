@@ -24,7 +24,7 @@ fs.readdirSync(path.join(__dirname, gulpDir))
 		var taskName = path.basename(filename, '.js');
 		gulp.task(taskName, task.dep, task.fn);
 	} else {
-		console.warn('File', filename, 'does not have the right format. Skipping.');
+		console.warn('gulpfile: File', filename, 'does not have the right format. Skipping.');
 	}
 });
 

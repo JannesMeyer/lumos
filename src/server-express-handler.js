@@ -1,129 +1,63 @@
-module path from 'path'
-module fs from 'fs'
-module converter from './lib/converter-marked'
-module denodeify from './lib/denodeify'
+module path from 'path';
+module fs from 'fs';
+module Promise from 'bluebird';
+module converter from './lib/converter-marked';
 module dateTool from './lib/date-tool';
-module layout from './templates/layout'
+module layout from './templates/layout';
+fs = Promise.promisifyAll(fs);
 
-import { config } from '../package.json'
-import { SegmentedPath } from './classes/SegmentedPath'
-import { Directory } from './classes/Directory'
+import { config } from '../package.json';
+import { SegmentedPath } from './classes/SegmentedPath';
+import { Directory } from './classes/Directory';
 
-var fsStat     = denodeify(fs, fs.stat);
-var fsReadDir  = denodeify(fs, fs.readdir);
-var fsReadFile = denodeify(fs, fs.readFile);
+module.exports = function(baseDir) {
+	var baseDirName = path.basename(baseDir);
 
-var baseDir = process.env.LUMOSPATH || process.cwd(); // Default to current working directory
-var baseDirName = path.basename(baseDir);
+	return function(req, res, next) {
+		var processedPath = decodeURIComponent(req.path);
+		var requestPath = new SegmentedPath(baseDir, [processedPath]);
+		if (!requestPath.verifyDescendance()) {
+		    next(mMakeError(400, 'Bad Request'));
+		    return;
+		}
 
+		// Prepare data to render
+		var data = {
+			baseDirName: baseDirName
+			// title
+			// breadcrumbs
+			// items
+			// content
+		};
 
-function handleRequest(req, res, next) {
-	var processedPath = decodeURIComponent(req.path);
-	var requestPath = new SegmentedPath(baseDir, [processedPath]);
-	if (!requestPath.verifyDescendance()) {
-	    next(mMakeError(400, 'Bad Request'));
-	    return;
-	}
-
-	// Prepare data to render
-	var data = {
-		baseDirName: baseDirName
-		// title
-		// breadcrumbs
-		// items
-		// content
-	};
-
-	if (requestPath.isDir)
-	{
-		// Read directory
-		return readDir(requestPath)
-		.then(dir => {
-			data.breadcrumbs = requestPath.makeBreadcrumbs();
-			data.items = dir.files;
-			data.dirs = dir.dirs;
-			data.title = dir.path.name === '' ? baseDirName : dir.path.name;
-			if (dir.files.length > 0) {
-				data.nextItem = dir.files[0];
-			}
-			// Include index file if available
-			if (dir.hasFile(config.indexFile)) {
-				dir.removeFile(config.indexFile);
-				var indexPath = dir.path.makeDescendant(config.indexFile);
-				return readFile(indexPath)
-				.then(file => {
-					data.filePath = indexPath.absolute;
-					// Can't have spaces or quotes in AppleScript
-					data.editURL = encodeURI(config.editURLProtocol + indexPath.absolute).replace(/'/g, '%27');
-					data.content = converter.makeHtml(file.content);
-				});
-			}
-		}/*, err => {
-			// TODO: act accordingly based on error type (ENOENT)
-			throw mHTTPError(404, 'Directory Not Found');
-		}*/)
-		.then(() => {
-			var acceptHeader = req.get('Accept');
-			if (acceptHeader === 'application/json') {
-				res.set({
-					'Content-Type': 'application/json',
-					'Vary': 'Accept'
-				});
-				res.json(data);
-			} else {
-				res.end(layout.render(data));
-			}
-		})
-		.catch(err => next(err));
-	} else {
-		requestPath.makeFile();
-		var requestPathMd = requestPath.makeClone();
-		requestPathMd.setLeaf(requestPathMd.getLeaf() + config.mdSuffix);
-		requestPathMd.makeFile();
-		data.breadcrumbs = requestPathMd.makeBreadcrumbs();
-
-		// Read file
-		return readFile(requestPathMd)
-		.then(file => {
-			data.title = requestPathMd.name;
-			data.filePath = requestPathMd.absolute;
-			// Can't have spaces or quotes in AppleScript
-			data.editURL = encodeURI(config.editURLProtocol + requestPathMd.absolute).replace(/'/g, '%27');
-			data.content = converter.makeHtml(file.content);
-
-			var creationDate = dateTool.createFromDate(file.stat.birthtime);
-			data.creationDate = dateTool.toString(creationDate);
-			data.creationTime = '';
-
+		if (requestPath.isDir)
+		{
 			// Read directory
-			return readDir(requestPathMd.makeParent())
+			return readDir(requestPath)
 			.then(dir => {
-				dir.removeFile(config.indexFile);
+				data.breadcrumbs = requestPath.makeBreadcrumbs();
 				data.items = dir.files;
 				data.dirs = dir.dirs;
-
-				// Find active file
-				var activeItem;
-				for (var i = 0; i < data.items.length; ++i) {
-					var item = data.items[i];
-					// TODO: make this a normalized representation,
-					// so that there can be no mistake between
-					// folders and files
-					item.isActive = item.absolute === requestPathMd.absolute;
-					if (item.isActive) {
-						activeItem = i;
-						item.link = path.dirname(item.link);
-					}
+				data.title = dir.path.name === '' ? baseDirName : dir.path.name;
+				if (dir.files.length > 0) {
+					data.nextItem = dir.files[0];
 				}
-				var prevItem = activeItem - 1;
-				if (prevItem >= 0) {
-					data.prevItem = data.items[prevItem];
+				// Include index file if available
+				if (dir.hasFile(config.indexFile)) {
+					dir.removeFile(config.indexFile);
+					var indexPath = dir.path.makeDescendant(config.indexFile);
+					return readFile(indexPath)
+					.then(file => {
+						data.filePath = indexPath.absolute;
+						// Can't have spaces or quotes in AppleScript
+						data.editURL = encodeURI(config.editURLProtocol + indexPath.absolute).replace(/'/g, '%27');
+						data.content = converter.makeHtml(file.content);
+					});
 				}
-				var nextItem = activeItem + 1;
-				if (nextItem < data.items.length) {
-					data.nextItem = data.items[nextItem];
-				}
-			})
+			}/*, err => {
+				// TODO: act accordingly based on error type (ENOENT)
+				throw mHTTPError(404, 'Directory Not Found');
+			}*/)
 			.then(() => {
 				var acceptHeader = req.get('Accept');
 				if (acceptHeader === 'application/json') {
@@ -137,23 +71,87 @@ function handleRequest(req, res, next) {
 				}
 			})
 			.catch(err => next(err));
-		}, err => {
-			console.error(err);
-			// Document not found, try to deliver the file at the original path
-			return denodeify(res, res.sendfile)(requestPath.absolute);
-		})
-		.catch(err => {
-			next(err);
-			// console.error(err);
-			// next(mHTTPError(404, 'File Not Found'));
-		});
-	}
-}
+		} else {
+			requestPath.makeFile();
+			var requestPathMd = requestPath.makeClone();
+			requestPathMd.setLeaf(requestPathMd.getLeaf() + config.mdSuffix);
+			requestPathMd.makeFile();
+			data.breadcrumbs = requestPathMd.makeBreadcrumbs();
+
+			// Read file
+			return readFile(requestPathMd)
+			.then(file => {
+				data.title = requestPathMd.name;
+				data.filePath = requestPathMd.absolute;
+				// Can't have spaces or quotes in AppleScript
+				data.editURL = encodeURI(config.editURLProtocol + requestPathMd.absolute).replace(/'/g, '%27');
+				data.content = converter.makeHtml(file.content);
+
+				var creationDate = dateTool.createFromDate(file.stat.birthtime);
+				data.creationDate = dateTool.toString(creationDate);
+				data.creationTime = '';
+
+				// Read directory
+				return readDir(requestPathMd.makeParent())
+				.then(dir => {
+					dir.removeFile(config.indexFile);
+					data.items = dir.files;
+					data.dirs = dir.dirs;
+
+					// Find active file
+					var activeItem;
+					for (var i = 0; i < data.items.length; ++i) {
+						var item = data.items[i];
+						// TODO: make this a normalized representation,
+						// so that there can be no mistake between
+						// folders and files
+						item.isActive = item.absolute === requestPathMd.absolute;
+						if (item.isActive) {
+							activeItem = i;
+							item.link = path.dirname(item.link);
+						}
+					}
+					var prevItem = activeItem - 1;
+					if (prevItem >= 0) {
+						data.prevItem = data.items[prevItem];
+					}
+					var nextItem = activeItem + 1;
+					if (nextItem < data.items.length) {
+						data.nextItem = data.items[nextItem];
+					}
+				})
+				.then(() => {
+					var acceptHeader = req.get('Accept');
+					if (acceptHeader === 'application/json') {
+						res.set({
+							'Content-Type': 'application/json',
+							'Vary': 'Accept'
+						});
+						res.json(data);
+					} else {
+						res.end(layout.render(data));
+					}
+				})
+				.catch(err => next(err));
+			}, err => {
+				console.error(err);
+				// Document not found, try to deliver the file at the original path
+				res = Promise.promisifyAll(res);
+				return res.sendfileAsync(requestPath.absolute);
+			})
+			.catch(err => {
+				next(err);
+				// console.error(err);
+				// next(mHTTPError(404, 'File Not Found'));
+			});
+		}
+	};
+};
 
 function readDir(dirPath) {
 	var dir = new Directory(dirPath);
 
-	return fsStat(dirPath.absolute)
+	return fs.statAsync(dirPath.absolute)
 	.then(stat => {
 		if (!stat.isDirectory()) {
 			throw new Error('Is a file');
@@ -164,12 +162,12 @@ function readDir(dirPath) {
 }
 
 function readFile(filePath) {
-	return fsStat(filePath.absolute)
+	return fs.statAsync(filePath.absolute)
 	.then(stat => {
 		if (stat.isDirectory()) {
 			throw new Error('Is a directory');
 		}
-		return fsReadFile(filePath.absolute, { encoding: 'utf-8' })
+		return fs.readFileAsync(filePath.absolute, { encoding: 'utf-8' })
 		.then(content => ({ stat, content }));
 	});
 }
@@ -183,4 +181,4 @@ function mHTTPError(status, message) {
 	return error;
 }
 
-export default handleRequest;
+// export default handleRequest;
