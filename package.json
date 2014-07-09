@@ -44,7 +44,6 @@
     "gulp-traceur": "0.x",
     "gulp-util": "2.x",
     "jstransform": "5.x",
-    "node-notifier": "3.x",
     "react": "0.x",
     "webpack": "1.x"
   },

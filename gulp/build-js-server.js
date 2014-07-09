@@ -8,7 +8,7 @@ exports.fn = function() {
 	// var uglify = require('gulp-uglify');
 	// var streamify = require('gulp-streamify');
 	// var rename = require('gulp-rename');
-	var config = require('./gulp.config.json');
+	var config = require('./gulp.config');
 
 	return gulp.src(config.src.javascripts)
 		.pipe(plumber({ errorHandler: notify.onError(config.errorTemplate) }))
