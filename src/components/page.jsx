@@ -1,6 +1,6 @@
 /** @jsx React.DOM */
 
-module React from 'react'
+import React from 'react';
 
 // Master component
 var app;
