@@ -37,7 +37,6 @@
     "gulp-changed": "0.x",
     "gulp-livereload": "1.x",
     "gulp-minify-css": "0.x",
-    "gulp-notify": "1.x",
     "gulp-plumber": "0.x",
     "gulp-rename": "1.x",
     "gulp-stylus": "1.x",

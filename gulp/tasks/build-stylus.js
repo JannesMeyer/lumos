@@ -1,15 +1,16 @@
 exports.fn = function() {
 	var gulp = require('gulp');
-	var stylus = require('gulp-stylus');
 	var plumber = require('gulp-plumber');
-	var notify = require('gulp-notify');
+	var stylus = require('gulp-stylus');
 	var autoprefixer = require('gulp-autoprefixer');
 	// var rename = require('gulp-rename');
 	// var minifycss = require('gulp-minify-css');
 	var config = require('../gulp.config');
+	var debug = require('../../src/lib/debug');
+	debug.filename = 'stylus';
 
 	return gulp.src(config.src.styles)
-		.pipe(plumber({ errorHandler: notify.onError(config.errorTemplate) }))
+		.pipe(plumber({ errorHandler: debug }))
 		.pipe(stylus())
 		.pipe(autoprefixer('last 2 versions'))
 		.pipe(gulp.dest(config.dest.styles));

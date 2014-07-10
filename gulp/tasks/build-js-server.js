@@ -3,15 +3,15 @@
 exports.fn = function() {
 	var gulp = require('gulp');
 	var plumber = require('gulp-plumber');
-	var notify = require('gulp-notify');
 	var jstransform = require('../gulp-jstransform');
 	// var uglify = require('gulp-uglify');
 	// var streamify = require('gulp-streamify');
 	// var rename = require('gulp-rename');
 	var config = require('../gulp.config');
+	var debug = require('../../src/lib/debug');
 
 	return gulp.src(config.src.javascripts)
-		.pipe(plumber({ errorHandler: notify.onError(config.errorTemplate) }))
+		.pipe(plumber({ errorHandler: debug }))
 		.pipe(jstransform())
 		.pipe(gulp.dest(config.dest.javascripts));
 		// .pipe(rename({ suffix: '.min' }))

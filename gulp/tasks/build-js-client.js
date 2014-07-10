@@ -8,7 +8,6 @@ exports.fn = function(callback) {
 	var webpack = require('webpack');
 	var webpackConfig = require('../webpack.config');
 	var debug = require('../../src/lib/debug');
-	debug.filename = __filename;
 
 	webpack(webpackConfig, function(err, stats) {
 		if (err) {
@@ -17,11 +16,12 @@ exports.fn = function(callback) {
 		}
 
 		// https://github.com/webpack/webpack/blob/master/lib/Stats.js
-		stats.compilation.errors.forEach(function(cerr) {
-			cerr.error.fileName = cerr.module.userRequest;
-			debug(cerr.error);
+		stats.compilation.errors.forEach(function(cmplError) {
+			cmplError.error.fileName = cmplError.module.userRequest;
+			debug(cmplError.error);
 		});
 
+		// Log debug output
 		// console.log(stats.toString({ colors: true }));
 
 		return callback();

@@ -33,7 +33,10 @@ function error(err, options) {
 	var filename = err.fileName || exports.filename;
 	var location =  filename ? '[' + path.basename(filename) + '] ' : '';
 	var bell = options.bell ? '\u0007' : '';
-	var message = exports.stack ? err.stack : err.name + ': ' + err.message;
+	// if (options.bell) {
+	// 	process.stdout.write('\x07');
+	// }
+	var message = exports.stack || err.showStack ? err.stack : err.message; // err.name
 
 	console.error(stylize(location + message, 'red') + bell);
 }

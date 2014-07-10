@@ -4,6 +4,5 @@ var visitors = require('../mytransform').visitorList;
 module.exports = function(source) {
 	this.cacheable();
 
-	var es5 = transform(visitors, source); // { sourceMap: true, filename: 'source.js' }
-	return es5.code;
+	return transform(visitors, source).code; // { sourceMap: true, filename: 'source.js' }
 };
