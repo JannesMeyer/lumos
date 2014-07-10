@@ -1,8 +1,9 @@
 var debug, startServer, config, server;
 
 function importModules() {
-	debug = require('../../dist/lib/debug');
+	debug = require('../../src/lib/debug');
 	debug.filename = __filename;
+
 	startServer = require('../../dist/server-main');
 	config = require('../../package.json').config;
 }
@@ -19,11 +20,13 @@ function clearProperties(object) {
 
 exports.dep = ['build-js-server'];
 exports.fn = function() {
+	// Stop server, if it's already running
 	if (server) {
 		server.close();
 		forgetModules();
 	}
 
+	// Import files and start server
 	try {
 		importModules();
 		server = startServer({
@@ -33,5 +36,4 @@ exports.fn = function() {
 	} catch(err) {
 		debug(err);
 	}
-
 };

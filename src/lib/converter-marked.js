@@ -1,5 +1,5 @@
-module marked from 'marked'
-module hljs from 'highlight.js'
+import marked from 'marked';
+import hljs from 'highlight.js';
 
 /*
 	Marked:

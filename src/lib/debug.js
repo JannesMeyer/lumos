@@ -1,12 +1,14 @@
-import util from 'util';
-import path from 'path';
+// ES5
+
+var util = require('util');
+var path = require('path');
 
 /*
-	Usage:
-
-	var debug = require('./lib/debug');
-	debug.filename = __filename;
-	debug.stack = true;
+ * Usage:
+ *
+ * var debug = require('./lib/debug');
+ * debug.filename = __filename;
+ * debug.stack = true;
  */
 
 // https://github.com/joyent/node/blob/master/lib/util.js
@@ -25,10 +27,15 @@ module.exports = exports = function log(obj, options) {
 }
 
 function error(err, options) {
+	if (options === undefined) { options = {}; }
+	if (options.bell === undefined) { options.bell = true; }
+
 	var filename = err.fileName || exports.filename;
 	var location =  filename ? '[' + path.basename(filename) + '] ' : '';
+	var bell = options.bell ? '\u0007' : '';
 	var message = exports.stack ? err.stack : err.name + ': ' + err.message;
-	console.error(stylize(location + message, 'red'));
+
+	console.error(stylize(location + message, 'red') + bell);
 }
 exports.error = error;
 

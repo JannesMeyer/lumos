@@ -4,19 +4,12 @@ module.exports = {
 		styles: './stylus/*.styl'
 	},
 	dest: {
-		javascripts: './dist/',
-		styles: './public/stylesheets/'
-	},
-	webpack: {
-		entry: './src/browser-main.js',
-		output: {
-			path: './public/javascripts/',
-		    filename: '[name].bundle.js'
-		}
+		javascripts: './dist',
+		styles: './public/stylesheets'
 	},
 	watch: {
-		styles: './stylus/',
-		javascripts: './src/'
+		styles: './stylus',
+		javascripts: './src'
 	},
 	errorTemplate: {
 		title: '<%= error.fileName %>',

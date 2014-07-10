@@ -1,5 +1,4 @@
 var path = require('path');
-var config = require('./gulp.config');
 
 function getDir(dir) {
 	return path.join(__dirname, '..', dir);
@@ -7,8 +6,11 @@ function getDir(dir) {
 
 module.exports = {
 	cache: true,
-	entry: config.webpack.entry,
-	output: config.webpack.output,
+	entry: './src/browser-main.js',
+	output: {
+		path: './public/javascripts/',
+		filename: '[name].bundle.js'
+	},
 	module: {
 		loaders: [
 			{ test: /\.jsx$/, loader:  'es6-loader' },

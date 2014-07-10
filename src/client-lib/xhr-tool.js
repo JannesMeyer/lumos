@@ -1,4 +1,4 @@
-module Promise from 'bluebird'
+import Promise from 'bluebird';
 
 /*
 

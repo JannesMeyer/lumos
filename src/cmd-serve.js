@@ -1,5 +1,5 @@
-module minimist from 'minimist';
-module startServer from './server-main';
+import minimist from 'minimist';
+import startServer from './server-main';
 import { config } from '../package.json';
 
 export function cmd(args) {

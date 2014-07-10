@@ -1,8 +1,8 @@
-var fs = require('fs');
-var debounce = require('../dist/lib/debounce');
+import fs from 'fs';
+import debounce from './debounce';
 
 function watch(dir, changeHandler) {
 	fs.watch(dir, { recursive: true }, debounce(changeHandler, 100));
 }
 
-module.exports = watch;
+export default watch;

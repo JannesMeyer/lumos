@@ -1,50 +1,9 @@
-module path from 'path'
-
-module fs from 'fs'
-module crypto from 'crypto'
-module denodeify from '../lib/denodeify'
-import { config } from '../../package.json'
-import { SegmentedPath } from './SegmentedPath'
-
-var fsStat     = denodeify(fs, fs.stat);
-var fsReadDir  = denodeify(fs, fs.readdir);
-
-/* accepts parameters
- * h  Object = {h:x, s:y, v:z}
- * OR
- * h, s, v
-*/
-function HSVtoRGB(h, s, v) {
-    var r, g, b, i, f, p, q, t;
-    if (h && s === undefined && v === undefined) {
-        s = h.s, v = h.v, h = h.h;
-    }
-    i = Math.floor(h * 6);
-    f = h * 6 - i;
-    p = v * (1 - s);
-    q = v * (1 - f * s);
-    t = v * (1 - (1 - f) * s);
-    switch (i % 6) {
-        case 0: r = v, g = t, b = p; break;
-        case 1: r = q, g = v, b = p; break;
-        case 2: r = p, g = v, b = t; break;
-        case 3: r = p, g = q, b = v; break;
-        case 4: r = t, g = p, b = v; break;
-        case 5: r = v, g = p, b = q; break;
-    }
-    return {
-        r: Math.floor(r * 255),
-        g: Math.floor(g * 255),
-        b: Math.floor(b * 255)
-    };
-}
-
-function colorizeName(name) {
-	var hash = crypto.createHash('md5').update(name).digest('binary');
-	var hue = hash.charCodeAt(2) / 255;
-	var color = HSVtoRGB(hue, 0.4, 1);
-	return `rgb(${color.r}, ${color.g}, ${color.b})`;
-}
+import path from 'path';
+import fs from 'fs';
+import Promise from 'bluebird';
+import { config } from '../../package.json';
+import { SegmentedPath } from './SegmentedPath';
+fs = Promise.promisifyAll(fs);
 
 /**
  * A class that represents a directory
@@ -59,11 +18,11 @@ export class Directory {
 
 	readContents() {
 		var contents;
-		return fsReadDir(this.path.absolute)
+		return fs.readdirAsync(this.path.absolute)
 		.then(names => {
 			contents = names.map(name => new SegmentedPath(this.path.absolute, [name]));
 			// Find out whether these are directories or files
-			var promises = contents.map(item => fsStat(item.absolute));
+			var promises = contents.map(item => fs.statAsync(item.absolute));
 			return Promise.all(promises);
 		})
 		.then(stats => {
@@ -72,7 +31,6 @@ export class Directory {
 			contents.forEach(function(item, i) {
 				item.isDir = stats[i].isDirectory();
 				if (item.isDir) {
-					item.color = colorizeName(item.name);
 					item.link = encodeURIComponent(item.name) + '/';
 				} else {
 					item.makeFile();
@@ -90,9 +48,9 @@ export class Directory {
 					break;
 				}
 			}
-
 			this.dirs = contents.slice(0, i);
 			this.files = contents.slice(i);
+
 			return this;
 		});
 	}

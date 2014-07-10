@@ -1,14 +1,13 @@
-module path from 'path';
-module fs from 'fs';
-module Promise from 'bluebird';
-module converter from './lib/converter-marked';
-module dateTool from './lib/date-tool';
-module layout from './templates/layout';
-fs = Promise.promisifyAll(fs);
-
+import fs from 'fs';
+import path from 'path';
+import Promise from 'bluebird';
+import converter from './lib/converter-marked';
+import dateTool from './lib/date-tool';
+import layout from './templates/layout';
 import { config } from '../package.json';
 import { SegmentedPath } from './classes/SegmentedPath';
 import { Directory } from './classes/Directory';
+fs = Promise.promisifyAll(fs);
 
 module.exports = function(baseDir) {
 	var baseDirName = path.basename(baseDir);

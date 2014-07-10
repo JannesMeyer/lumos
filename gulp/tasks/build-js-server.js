@@ -16,5 +16,5 @@ exports.fn = function() {
 		.pipe(gulp.dest(config.dest.javascripts));
 		// .pipe(rename({ suffix: '.min' }))
 		// .pipe(streamify(uglify()))
-		// .pipe(gulp.dest(config.dest.clientJS));
+		// .pipe(gulp.dest(config.dest.javascripts));
 };

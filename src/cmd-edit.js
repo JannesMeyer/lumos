@@ -1,9 +1,10 @@
-module Promise from 'bluebird';
-var fs = Promise.promisifyAll(require('fs'));
-module path from 'path';
-module childProcess from 'child_process';
-module dateTool from './lib/date-tool';
+import fs from 'fs';
+import path from 'path';
+import Promise from 'bluebird';
+import childProcess from 'child_process';
+import dateTool from './lib/date-tool';
 import { config } from '../package.json';
+fs = Promise.promisifyAll(fs);
 
 function isDefined(value) {
 	return value !== undefined;

@@ -1,4 +1,4 @@
-module minimist from 'minimist';
+import minimist from 'minimist';
 import { spawn } from 'child_process';
 import { config } from '../package.json';
 

@@ -1,4 +1,4 @@
-module path from 'path'
+import path from 'path';
 
 /**
  * Represents a path that is relative to a base path

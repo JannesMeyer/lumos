@@ -1,7 +1,9 @@
-// module Promise from 'bluebird'
+// import Promise from 'bluebird';
 // TODO: lazy-loading of denodified functions
 
-// Convert node.js async functions into Promises
+/*
+ * Converts node's async functions into Promises
+ */
 function denodeify(thisArg, nodeFn) {
 	return function() {
 		var args = Array.prototype.slice.call(arguments);
