@@ -19,7 +19,7 @@ module.exports = {
 		javascripts: './src/'
 	},
 	errorTemplate: {
-		title: '<%= error.plugin %>: <%= error.filename %>',
+		title: '<%= error.fileName %>',
 		message: '<%= error.message %>'
 	}
 };

@@ -14,7 +14,7 @@ module.exports = function() {
 				var es5 = jstransform.transform(visitors, file.contents.toString());
 			} catch(err) {
 				err.plugin = 'jstransfrom';
-				err.filename = file.relative;
+				err.fileName = file.relative;
 				this.emit('error', err);
 				return callback();
 			}

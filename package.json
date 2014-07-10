@@ -7,7 +7,7 @@
   "bin": "./bin/lumos",
   "scripts": {
     "start": "./bin/lumos serve",
-    "prepublish": "gulp build-all"
+    "prepublish": "gulp build"
   },
   "config": {
     "defaultPort": 9000,
