@@ -8,7 +8,7 @@ module.exports = {
 	cache: true,
 	entry: './src/browser-main.js',
 	output: {
-		path: './public/javascripts/',
+		path: './public/a2b8e37dbe533b/javascripts/',
 		filename: '[name].bundle.js'
 	},
 	module: {

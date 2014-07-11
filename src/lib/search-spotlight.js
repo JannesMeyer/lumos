@@ -1,22 +1,29 @@
-import { spawn } from 'child_process'
+import Promise from 'bluebird';
+import { execFile } from 'child_process';
 
-var mdfind_process;
+function buildQueryWith(terms) {
+	// var query = 'kMDItemContentType == net.daringfireball.markdown';
+	// terms.forEach((term, i) => {
+	// 	term = term.replace(/["']/g, '\\$&');
+	// 	var isLast = (i === terms.length - 1);
+	// 	var wildcard = isLast ? '*' : '';
+	// 	query += ` && (kMDItemDisplayName == "${term}${wildcard}"cdwt || kMDItemTextContent == "${term}${wildcard}"cdwt)`;
+	// });
+	// return query;
 
-export function search() {
-	return 'test';
+	terms = terms.join(' ').replace(/["']/g, '\\$&');
+	return `kMDItemContentType == net.daringfireball.markdown && (** = "${terms}*"cdwt)`;
 }
 
-/*
-http://labs.hoffmanlabs.com/node/1723
+function search(directory, terms) {
+	return new Promise(function(resolve, reject) {
+		execFile('mdfind', ['-onlyin', directory, buildQueryWith(terms)], function(error, stdout, stderr) {
+			if (error) {
+				return reject(error);
+			}
 
-mdfind 'kMDItemDisplayName == "*YourTargetFilename*"cd'
-
-List metadata:
-mdls -name 'kMDItemFSCreationDate' -raw [Filename]
-
-mdls /Applications/iMovie.app -name kMDItemCFBundleIdentifier /Applications/iMovie.app
-mdfind kMDItemAppStoreHasReceipt=1
-mdfind kMDItemAppStoreCategory=Games
-mdls /Applications/iMovie.app -name kMDItemVersion /Applications/iMovie.app
-mdfind kMDItemContentType="com.apple.application-bundle"
-*/
+			resolve((stdout === '') ? [] : stdout.trim().split('\n'));
+		});
+	});
+}
+export default search;

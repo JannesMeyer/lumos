@@ -5,14 +5,10 @@ module.exports = {
 	},
 	dest: {
 		javascripts: './dist',
-		styles: './public/stylesheets'
+		styles: './public/a2b8e37dbe533b/stylesheets'
 	},
 	watch: {
 		styles: './stylus',
 		javascripts: './src'
-	},
-	errorTemplate: {
-		title: '<%= error.fileName %>',
-		message: '<%= error.message %>'
 	}
 };
