@@ -13,8 +13,11 @@ export function cmd(args) {
 
 	search(directory, args)
 	.then(results => {
+		results.slice(0, 10).forEach(result => {
+			console.log(result);
+		});
+		console.log();
 		console.timeEnd('command');
-		debug(results.slice(0, 10));
 	})
 	.catch(debug);
 }

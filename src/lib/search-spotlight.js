@@ -1,7 +1,7 @@
 import Promise from 'bluebird';
 import { execFile } from 'child_process';
 
-function buildQueryWith(terms) {
+function buildQuery(terms) {
 	// var query = 'kMDItemContentType == net.daringfireball.markdown';
 	// terms.forEach((term, i) => {
 	// 	term = term.replace(/["']/g, '\\$&');
@@ -16,13 +16,21 @@ function buildQueryWith(terms) {
 }
 
 function search(directory, terms) {
-	return new Promise(function(resolve, reject) {
-		execFile('mdfind', ['-onlyin', directory, buildQueryWith(terms)], function(error, stdout, stderr) {
-			if (error) {
-				return reject(error);
-			}
+	// directory must not end in a slash
+	if (directory.endsWith('/')) {
+		directory = directory.replace(/\/+$/, '');
+	}
 
-			resolve((stdout === '') ? [] : stdout.trim().split('\n'));
+	return new Promise(function(resolve, reject) {
+		execFile('mdfind', ['-onlyin', directory, buildQuery(terms)], (err, out) => {
+			if (err) {
+				return reject(err);
+			}
+			if (out === '') {
+				return resolve([]);
+			}
+			resolve(out.trim().split('\n')
+			           .map(result => result.slice(directory.length)));
 		});
 	});
 }
