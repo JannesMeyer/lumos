@@ -146,9 +146,10 @@ var Navigation = React.createClass({
 
 // TODO: update twice for each page load (loading, loaded)
 var Page = React.createClass({
-	shouldComponentUpdate(nextProps) {
-		return nextProps.filePath !== this.props.filePath;
-	},
+	// TODO: doesn't work with live reload
+	// shouldComponentUpdate(nextProps) {
+	// 	return nextProps.filePath !== this.props.filePath;
+	// },
 	componentDidMount() {
 		var section = this.getDOMNode();
 
@@ -403,6 +404,15 @@ export function renderToDOM(data) {
 	return app;
 }
 
+var pageDidNavigateListeners = [];
+export function on(eventName, listener) {
+	if (eventName === 'pageDidNavigate') {
+		pageDidNavigateListeners.push(listener);
+	} else {
+		console.warn('Unrecognized event name');
+	}
+}
+
 // TODO: links inside the page
 // TODO: Require a node (mid-tree or leaf) as argument
 // https://code.google.com/p/chromium/issues/detail?id=50298
@@ -418,7 +428,9 @@ function navigateTo(path, title) {
 	dataSource.get(path)
 	.then(data => {
 		history.replaceState(data, undefined, path);
-		// TODO: Scroll to top
 		app.setProps({ data });
+		pageDidNavigateListeners.forEach(listener => {
+			listener(path);
+		});
 	});
 }

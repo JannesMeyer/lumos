@@ -47,12 +47,14 @@
 	var page = __webpack_require__(1);
 	var dataSource = __webpack_require__(2);
 
+	var app;
+
 	addEventListener('load', function(event)  {
 
 		// Initialize React
 		dataSource.get(location.pathname)
 		.then(function(data)  {
-			page.renderToDOM(data);
+			app = page.renderToDOM(data);
 		});
 
 		// TODO: how to know the port?
@@ -60,6 +62,23 @@
 		socket.on('connect', function()  {
 			console.log('connected');
 			socket.on('disconnect', console.log.bind(console, 'disconnected:'));
+
+			socket.emit('viewing', location.pathname);
+			socket.on('changed', function()  {
+				dataSource.get(location.pathname)
+				.then(function(data)  {
+					console.log('answer received', data);
+					// page.renderToDOM(data);
+					console.log(app);
+					app.setProps({ data:data });
+				});
+				console.log('changed content');
+			});
+		});
+
+		page.on('pageDidNavigate', function(pathname)  {
+			console.log('navigated to…', pathname);
+			socket.emit('viewing', pathname);
 		});
 	});
 
@@ -215,9 +234,10 @@
 
 	// TODO: update twice for each page load (loading, loaded)
 	var Page = React.createClass({displayName: 'Page',
-		shouldComponentUpdate:function(nextProps) {
-			return nextProps.filePath !== this.props.filePath;
-		},
+		// TODO: doesn't work with live reload
+		// shouldComponentUpdate(nextProps) {
+		// 	return nextProps.filePath !== this.props.filePath;
+		// },
 		componentDidMount:function() {
 			var section = this.getDOMNode();
 
@@ -472,6 +492,15 @@
 		return app;
 	} module.exports.renderToDOM = renderToDOM;
 
+	var pageDidNavigateListeners = [];
+	function on(eventName, listener) {
+		if (eventName === 'pageDidNavigate') {
+			pageDidNavigateListeners.push(listener);
+		} else {
+			console.warn('Unrecognized event name');
+		}
+	} module.exports.on = on;
+
 	// TODO: links inside the page
 	// TODO: Require a node (mid-tree or leaf) as argument
 	// https://code.google.com/p/chromium/issues/detail?id=50298
@@ -487,8 +516,10 @@
 		dataSource.get(path)
 		.then(function(data)  {
 			history.replaceState(data, undefined, path);
-			// TODO: Scroll to top
 			app.setProps({ data:data });
+			pageDidNavigateListeners.forEach(function(listener)  {
+				listener(path);
+			});
 		});
 	}
 
