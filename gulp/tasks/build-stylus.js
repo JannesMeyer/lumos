@@ -6,8 +6,7 @@ exports.fn = function() {
 	// var rename = require('gulp-rename');
 	// var minifycss = require('gulp-minify-css');
 	var config = require('../gulp.config');
-	var debug = require('../../src/lib/debug');
-	debug.filename = 'stylus';
+	var debug = require('../../src/lib/debug')('stylus');
 
 	return gulp.src(config.src.styles)
 		.pipe(plumber({ errorHandler: debug }))

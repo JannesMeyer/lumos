@@ -1,41 +1,26 @@
-var debug, startServer, config, server;
+var server;
 
-function importModules() {
-	debug = require('../../src/lib/debug');
-	debug.filename = __filename;
-
-	startServer = require('../../dist/server-main');
-	config = require('../../package.json').config;
-}
-
-function forgetModules() {
-	clearProperties(require.cache);
-}
-
-function clearProperties(object) {
-	Object.getOwnPropertyNames(object).forEach(function(property) {
-		delete object[property];
-	});
+function killServer() {
+	if (server) {
+		server.kill();
+	}
 }
 
 exports.dep = ['build-js-server'];
 exports.fn = function() {
-	// Stop server, if it's already running
-	if (server) {
-		server.close();
-		forgetModules();
-	}
+	var child_process = require('child_process');
 
-	// Import files and start server
-	try {
-		importModules();
-		server = startServer({
-			directory: '/Users/jannes/Dropbox/Notes',
-			port: config.defaultPort
-		});
-	} catch(err) {
-		debug(err);
-	}
+	killServer();
+
+	var dir = '/Users/jannes/Dropbox/Notes';
+	server = child_process.spawn(require.resolve('../../bin/lumos'), ['serve'], {
+		cwd: dir,
+		stdio: ['ignore', 'inherit', 'inherit']
+	});
 };
+process.on('exit', killServer);
 
-// TODO: child_process.fork
+// gulp.task('node-inspector', function() {
+// 	childs.node = spawn('node', ['--harmony', '--debug', './bin/lumos', 'serve'], options);
+// 	childs.inspector = spawn('node-inspector', { stdio: 'inherit' });
+// });

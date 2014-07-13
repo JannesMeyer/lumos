@@ -8,8 +8,22 @@ var path = require('path');
  *
  * var debug = require('./lib/debug');
  * debug.filename = __filename;
- * debug.stack = true;
  */
+
+function extend(obj) {
+	if (obj === undefined) {
+		obj = {};
+	}
+
+	var source, prop;
+	for (var i = 1, length = arguments.length; i < length; i++) {
+		source = arguments[i];
+		for (prop in source) {
+			obj[prop] = source[prop];
+		}
+	}
+	return obj;
+}
 
 // https://github.com/joyent/node/blob/master/lib/util.js
 function stylize(str, style) {
@@ -18,35 +32,40 @@ function stylize(str, style) {
 	       '\u001b[' + color[1] + 'm';
 }
 
-module.exports = exports = function log(obj, options) {
-	if (obj instanceof Error) {
-		error(obj, options);
-	} else {
-		dir(obj, options);
-	}
+module.exports = exports = logger;
+exports.error = error;
+exports.dir = dir;
+
+function logger(filename, options1) {
+	return function(obj, options2) {
+		var options = extend({ filename: filename }, options1, options2);
+
+		if (obj instanceof Error) {
+			error(obj, options);
+		} else {
+			dir(obj, options);
+		}
+	};
 }
 
 function error(err, options) {
-	if (options === undefined) { options = {}; }
 	if (options.bell === undefined) { options.bell = true; }
+	if (options.bell) {
+		process.stdout.write('\x07');
+	}
 
-	var filename = err.fileName || exports.filename;
+	var filename = err.fileName || options.filename;
 	var location =  filename ? '[' + path.basename(filename) + '] ' : '';
-	var bell = options.bell ? '\u0007' : '';
-	// if (options.bell) {
-	// 	process.stdout.write('\x07');
-	// }
-	var message = exports.stack || err.showStack ? err.stack : err.message; // err.name
+	var message = options.showStack ? err.stack : err.message;
 
-	console.error(stylize(location + message, 'red') + bell);
+	console.error(stylize(location + message, 'red'));
 }
-exports.error = error;
 
 function dir(obj, options) {
-	if (options === undefined) { options = {}; }
 	if (options.colors === undefined) { options.colors = true; }
 
-	var location = exports.filename ? '[' + path.basename(exports.filename) + '] ' : '';
+	var filename = options.filename;
+	var location = filename ? '[' + path.basename(filename) + '] ' : '';
+
 	console.log(location + util.inspect(obj, options));
 }
-exports.dir = dir;

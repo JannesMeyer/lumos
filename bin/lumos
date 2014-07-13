@@ -1,6 +1,6 @@
 #!/usr/bin/env node --harmony
 
-console.time('command');
+var debug = require('../src/lib/debug')(undefined, { showStack: true });
 
 var commands = {
 	serve: '../dist/cmd-serve',
@@ -22,8 +22,13 @@ var args = process.argv.slice(2);
 var commandPath = commands[args.shift()];
 
 if (commandPath) {
-	// Execute command
-	require(commandPath).cmd(args);
+	try {
+		// Execute command
+		console.time('command');
+		require(commandPath).cmd(args);
+	} catch(err) {
+		debug(err);
+	}
 } else {
 	console.log(getHelp());
 }

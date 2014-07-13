@@ -1,6 +1,6 @@
 var path = require('path');
 
-function getDir(dir) {
+function resolveDir(dir) {
 	return path.join(__dirname, '..', dir);
 }
 
@@ -14,11 +14,11 @@ module.exports = {
 	module: {
 		loaders: [
 			{ test: /\.jsx$/, loader:  'es6-loader' },
-			{ test: /\.js$/, loader: 'es6-loader', exclude: [ getDir('node_modules') ] }
+			{ test: /\.js$/, loader: 'es6-loader', exclude: [ resolveDir('node_modules') ] }
 		]
 	},
 	resolve: {
-		root: getDir('src'),
+		root: resolveDir('src'),
 		extensions: ['', '.webpack.js', '.web.js', '.js', '.jsx']
 	}
 };

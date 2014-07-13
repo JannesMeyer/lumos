@@ -7,7 +7,7 @@ exports.fn = function(callback) {
 	var path = require('path');
 	var webpack = require('webpack');
 	var webpackConfig = require('../webpack.config');
-	var debug = require('../../src/lib/debug');
+	var debug = require('../../src/lib/debug')();
 
 	webpack(webpackConfig, function(err, stats) {
 		if (err) {

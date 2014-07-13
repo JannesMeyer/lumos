@@ -27,7 +27,8 @@
     "marked": "0.x",
     "minimist": "0.x",
     "morgan": "1.x",
-    "react": "0.x"
+    "react": "0.x",
+    "socket.io": "^1.0.6"
   },
   "devDependencies": {
     "es6-shim": "0.x",

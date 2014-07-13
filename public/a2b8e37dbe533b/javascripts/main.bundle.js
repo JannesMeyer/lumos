@@ -48,10 +48,21 @@
 	var dataSource = __webpack_require__(2);
 
 	addEventListener('load', function(event)  {
+
 		dataSource.get(location.pathname)
 		.then(function(data)  {
 			// Initialize React
 			page.renderToDOM(data);
+		});
+
+		// TODO: how to know the port?
+		var socket = io('http://notes:9000');
+		socket.on('connect', function()  {
+			console.log('connected');
+			// socket.join('testroom');
+			socket.on('disconnect', console.log.bind(console, 'server disconnected:'));
+
+			// socket.close();
 		});
 	});
 
@@ -431,7 +442,8 @@
 						React.DOM.link( {rel:"stylesheet", href:"/a2b8e37dbe533b/stylesheets/bootstrap.css"} ),
 						React.DOM.link( {rel:"stylesheet", href:"/a2b8e37dbe533b/stylesheets/theme-one.css"} ),
 						React.DOM.link( {rel:"stylesheet", href:"/a2b8e37dbe533b/stylesheets/hljs/github.css"} ),
-						Favicon( {color:this.state.color, template:"/images/favicon-template.png"} ),
+						Favicon( {color:this.state.color, template:"/a2b8e37dbe533b/images/favicon-template.png"} ),
+						React.DOM.script( {defer:true, src:"/socket.io/socket.io.js"}),
 						React.DOM.script( {defer:true, src:"/a2b8e37dbe533b/javascripts/main.bundle.js"})
 					),
 
@@ -1610,12 +1622,12 @@
 	"use strict";
 
 	var ReactCurrentOwner = __webpack_require__(17);
-	var ReactOwner = __webpack_require__(40);
-	var ReactUpdates = __webpack_require__(41);
+	var ReactOwner = __webpack_require__(41);
+	var ReactUpdates = __webpack_require__(42);
 
 	var invariant = __webpack_require__(37);
-	var keyMirror = __webpack_require__(42);
-	var merge = __webpack_require__(43);
+	var keyMirror = __webpack_require__(43);
+	var merge = __webpack_require__(40);
 	var monitorCodeUse = __webpack_require__(44);
 
 	/**
@@ -2215,17 +2227,17 @@
 	var ReactContext = __webpack_require__(16);
 	var ReactCurrentOwner = __webpack_require__(17);
 	var ReactErrorUtils = __webpack_require__(45);
-	var ReactOwner = __webpack_require__(40);
+	var ReactOwner = __webpack_require__(41);
 	var ReactPerf = __webpack_require__(24);
 	var ReactPropTransferer = __webpack_require__(46);
 	var ReactPropTypeLocations = __webpack_require__(47);
 	var ReactPropTypeLocationNames = __webpack_require__(48);
-	var ReactUpdates = __webpack_require__(41);
+	var ReactUpdates = __webpack_require__(42);
 
 	var instantiateReactComponent = __webpack_require__(49);
 	var invariant = __webpack_require__(37);
-	var keyMirror = __webpack_require__(42);
-	var merge = __webpack_require__(43);
+	var keyMirror = __webpack_require__(43);
+	var merge = __webpack_require__(40);
 	var mixInto = __webpack_require__(50);
 	var monitorCodeUse = __webpack_require__(44);
 	var objMap = __webpack_require__(51);
@@ -3805,7 +3817,7 @@
 
 	"use strict";
 
-	var merge = __webpack_require__(43);
+	var merge = __webpack_require__(40);
 
 	/**
 	 * Keeps track of the current context.
@@ -4150,7 +4162,7 @@
 	var escapeTextForBrowser = __webpack_require__(33);
 	var invariant = __webpack_require__(37);
 	var keyOf = __webpack_require__(58);
-	var merge = __webpack_require__(43);
+	var merge = __webpack_require__(40);
 	var mixInto = __webpack_require__(50);
 
 	var deleteListener = ReactEventEmitter.deleteListener;
@@ -8459,7 +8471,7 @@
 
 	"use strict";
 
-	var keyMirror = __webpack_require__(42);
+	var keyMirror = __webpack_require__(43);
 
 	var PropagationPhases = keyMirror({bubbled: null, captured: null});
 
@@ -8913,6 +8925,49 @@
 /* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/**
+	 * Copyright 2013-2014 Facebook, Inc.
+	 *
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 *
+	 * @providesModule merge
+	 */
+
+	"use strict";
+
+	var mergeInto = __webpack_require__(53);
+
+	/**
+	 * Shallow merges two structures into a return value, without mutating either.
+	 *
+	 * @param {?object} one Optional object with properties to merge from.
+	 * @param {?object} two Optional object with properties to merge from.
+	 * @return {object} The shallow extension of one by two.
+	 */
+	var merge = function(one, two) {
+	  var result = {};
+	  mergeInto(result, one);
+	  mergeInto(result, two);
+	  return result;
+	};
+
+	module.exports = merge;
+
+
+/***/ },
+/* 41 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/* WEBPACK VAR INJECTION */(function(process) {/**
 	 * Copyright 2013-2014 Facebook, Inc.
 	 *
@@ -9076,7 +9131,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(31)))
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -9231,7 +9286,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(31)))
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -9294,49 +9349,6 @@
 	module.exports = keyMirror;
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(31)))
-
-/***/ },
-/* 43 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014 Facebook, Inc.
-	 *
-	 * Licensed under the Apache License, Version 2.0 (the "License");
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at
-	 *
-	 * http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software
-	 * distributed under the License is distributed on an "AS IS" BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and
-	 * limitations under the License.
-	 *
-	 * @providesModule merge
-	 */
-
-	"use strict";
-
-	var mergeInto = __webpack_require__(53);
-
-	/**
-	 * Shallow merges two structures into a return value, without mutating either.
-	 *
-	 * @param {?object} one Optional object with properties to merge from.
-	 * @param {?object} two Optional object with properties to merge from.
-	 * @return {object} The shallow extension of one by two.
-	 */
-	var merge = function(one, two) {
-	  var result = {};
-	  mergeInto(result, one);
-	  mergeInto(result, two);
-	  return result;
-	};
-
-	module.exports = merge;
-
 
 /***/ },
 /* 44 */
@@ -9452,7 +9464,7 @@
 	var emptyFunction = __webpack_require__(120);
 	var invariant = __webpack_require__(37);
 	var joinClasses = __webpack_require__(122);
-	var merge = __webpack_require__(43);
+	var merge = __webpack_require__(40);
 
 	/**
 	 * Creates a transfer strategy that will merge prop values using the supplied
@@ -9603,7 +9615,7 @@
 
 	"use strict";
 
-	var keyMirror = __webpack_require__(42);
+	var keyMirror = __webpack_require__(43);
 
 	var ReactPropTypeLocations = keyMirror({
 	  prop: null,
@@ -10181,7 +10193,7 @@
 
 	var invariant = __webpack_require__(37);
 	var isEventSupported = __webpack_require__(132);
-	var merge = __webpack_require__(43);
+	var merge = __webpack_require__(40);
 
 	/**
 	 * Summary of `ReactEventEmitter` event handling:
@@ -10571,7 +10583,7 @@
 	var ReactEventEmitter = __webpack_require__(57);
 	var ReactPerf = __webpack_require__(24);
 	var ReactRootIndex = __webpack_require__(82);
-	var ReactUpdates = __webpack_require__(41);
+	var ReactUpdates = __webpack_require__(42);
 
 	var ReactInjection = {
 	  Component: ReactComponent.injection,
@@ -10818,7 +10830,7 @@
 	var EventPluginHub = __webpack_require__(128);
 	var EventPropagators = __webpack_require__(133);
 	var ExecutionEnvironment = __webpack_require__(29);
-	var ReactUpdates = __webpack_require__(41);
+	var ReactUpdates = __webpack_require__(42);
 	var SyntheticEvent = __webpack_require__(134);
 
 	var isEventSupported = __webpack_require__(132);
@@ -12072,7 +12084,7 @@
 	var ReactCompositeComponent = __webpack_require__(15);
 	var ReactDOM = __webpack_require__(18);
 
-	var keyMirror = __webpack_require__(42);
+	var keyMirror = __webpack_require__(43);
 
 	// Store a reference to the <button> `ReactDOMComponent`.
 	var button = ReactDOM.button;
@@ -12286,7 +12298,7 @@
 	var ReactMount = __webpack_require__(22);
 
 	var invariant = __webpack_require__(37);
-	var merge = __webpack_require__(43);
+	var merge = __webpack_require__(40);
 
 	// Store a reference to the <input> `ReactDOMComponent`.
 	var input = ReactDOM.input;
@@ -12535,7 +12547,7 @@
 	var ReactDOM = __webpack_require__(18);
 
 	var invariant = __webpack_require__(37);
-	var merge = __webpack_require__(43);
+	var merge = __webpack_require__(40);
 
 	// Store a reference to the <select> `ReactDOMComponent`.
 	var select = ReactDOM.select;
@@ -12723,7 +12735,7 @@
 	var ReactDOM = __webpack_require__(18);
 
 	var invariant = __webpack_require__(37);
-	var merge = __webpack_require__(43);
+	var merge = __webpack_require__(40);
 
 	var warning = __webpack_require__(35);
 
@@ -13534,7 +13546,7 @@
 
 	"use strict";
 
-	var ReactUpdates = __webpack_require__(41);
+	var ReactUpdates = __webpack_require__(42);
 	var Transaction = __webpack_require__(154);
 
 	var emptyFunction = __webpack_require__(120);
@@ -14078,7 +14090,7 @@
 
 	"use strict";
 
-	var keyMirror = __webpack_require__(42);
+	var keyMirror = __webpack_require__(43);
 
 	/**
 	 * When a component's children are updated, a series of update configuration
@@ -18446,7 +18458,7 @@
 	"use strict";
 
 	var invariant = __webpack_require__(37);
-	var keyMirror = __webpack_require__(42);
+	var keyMirror = __webpack_require__(43);
 
 	/**
 	 * Maximum number of levels to traverse. Will catch circular structures.
@@ -19484,7 +19496,7 @@
 	"use strict";
 
 	var EventPluginHub = __webpack_require__(128);
-	var ReactUpdates = __webpack_require__(41);
+	var ReactUpdates = __webpack_require__(42);
 
 	function runEventQueueInBatch(events) {
 	  EventPluginHub.enqueueEvents(events);
@@ -19820,7 +19832,7 @@
 
 	var emptyFunction = __webpack_require__(120);
 	var getEventTarget = __webpack_require__(142);
-	var merge = __webpack_require__(43);
+	var merge = __webpack_require__(40);
 	var mergeInto = __webpack_require__(53);
 
 	/**
@@ -21819,7 +21831,7 @@
 	 * @providesModule ReactDefaultPerfAnalysis
 	 */
 
-	var merge = __webpack_require__(43);
+	var merge = __webpack_require__(40);
 
 	// Don't try to save users less than 1.2ms (a number I made up)
 	var DONT_CARE_THRESHOLD = 1.2;
