@@ -3,9 +3,9 @@ var dataSource = require('client-lib/data-source');
 
 addEventListener('load', event => {
 
+	// Initialize React
 	dataSource.get(location.pathname)
 	.then(data => {
-		// Initialize React
 		page.renderToDOM(data);
 	});
 
@@ -13,9 +13,6 @@ addEventListener('load', event => {
 	var socket = io('http://notes:9000');
 	socket.on('connect', () => {
 		console.log('connected');
-		// socket.join('testroom');
-		socket.on('disconnect', console.log.bind(console, 'server disconnected:'));
-
-		// socket.close();
+		socket.on('disconnect', console.log.bind(console, 'disconnected:'));
 	});
 });

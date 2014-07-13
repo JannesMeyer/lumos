@@ -27,15 +27,11 @@ function startServer(options) {
 	var io = socket_io(server);
 
 	// Socket.io
-	// var socketlist = [];
-	var namespace = io.of('/');
 	io.on('connection', socket => {
-		// socketlist.push(socket);
-		console.log('client connected', Object.keys(namespace.connected));
+		console.log(Object.keys(io.sockets.connected));
 
 		socket.on('disconnect', () => {
-			// socketlist.splice(socketlist.indexOf(socket), 1);
-			console.log('client disconnected', Object.keys(namespace.connected));
+			console.log(Object.keys(io.sockets.connected));
 		});
 	});
 
