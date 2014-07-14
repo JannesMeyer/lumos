@@ -5,11 +5,13 @@ import socket_io from 'socket.io';
 import http from 'http';
 import morgan from 'morgan';
 import debug from 'debug';
+import Promise from 'bluebird';
 import requestHandler from './server-express-handler';
 import errorTemplate from './templates/error';
 import watch from './lib/watch';
 import { config } from '../package.json';
 debug = debug('lumos:main');
+Promise.promisifyAll(fs);
 
 function startServer(options) {
 	// options.directory
@@ -46,7 +48,17 @@ function startServer(options) {
 		}
 		// TODO: debounce based on filename
 		// TODO: diff content
+
+		// TODO: the filename for some utf8 files seems to be incorrect
+		// when reported through the fs.watch API
 		debug('File event: ' + filename);
+		// fs.statAsync(filename)
+		// .then(stats => {
+		// 	console.log('file exists');
+		// })
+		// .catch(Promise.OperationalError, err => {
+		// 	console.log('file not found');
+		// });
 
 		// Emit event
 		var room = '/' + filename.slice(0, -config.mdSuffix.length);
