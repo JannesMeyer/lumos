@@ -1,7 +1,5 @@
 import fs from 'fs';
 import debounce from './debounce';
-// import debug from 'debug';
-// debug = debug('lumos:watcher');
 
 export function debounced(dir, changeHandler) {
 	fs.watch(dir, { recursive: true }, debounce(changeHandler, 50));

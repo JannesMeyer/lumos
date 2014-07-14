@@ -153,7 +153,6 @@ var Page = React.createClass({
 	},
 	componentDidMount() {
 		var section = this.getDOMNode();
-
 		keypress.on([], 'x', event => {
 			if (scroll.isAtElement(section)) {
 				scroll.to(0);
@@ -162,10 +161,13 @@ var Page = React.createClass({
 			}
 		});
 	},
-	componentWillUpdate() {
-		var section = this.getDOMNode();
-		if (!scroll.isAtElement(section)) {
-			scroll.to(0);
+	componentWillUpdate(nextProps) {
+		// Only scroll to top after a navigation, not after a reload
+		if (nextProps.isUserNavigation) {
+			var section = this.getDOMNode();
+			if (!scroll.isAtElement(section)) {
+				scroll.to(0);
+			}
 		}
 	},
 	render() {
@@ -183,7 +185,6 @@ var Page = React.createClass({
 				<article dangerouslySetInnerHTML={{ __html: this.props.content }} />
 			</section>
 		);
-		// this.props.creationTime
 	}
 });
 
@@ -231,7 +232,6 @@ var FullscreenButton = React.createClass({
 var LumosApplication = React.createClass({
 	render() {
 		var data = this.props.data;
-
 		return (
 			<div className={'m-container s-' + this.props.color}>
 				<Header breadcrumbs={data.breadcrumbs}
@@ -243,7 +243,8 @@ var LumosApplication = React.createClass({
 					      title={data.title}
 					      creationDate={data.creationDate}
 					      content={data.content}
-					      editURL={data.editURL} />
+					      editURL={data.editURL}
+					      isUserNavigation={data.isUserNavigation} />
 					<Navigation items={data.items} />
 				</div>
 			</div>
@@ -357,8 +358,6 @@ var MyHTML = React.createClass({
 	render() {
 		var data = this.props.data;
 
-		// LiveReload
-		// <script src="http://notes:35729/livereload.js?snipver=1"></script>
 		// <link rel="preload" href="/fonts/glyphicons-halflings-regular.woff" type="font/woff" />
 
 		// TODO: Send 'Content-Type'(+JSON) and 'X-UA-Compatible' as headers
@@ -405,6 +404,7 @@ export function renderToDOM(data) {
 	return app;
 }
 
+// Event listeners
 var pageDidNavigateListeners = [];
 export function on(eventName, listener) {
 	if (eventName === 'pageDidNavigate') {
@@ -428,8 +428,10 @@ function navigateTo(path, title) {
 
 	dataSource.get(path)
 	.then(data => {
+		data.isUserNavigation = true;
 		history.replaceState(data, undefined, path);
 		app.setProps({ data });
+
 		pageDidNavigateListeners.forEach(listener => {
 			listener(path);
 		});

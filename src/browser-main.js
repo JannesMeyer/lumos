@@ -6,6 +6,7 @@ addEventListener('load', event => {
 	// Initialize React
 	dataSource.get(location.pathname)
 	.then(data => {
+		data.isUserNavigation = false;
 		app = page.renderToDOM(data);
 	});
 
@@ -21,6 +22,7 @@ addEventListener('load', event => {
 		console.log('Content changed:', location.pathname);
 		dataSource.get(location.pathname)
 		.then(data => {
+			data.isUserNavigation = false;
 			page.renderToDOM(data);
 		});
 	});

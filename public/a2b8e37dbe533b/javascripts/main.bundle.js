@@ -52,6 +52,7 @@
 		// Initialize React
 		dataSource.get(location.pathname)
 		.then(function(data)  {
+			data.isUserNavigation = false;
 			app = page.renderToDOM(data);
 		});
 
@@ -67,6 +68,7 @@
 			console.log('Content changed:', location.pathname);
 			dataSource.get(location.pathname)
 			.then(function(data)  {
+				data.isUserNavigation = false;
 				page.renderToDOM(data);
 			});
 		});
@@ -235,7 +237,6 @@
 		},
 		componentDidMount:function() {
 			var section = this.getDOMNode();
-
 			keypress.on([], 'x', function(event)  {
 				if (scroll.isAtElement(section)) {
 					scroll.to(0);
@@ -244,10 +245,13 @@
 				}
 			});
 		},
-		componentWillUpdate:function() {
-			var section = this.getDOMNode();
-			if (!scroll.isAtElement(section)) {
-				scroll.to(0);
+		componentWillUpdate:function(nextProps) {
+			// Only scroll to top after a navigation, not after a reload
+			if (nextProps.isUserNavigation) {
+				var section = this.getDOMNode();
+				if (!scroll.isAtElement(section)) {
+					scroll.to(0);
+				}
 			}
 		},
 		render:function() {
@@ -265,7 +269,6 @@
 					React.DOM.article( {dangerouslySetInnerHTML:{ __html: this.props.content }} )
 				)
 			);
-			// this.props.creationTime
 		}
 	});
 
@@ -313,7 +316,6 @@
 	var LumosApplication = React.createClass({displayName: 'LumosApplication',
 		render:function() {
 			var data = this.props.data;
-
 			return (
 				React.DOM.div( {className:'m-container s-' + this.props.color}, 
 					Header( {breadcrumbs:data.breadcrumbs,
@@ -325,7 +327,8 @@
 						      title:data.title,
 						      creationDate:data.creationDate,
 						      content:data.content,
-						      editURL:data.editURL} ),
+						      editURL:data.editURL,
+						      isUserNavigation:data.isUserNavigation} ),
 						Navigation( {items:data.items} )
 					)
 				)
@@ -439,8 +442,6 @@
 		render:function() {
 			var data = this.props.data;
 
-			// LiveReload
-			// <script src="http://notes:35729/livereload.js?snipver=1"></script>
 			// <link rel="preload" href="/fonts/glyphicons-halflings-regular.woff" type="font/woff" />
 
 			// TODO: Send 'Content-Type'(+JSON) and 'X-UA-Compatible' as headers
@@ -487,6 +488,7 @@
 		return app;
 	} module.exports.renderToDOM = renderToDOM;
 
+	// Event listeners
 	var pageDidNavigateListeners = [];
 	function on(eventName, listener) {
 		if (eventName === 'pageDidNavigate') {
@@ -510,8 +512,10 @@
 
 		dataSource.get(path)
 		.then(function(data)  {
+			data.isUserNavigation = true;
 			history.replaceState(data, undefined, path);
 			app.setProps({ data:data });
+
 			pageDidNavigateListeners.forEach(function(listener)  {
 				listener(path);
 			});
@@ -5076,8 +5080,8 @@
 	var ReactInstanceHandles = __webpack_require__(21);
 	var ReactPerf = __webpack_require__(24);
 
-	var containsNode = __webpack_require__(83);
-	var getReactRootElementInContainer = __webpack_require__(84);
+	var containsNode = __webpack_require__(85);
+	var getReactRootElementInContainer = __webpack_require__(86);
 	var instantiateReactComponent = __webpack_require__(49);
 	var invariant = __webpack_require__(37);
 	var shouldUpdateReactComponent = __webpack_require__(52);
@@ -5729,9 +5733,9 @@
 	"use strict";
 
 	var ReactComponent = __webpack_require__(14);
-	var ReactMultiChildUpdateTypes = __webpack_require__(85);
+	var ReactMultiChildUpdateTypes = __webpack_require__(83);
 
-	var flattenChildren = __webpack_require__(86);
+	var flattenChildren = __webpack_require__(84);
 	var instantiateReactComponent = __webpack_require__(49);
 	var shouldUpdateReactComponent = __webpack_require__(52);
 
@@ -11822,7 +11826,7 @@
 	var ReactPerf = __webpack_require__(24);
 	var ReactReconcileTransaction = __webpack_require__(141);
 
-	var getReactRootElementInContainer = __webpack_require__(84);
+	var getReactRootElementInContainer = __webpack_require__(86);
 	var invariant = __webpack_require__(37);
 
 
@@ -14007,107 +14011,6 @@
 	 * See the License for the specific language governing permissions and
 	 * limitations under the License.
 	 *
-	 * @providesModule containsNode
-	 * @typechecks
-	 */
-
-	var isTextNode = __webpack_require__(157);
-
-	/*jslint bitwise:true */
-
-	/**
-	 * Checks if a given DOM node contains or is another DOM node.
-	 *
-	 * @param {?DOMNode} outerNode Outer DOM node.
-	 * @param {?DOMNode} innerNode Inner DOM node.
-	 * @return {boolean} True if `outerNode` contains or is `innerNode`.
-	 */
-	function containsNode(outerNode, innerNode) {
-	  if (!outerNode || !innerNode) {
-	    return false;
-	  } else if (outerNode === innerNode) {
-	    return true;
-	  } else if (isTextNode(outerNode)) {
-	    return false;
-	  } else if (isTextNode(innerNode)) {
-	    return containsNode(outerNode, innerNode.parentNode);
-	  } else if (outerNode.contains) {
-	    return outerNode.contains(innerNode);
-	  } else if (outerNode.compareDocumentPosition) {
-	    return !!(outerNode.compareDocumentPosition(innerNode) & 16);
-	  } else {
-	    return false;
-	  }
-	}
-
-	module.exports = containsNode;
-
-
-/***/ },
-/* 84 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014 Facebook, Inc.
-	 *
-	 * Licensed under the Apache License, Version 2.0 (the "License");
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at
-	 *
-	 * http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software
-	 * distributed under the License is distributed on an "AS IS" BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and
-	 * limitations under the License.
-	 *
-	 * @providesModule getReactRootElementInContainer
-	 */
-
-	"use strict";
-
-	var DOC_NODE_TYPE = 9;
-
-	/**
-	 * @param {DOMElement|DOMDocument} container DOM element that may contain
-	 *                                           a React component
-	 * @return {?*} DOM element that may have the reactRoot ID, or null.
-	 */
-	function getReactRootElementInContainer(container) {
-	  if (!container) {
-	    return null;
-	  }
-
-	  if (container.nodeType === DOC_NODE_TYPE) {
-	    return container.documentElement;
-	  } else {
-	    return container.firstChild;
-	  }
-	}
-
-	module.exports = getReactRootElementInContainer;
-
-
-/***/ },
-/* 85 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/**
-	 * Copyright 2013-2014 Facebook, Inc.
-	 *
-	 * Licensed under the Apache License, Version 2.0 (the "License");
-	 * you may not use this file except in compliance with the License.
-	 * You may obtain a copy of the License at
-	 *
-	 * http://www.apache.org/licenses/LICENSE-2.0
-	 *
-	 * Unless required by applicable law or agreed to in writing, software
-	 * distributed under the License is distributed on an "AS IS" BASIS,
-	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-	 * See the License for the specific language governing permissions and
-	 * limitations under the License.
-	 *
 	 * @providesModule ReactMultiChildUpdateTypes
 	 */
 
@@ -14134,7 +14037,7 @@
 
 
 /***/ },
-/* 86 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {/**
@@ -14196,6 +14099,107 @@
 	module.exports = flattenChildren;
 	
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(31)))
+
+/***/ },
+/* 85 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014 Facebook, Inc.
+	 *
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 *
+	 * @providesModule containsNode
+	 * @typechecks
+	 */
+
+	var isTextNode = __webpack_require__(157);
+
+	/*jslint bitwise:true */
+
+	/**
+	 * Checks if a given DOM node contains or is another DOM node.
+	 *
+	 * @param {?DOMNode} outerNode Outer DOM node.
+	 * @param {?DOMNode} innerNode Inner DOM node.
+	 * @return {boolean} True if `outerNode` contains or is `innerNode`.
+	 */
+	function containsNode(outerNode, innerNode) {
+	  if (!outerNode || !innerNode) {
+	    return false;
+	  } else if (outerNode === innerNode) {
+	    return true;
+	  } else if (isTextNode(outerNode)) {
+	    return false;
+	  } else if (isTextNode(innerNode)) {
+	    return containsNode(outerNode, innerNode.parentNode);
+	  } else if (outerNode.contains) {
+	    return outerNode.contains(innerNode);
+	  } else if (outerNode.compareDocumentPosition) {
+	    return !!(outerNode.compareDocumentPosition(innerNode) & 16);
+	  } else {
+	    return false;
+	  }
+	}
+
+	module.exports = containsNode;
+
+
+/***/ },
+/* 86 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2014 Facebook, Inc.
+	 *
+	 * Licensed under the Apache License, Version 2.0 (the "License");
+	 * you may not use this file except in compliance with the License.
+	 * You may obtain a copy of the License at
+	 *
+	 * http://www.apache.org/licenses/LICENSE-2.0
+	 *
+	 * Unless required by applicable law or agreed to in writing, software
+	 * distributed under the License is distributed on an "AS IS" BASIS,
+	 * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+	 * See the License for the specific language governing permissions and
+	 * limitations under the License.
+	 *
+	 * @providesModule getReactRootElementInContainer
+	 */
+
+	"use strict";
+
+	var DOC_NODE_TYPE = 9;
+
+	/**
+	 * @param {DOMElement|DOMDocument} container DOM element that may contain
+	 *                                           a React component
+	 * @return {?*} DOM element that may have the reactRoot ID, or null.
+	 */
+	function getReactRootElementInContainer(container) {
+	  if (!container) {
+	    return null;
+	  }
+
+	  if (container.nodeType === DOC_NODE_TYPE) {
+	    return container.documentElement;
+	  } else {
+	    return container.firstChild;
+	  }
+	}
+
+	module.exports = getReactRootElementInContainer;
+
 
 /***/ },
 /* 87 */
@@ -20077,7 +20081,7 @@
 
 	var ReactDOMSelection = __webpack_require__(168);
 
-	var containsNode = __webpack_require__(83);
+	var containsNode = __webpack_require__(85);
 	var focusNode = __webpack_require__(169);
 	var getActiveElement = __webpack_require__(145);
 
@@ -23091,7 +23095,7 @@
 	"use strict";
 
 	var Danger = __webpack_require__(174);
-	var ReactMultiChildUpdateTypes = __webpack_require__(85);
+	var ReactMultiChildUpdateTypes = __webpack_require__(83);
 
 	var getTextContentAccessor = __webpack_require__(138);
 
