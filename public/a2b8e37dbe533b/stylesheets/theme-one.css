@@ -1083,12 +1083,19 @@ article a:active:hover {
  * Smaller screens
  *==========================================*/
 @media (max-width: 767px) {
-  .m-container > div {
+  .m-container {
     -webkit-box-orient: vertical;
     -webkit-box-direction: reverse;
     -webkit-flex-direction: column-reverse;
     -ms-flex-direction: column-reverse;
     flex-direction: column-reverse;
+  }
+  .m-container > div {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
   }
   .m-container > div > nav {
     -webkit-flex-basis: auto;
