@@ -4,7 +4,7 @@ import Promise from 'bluebird';
 import childProcess from 'child_process';
 import dateTool from './lib/date-tool';
 import { config } from '../package.json';
-fs = Promise.promisifyAll(fs);
+Promise.promisifyAll(fs);
 
 function isDefined(value) {
 	return value !== undefined;

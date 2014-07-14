@@ -1,14 +1,13 @@
 import fs from 'fs';
 import debounce from './debounce';
-import debug from 'debug';
-debug = debug('lumos:watcher');
+// import debug from 'debug';
+// debug = debug('lumos:watcher');
 
-function watch(dir, changeHandler) {
-	var changeHandler = debounce(changeHandler, 100);
-	fs.watch(dir, { recursive: true }, function(event, filename) {
-		debug('%s: %s', event, filename);
-		changeHandler(event, filename);
-	});
+export function debounced(dir, changeHandler) {
+	fs.watch(dir, { recursive: true }, debounce(changeHandler, 50));
 }
 
-export default watch;
+export function debouncedByFilename(dir, changeHandler) {
+	// Group events based on filename (1)
+	fs.watch(dir, { recursive: true }, debounce(changeHandler, 50, 1));
+}

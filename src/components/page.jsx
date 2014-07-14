@@ -146,10 +146,11 @@ var Navigation = React.createClass({
 
 // TODO: update twice for each page load (loading, loaded)
 var Page = React.createClass({
-	// TODO: doesn't work with live reload
-	// shouldComponentUpdate(nextProps) {
-	// 	return nextProps.filePath !== this.props.filePath;
-	// },
+	// TODO: doesn't work good with live reload
+	shouldComponentUpdate(nextProps) {
+		return (nextProps.filePath !== this.props.filePath) ||
+		       (nextProps.content !== this.props.content);
+	},
 	componentDidMount() {
 		var section = this.getDOMNode();
 

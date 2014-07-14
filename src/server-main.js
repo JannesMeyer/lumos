@@ -4,12 +4,12 @@ import express from 'express';
 import socket_io from 'socket.io';
 import http from 'http';
 import morgan from 'morgan';
+import debug from 'debug';
 import requestHandler from './server-express-handler';
 import errorTemplate from './templates/error';
-// import Promise from 'bluebird';
+import watch from './lib/watch';
 import { config } from '../package.json';
-import debug from 'debug';
-debug = debug('lumos:sockets');
+debug = debug('lumos:main');
 
 function startServer(options) {
 	// options.directory
@@ -31,31 +31,27 @@ function startServer(options) {
 
 	// WebSocket
 	io.on('connection', socket => {
-		// socket = Promise.promisifyAll(socket);
-
-		// debug(Object.keys(io.sockets.connected));
-
-		// socket.on('disconnect', () => {
-		// 	debug(Object.keys(io.sockets.connected));
-		// });
-
 		socket.on('viewing', pathname => {
 			socket.rooms.forEach(r => socket.leave(r));
 			socket.join(pathname, () => {
 				debug(socket.rooms, 'joined room');
 			});
-
-			fs.watch(options.directory, { recursive: true }, (event, filename) => {
-				if (!filename.endsWith(config.mdSuffix)) {
-					return;
-				}
-				// TODO: debounce based on filename
-				// TODO: diff content
-				debug('%s: %s', event, filename);
-				var room = encodeURI('/' + filename.slice(0, -config.mdSuffix.length));
-				io.to(room).emit('changed');
-			});
 		});
+	});
+
+	// Watch for changes
+	watch.debouncedByFilename(options.directory, (event, filename) => {
+		if (!filename.endsWith(config.mdSuffix)) {
+			return;
+		}
+		// TODO: debounce based on filename
+		// TODO: diff content
+		debug('File event: ' + filename);
+
+		// Emit event
+		var room = '/' + filename.slice(0, -config.mdSuffix.length);
+		console.log('room', room);
+		io.to(room).emit('changed');
 	});
 
 	server.listen(options.port, () => {

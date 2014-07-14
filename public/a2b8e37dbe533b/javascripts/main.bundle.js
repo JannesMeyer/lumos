@@ -47,8 +47,6 @@
 	var page = __webpack_require__(1);
 	var dataSource = __webpack_require__(2);
 
-	var app;
-
 	addEventListener('load', function(event)  {
 
 		// Initialize React
@@ -60,24 +58,20 @@
 		// TODO: how to know the port?
 		var socket = io('http://notes:9000');
 		socket.on('connect', function()  {
-			console.log('connected');
-			socket.on('disconnect', console.log.bind(console, 'disconnected:'));
+			console.log('Connected');
+			socket.emit('viewing', decodeURIComponent(location.pathname));
+		});
 
-			socket.emit('viewing', location.pathname);
-			socket.on('changed', function()  {
-				dataSource.get(location.pathname)
-				.then(function(data)  {
-					console.log('answer received', data);
-					// page.renderToDOM(data);
-					console.log(app);
-					app.setProps({ data:data });
-				});
-				console.log('changed content');
+		socket.on('disconnect', console.log.bind(console, 'Disconnected:'));
+		socket.on('changed', function()  {
+			console.log('Content changed:', location.pathname);
+			dataSource.get(location.pathname)
+			.then(function(data)  {
+				page.renderToDOM(data);
 			});
 		});
 
 		page.on('pageDidNavigate', function(pathname)  {
-			console.log('navigated to…', pathname);
 			socket.emit('viewing', pathname);
 		});
 	});
@@ -234,10 +228,11 @@
 
 	// TODO: update twice for each page load (loading, loaded)
 	var Page = React.createClass({displayName: 'Page',
-		// TODO: doesn't work with live reload
-		// shouldComponentUpdate(nextProps) {
-		// 	return nextProps.filePath !== this.props.filePath;
-		// },
+		// TODO: doesn't work good with live reload
+		shouldComponentUpdate:function(nextProps) {
+			return (nextProps.filePath !== this.props.filePath) ||
+			       (nextProps.content !== this.props.content);
+		},
 		componentDidMount:function() {
 			var section = this.getDOMNode();
 

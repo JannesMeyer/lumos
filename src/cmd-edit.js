@@ -1,10 +1,11 @@
 import fs from 'fs';
 import path from 'path';
+import minimist from 'minimist';
 import Promise from 'bluebird';
 import childProcess from 'child_process';
 import dateTool from './lib/date-tool';
 import { config } from '../package.json';
-fs = Promise.promisifyAll(fs);
+Promise.promisifyAll(fs);
 
 function isDefined(value) {
 	return value !== undefined;
@@ -38,17 +39,26 @@ function createFiles(files) {
 	));
 }
 
+// Needs an absolute path
 export function cmd(args) {
-	if (args.length === 0) {
+	var argv = minimist(args);
+	if (argv._.length === 0) {
 		throw new Error('Need more arguments');
 	}
 
-	// Needs an absolute path
-
+	if (argv['decode-uri-component']) {
+		// escape() will not encode: @*/+
+		// (encodes Unicode characters to Unicode escape sequences, too)
+		// encodeURI() will not encode: ~!@#$&*()=:/,;?+'
+		// encodeURIComponent() will not encode: ~!*()'
+		argv._ = argv._.map((file, i) => {
+			return decodeURIComponent(file);
+		});
+	}
 	// Open the files in an editor
-	createFiles(args)
+	createFiles(argv._)
 	.then(() => {
 		// TODO: respect errors
-		editor(args);
+		editor(argv._);
 	});
 }

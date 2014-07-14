@@ -3,7 +3,7 @@ import fs from 'fs';
 import Promise from 'bluebird';
 import { config } from '../../package.json';
 import { SegmentedPath } from './SegmentedPath';
-fs = Promise.promisifyAll(fs);
+Promise.promisifyAll(fs);
 
 /**
  * A class that represents a directory

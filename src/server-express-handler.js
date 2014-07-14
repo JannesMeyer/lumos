@@ -7,7 +7,7 @@ import layout from './templates/layout';
 import { config } from '../package.json';
 import { SegmentedPath } from './classes/SegmentedPath';
 import { Directory } from './classes/Directory';
-fs = Promise.promisifyAll(fs);
+Promise.promisifyAll(fs);
 
 module.exports = function(baseDir) {
 	var baseDirName = path.basename(baseDir);
@@ -49,7 +49,7 @@ module.exports = function(baseDir) {
 					.then(file => {
 						data.filePath = indexPath.absolute;
 						// Can't have spaces or quotes in AppleScript
-						data.editURL = encodeURI(config.editURLProtocol + indexPath.absolute).replace(/'/g, '%27');
+						data.editURL = config.editURLProtocol + 'open/' + encodeURIComponent(indexPath.absolute).replace(/'/g, '%27');
 						data.content = converter.makeHtml(file.content);
 					});
 				}
@@ -83,7 +83,7 @@ module.exports = function(baseDir) {
 				data.title = requestPathMd.name;
 				data.filePath = requestPathMd.absolute;
 				// Can't have spaces or quotes in AppleScript
-				data.editURL = encodeURI(config.editURLProtocol + requestPathMd.absolute).replace(/'/g, '%27');
+				data.editURL = config.editURLProtocol + 'open/' + encodeURIComponent(requestPathMd.absolute).replace(/'/g, '%27');
 				data.content = converter.makeHtml(file.content);
 
 				var creationDate = dateTool.createFromDate(file.stat.birthtime);
