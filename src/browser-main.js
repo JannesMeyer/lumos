@@ -1,11 +1,13 @@
 import page from './components/page';
 import dataSource from 'client-lib/data-source';
+import debug from 'debug';
+debug = debug('lumos');
+// localStorage.debug = 'lumos';
 
 addEventListener('load', event => {
 
 	// Initialize React
-	dataSource.get(location.pathname)
-	.then(data => {
+	dataSource.get(location.pathname).then(data => {
 		data.isUserNavigation = false;
 		app = page.renderToDOM(data);
 	});
@@ -13,20 +15,26 @@ addEventListener('load', event => {
 	// TODO: how to know the port?
 	var socket = io('http://notes:9000');
 	socket.on('connect', () => {
-		console.log('Connected');
+		debug('Connected');
+
 		socket.emit('viewing', decodeURIComponent(location.pathname));
 	});
 
-	socket.on('disconnect', console.log.bind(console, 'Disconnected:'));
-	socket.on('changed', () => {
-		console.log('Content changed:', location.pathname);
-		dataSource.get(location.pathname)
-		.then(data => {
+	socket.on('disconnect', () => {
+		debug('Disconnected');
+	});
+
+	socket.on('change', () => {
+		debug('Content changed');
+
+		dataSource.get(location.pathname).then(data => {
 			data.isUserNavigation = false;
 			page.renderToDOM(data);
 		});
 	});
 
+	// Listen for navigation events
+	// TODO: e.preventDefault()
 	page.on('pageDidNavigate', pathname => {
 		socket.emit('viewing', decodeURIComponent(pathname));
 	});

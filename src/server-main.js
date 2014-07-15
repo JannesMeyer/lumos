@@ -50,17 +50,21 @@ function startServer(options) {
 
 	// Watch for changes
 	watch.debouncedByFilename(options.directory, (event, filename) => {
+		filename = filename.normalize();
+
+		// Ignore invisible files
 		if (!filename.endsWith(config.mdSuffix)) {
 			return;
 		}
-		// Normalize UTF-8
-		filename = filename.normalize();
 
 		// TODO: diff content
-		// Emit event
+		// TODO: compare modification time
+
 		var room = '/' + filename.slice(0, -config.mdSuffix.length);
 		debug('file changed: ' + room);
-		io.to(room).emit('changed');
+
+		// Emit event
+		io.in(room).emit('change');
 	});
 
 	server.listen(options.port, () => {
