@@ -28,6 +28,6 @@ addEventListener('load', event => {
 	});
 
 	page.on('pageDidNavigate', pathname => {
-		socket.emit('viewing', pathname);
+		socket.emit('viewing', decodeURIComponent(pathname));
 	});
 });

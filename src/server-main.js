@@ -35,6 +35,13 @@ function startServer(options) {
 	io.on('connection', socket => {
 		socket.on('viewing', pathname => {
 			socket.rooms.forEach(r => socket.leave(r));
+
+			// Normalize UTF-8
+			pathname = pathname.normalize();
+
+			debug('viewing: ' + pathname);
+
+			// Join room
 			socket.join(pathname, () => {
 				debug(socket.rooms, 'joined room');
 			});
@@ -46,23 +53,13 @@ function startServer(options) {
 		if (!filename.endsWith(config.mdSuffix)) {
 			return;
 		}
-		// TODO: debounce based on filename
+		// Normalize UTF-8
+		filename = filename.normalize();
+
 		// TODO: diff content
-
-		// TODO: the filename for some utf8 files seems to be incorrect
-		// when reported through the fs.watch API
-		debug('File event: ' + filename);
-		// fs.statAsync(filename)
-		// .then(stats => {
-		// 	console.log('file exists');
-		// })
-		// .catch(Promise.OperationalError, err => {
-		// 	console.log('file not found');
-		// });
-
 		// Emit event
 		var room = '/' + filename.slice(0, -config.mdSuffix.length);
-		console.log('room', room);
+		debug('file changed: ' + room);
 		io.to(room).emit('changed');
 	});
 

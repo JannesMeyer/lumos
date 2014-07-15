@@ -341,9 +341,9 @@ var MyHTML = React.createClass({
 		keypress.on(['shift'], 'enter', goToPrevious);
 
 		keypress.on(['executeDefault'], 'down', scroll.ifAtBottom(goToNext));
-		keypress.on(['executeDefault'], 'space', scroll.ifAtBottom(goToNext));
+		// keypress.on(['executeDefault'], 'space', scroll.ifAtBottom(goToNext));
 		keypress.on(['executeDefault'], 'up', scroll.ifAtTop(goToPrevious));
-		keypress.on(['executeDefault', 'shift'], 'space', scroll.ifAtTop(goToPrevious));
+		// keypress.on(['executeDefault', 'shift'], 'space', scroll.ifAtTop(goToPrevious));
 
 		// TODO: fix titles
 		keypress.on(['meta'], 'up', event => navigateTo('..', 'Title'));
