@@ -6,7 +6,7 @@ If you want your file lists to sort correctly you have to compile Node.js with l
 
 	./configure --with-icu-path=deps/v8/third_party/icu46/icu.gyp
 	make
-	make install
+	sudo make install
 
 <https://github.com/joyent/node/issues/6371>
 <https://github.com/joyent/node/issues/4689>

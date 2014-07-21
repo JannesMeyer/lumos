@@ -19,7 +19,7 @@ function startServer(options) {
 
 	var app = express();
 	var server = http.createServer(app);
-	var io = socket_io(server);
+	var io = socket_io(server, { path: '/581209544f9a07/socket.io' });
 
 	app.use(morgan(':method :url :status (done after :response-time ms)'));
 	app.use(express.static(path.join(__dirname, '../public'), { maxAge: 31557600000 }));
@@ -34,17 +34,13 @@ function startServer(options) {
 	// WebSocket
 	io.on('connection', socket => {
 		socket.on('viewing', pathname => {
-			socket.rooms.forEach(r => socket.leave(r));
-
 			// Normalize UTF-8
 			pathname = pathname.normalize();
 
 			debug('viewing: ' + pathname);
 
-			// Join room
-			socket.join(pathname, () => {
-				debug(socket.rooms, 'joined room');
-			});
+			socket.rooms.forEach(r => socket.leave(r));
+			socket.join(pathname);
 		});
 	});
 
@@ -59,12 +55,13 @@ function startServer(options) {
 
 		// TODO: diff content
 		// TODO: compare modification time
+		// TODO: index.md
 
-		var room = '/' + filename.slice(0, -config.mdSuffix.length);
-		debug('file changed: ' + room);
+		var pathname = '/' + filename.slice(0, -config.mdSuffix.length);
+		debug('file changed: ' + pathname);
 
 		// Emit event
-		io.in(room).emit('change');
+		io.in(pathname).emit('change');
 	});
 
 	server.listen(options.port, () => {

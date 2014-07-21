@@ -1,7 +1,7 @@
 // Example:
 // https://github.com/webpack/webpack-with-common-libs/blob/master/gulpfile.js
 
-// TODO: NODE_ENV=production
+var compiler;
 
 exports.fn = function(callback) {
 	var path = require('path');
@@ -9,7 +9,11 @@ exports.fn = function(callback) {
 	var webpackConfig = require('../webpack.config');
 	var debug = require('../../src/lib/debug')();
 
-	webpack(webpackConfig, function(err, stats) {
+	if (!compiler) {
+		compiler = webpack(webpackConfig);
+	}
+
+	compiler.run(function(err, stats) {
 		if (err) {
 			debug(err);
 			return callback();

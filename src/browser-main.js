@@ -1,6 +1,7 @@
 import page from './components/page';
 import dataSource from 'client-lib/data-source';
 import debug from 'debug';
+import io from 'socket.io-client';
 debug = debug('lumos');
 // localStorage.debug = 'lumos';
 
@@ -13,7 +14,10 @@ addEventListener('load', event => {
 	});
 
 	// TODO: how to know the port?
-	var socket = io('http://notes:9000');
+	var socket = io('http://notes:9000', {
+		path: '/581209544f9a07/socket.io',
+		transports: ['websocket']
+	});
 	socket.on('connect', () => {
 		debug('Connected');
 
@@ -36,6 +40,6 @@ addEventListener('load', event => {
 	// Listen for navigation events
 	// TODO: e.preventDefault()
 	page.on('pageDidNavigate', pathname => {
-		socket.emit('viewing', decodeURIComponent(pathname));
+		socket.emit('viewing', decodeURIComponent(location.pathname));
 	});
 });

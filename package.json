@@ -46,6 +46,7 @@
     "gulp-util": "2.x",
     "jstransform": "5.x",
     "react": "0.x",
+    "socket.io-client": "^1.0.6",
     "webpack": "1.x"
   },
   "os": [

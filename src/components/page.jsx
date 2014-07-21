@@ -372,7 +372,6 @@ var MyHTML = React.createClass({
 					<link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/theme-one.css" />
 					<link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/hljs/github.css" />
 					<Favicon color={this.state.color} template="/a2b8e37dbe533b/images/favicon-template.png" />
-					<script defer src="/socket.io/socket.io.js"></script>
 					<script defer src="/a2b8e37dbe533b/javascripts/main.bundle.js"></script>
 				</head>
 
