@@ -219,6 +219,46 @@ custom-color($stripe, $nav-bg, $nav-border, $nav-link, $nav-link-active)
 	custom-color(#a0a0a0, #ebebeb, #cdcdcd, #4c4c4c, #7d7d7d)
 
 /*==========================================
+ * Table of contents
+ *==========================================*/
+
+#toc
+	border: 1px solid #aaa
+	background-color: #f9f9f9
+	position: absolute
+	top: 60px
+	right: 20px
+
+	> .toc-heading
+		font-weight: bold
+		padding: 4px 8px
+
+		> .toggle
+			font-weight: normal
+
+	> ol
+		margin-bottom: 8px
+		padding-left: 8px
+
+		ol
+			margin: 0
+			padding: 0
+			padding-left: 20px
+
+	ol
+		// padding-left: 10px
+		counter-reset: item
+
+		li
+			display: block
+
+		li:before
+			content: counters(item, ".") " "
+			counter-increment: item
+
+
+
+/*==========================================
  * Content
  *==========================================*/
 

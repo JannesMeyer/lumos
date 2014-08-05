@@ -25,8 +25,8 @@ exports.fn = function(callback) {
 			debug(cmplError.error);
 		});
 
-		// Log debug output
-		// console.log(stats.toString({ colors: true }));
+		// Log stats
+		// debug(stats.toString({ colors: true }));
 
 		return callback();
 	});

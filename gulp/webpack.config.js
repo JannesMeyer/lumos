@@ -1,7 +1,7 @@
 'use strict';
 var webpack = require('webpack');
 var path = require('path');
-var getPath = path.join.bind(path, __dirname);
+var getPath = path.join.bind(path, __dirname, '..');
 
 module.exports = {
 	cache: true,
@@ -14,7 +14,7 @@ module.exports = {
 		loaders: [
 			{
 				test: /\.(?:js|jsx)$/,
-				loader: 'es6-loader',
+				loader:  'es6-loader',
 				include: [ getPath() ],
 				exclude: [ getPath('node_modules') ]
 			}
