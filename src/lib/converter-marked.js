@@ -23,9 +23,28 @@ class Section {
 		section.parent = this;
 		this.children.push(section);
 	}
+	toSafeString() {
+		var out = '';
+
+		if (this.text) {
+			var slug = this.text.toLowerCase().replace(/[^\w]+/g, '-');
+			out += '<li>\n<a href="#' + slug + '">' + this.text + '</a>\n';
+		}
+		if (this.children) {
+			out += '<ol>\n';
+			for (var i = 0; i < this.children.length; ++i) {
+				out += this.children[i].toSafeString();
+			}
+			out += '</ol>\n';
+		}
+		if (this.text) {
+			out += '</li>\n';
+		}
+		return out;
+	}
 }
 
-function makeToc(headings) {
+function makeOutline(headings) {
 	var outline = new Section();
 	var sectionDepth = 1;
 
@@ -39,7 +58,8 @@ function makeToc(headings) {
 		var h = headings[i];
 		// h.depth, h.text
 
-		if (h.depth > sectionDepth && h.depth > currentSection.highestHeading) {
+		if (!currentSection.children) {
+		} else if (h.depth > sectionDepth && h.depth > currentSection.highestHeading) {
 			// make new section
 			currentSection = heading;
 			sectionDepth += 1;
@@ -52,20 +72,29 @@ function makeToc(headings) {
 		heading = new Section(h.text);
 		currentSection.addChildSection(heading, h.depth);
 	}
-	console.log(util.inspect(outline, { depth: null }));
 
+	return outline;
+}
 
-	return '<div id="toc"><div class="toc-heading">Table of contents <span class="toggle">[<a href="#">hide</a>]</span></div></div>';
+function makeToc(headings) {
+	var outline = makeOutline(headings);
+	// console.log(util.inspect(outline, { depth: null }));
+	if (!outline.children) {
+		return '';
+	}
+	return '<div class="m-toc"><div class="toc-heading">Table of contents <span class="toggle">[<a href="#">hide</a>]</span></div>' +
+		outline.toSafeString() +
+		'</div>';
 }
 
 export function makeHtml(content) {
 	var tokens = marked.lexer(content);
 	var headings = tokens.filter(item => item.type === 'heading');
-	var out = marked.parser(tokens);
-	out = out.replace(/(<table>)/g, '<div class="table-responsive"><table class="table table-hover">');
-	out = out.replace(/(<\/table>)/g, '</table></div>');
+	var toc = makeToc(headings);
 
-	out = makeToc(headings) + out;
+	var content = marked.parser(tokens);
+	content = content.replace(/(<table>)/g, '<div class="table-responsive"><table class="table table-hover">');
+	content = content.replace(/(<\/table>)/g, '</table></div>');
 
-	return out;
+	return toc + content;
 }

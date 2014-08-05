@@ -222,41 +222,37 @@ custom-color($stripe, $nav-bg, $nav-border, $nav-link, $nav-link-active)
  * Table of contents
  *==========================================*/
 
-#toc
+.m-toc
+	display: inline-block
+	margin-bottom: 15px
+	margin-left: 15px
 	border: 1px solid #aaa
+	padding: 12px
+	float: right
+
 	background-color: #f9f9f9
-	position: absolute
-	top: 60px
-	right: 20px
 
 	> .toc-heading
 		font-weight: bold
-		padding: 4px 8px
+		padding-bottom: 0
 
 		> .toggle
 			font-weight: normal
 
-	> ol
-		margin-bottom: 8px
-		padding-left: 8px
-
-		ol
-			margin: 0
-			padding: 0
-			padding-left: 20px
-
 	ol
-		// padding-left: 10px
+		margin: 0
+		padding: 0
 		counter-reset: item
 
-		li
-			display: block
+		ol
+			padding-left: 20px
 
-		li:before
-			content: counters(item, ".") " "
+		> li
+			display: block
 			counter-increment: item
 
-
+			> a:before
+				content: counters(item, '.') '. '
 
 /*==========================================
  * Content

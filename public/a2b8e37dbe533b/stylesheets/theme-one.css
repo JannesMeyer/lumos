@@ -880,38 +880,36 @@ body {
 /*==========================================
  * Table of contents
  *==========================================*/
-#toc {
+.m-toc {
+  display: inline-block;
+  margin-bottom: 15px;
+  margin-left: 15px;
   border: 1px solid #aaa;
+  padding: 12px;
+  float: right;
   background-color: #f9f9f9;
-  position: absolute;
-  top: 60px;
-  right: 20px;
 }
-#toc > .toc-heading {
+.m-toc > .toc-heading {
   font-weight: bold;
-  padding: 4px 8px;
+  padding-bottom: 0;
 }
-#toc > .toc-heading > .toggle {
+.m-toc > .toc-heading > .toggle {
   font-weight: normal;
 }
-#toc > ol {
-  margin-bottom: 8px;
-  padding-left: 8px;
-}
-#toc > ol ol {
+.m-toc ol {
   margin: 0;
   padding: 0;
-  padding-left: 20px;
-}
-#toc ol {
   counter-reset: item;
 }
-#toc ol li {
-  display: block;
+.m-toc ol ol {
+  padding-left: 20px;
 }
-#toc ol li:before {
-  content: counters(item, ".") " ";
+.m-toc ol > li {
+  display: block;
   counter-increment: item;
+}
+.m-toc ol > li > a:before {
+  content: counters(item, '.') '. ';
 }
 /*==========================================
  * Content
