@@ -1,3 +1,4 @@
+'use strict';
 var transform = require('jstransform').transform;
 var visitors = require('../mytransform').visitorList;
 

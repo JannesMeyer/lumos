@@ -1,9 +1,7 @@
-var path = require('path');
+'use strict';
 var webpack = require('webpack');
-
-function resolveDir(dir) {
-	return path.join(__dirname, '..', dir);
-}
+var path = require('path');
+var getPath = path.join.bind(path, __dirname);
 
 module.exports = {
 	cache: true,
@@ -12,18 +10,18 @@ module.exports = {
 		path: './public/a2b8e37dbe533b/javascripts/',
 		filename: '[name].bundle.js'
 	},
-	plugins: [
-		new webpack.DefinePlugin({ 'process.env.NODE_ENV': '\'production\'' })
-		// ,new webpack.optimize.UglifyJsPlugin()
-	],
 	module: {
 		loaders: [
-			{ test: /\.jsx$/, loader:  'es6-loader', exclude: [ resolveDir('node_modules') ] },
-			{ test: /\.js$/, loader: 'es6-loader', exclude: [ resolveDir('node_modules') ] }
+			{
+				test: /\.(?:js|jsx)$/,
+				loader: 'es6-loader',
+				include: [ getPath() ],
+				exclude: [ getPath('node_modules') ]
+			}
 		]
 	},
 	resolve: {
-		root: resolveDir('src'),
-		extensions: ['', '.webpack.js', '.web.js', '.js', '.jsx']
+		root: getPath('src'),
+		extensions: ['', '.js', '.jsx', '.json']
 	}
 };
