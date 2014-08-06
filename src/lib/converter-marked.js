@@ -8,82 +8,72 @@ marked.setOptions({
 	highlight: (code, lang) => (lang ? hljs.highlight(lang, code).value : code)
 });
 
-class Section {
-	constructor(text) {
-		this.text = text;
-		// this.parent;
-		// this.children = [];
-		this.highestHeading = 0;
-	}
-	addChildSection(section, headingDepth) {
-		if (this.children === undefined) {
-			this.children = [];
-			this.highestHeading = headingDepth;
-		}
-		section.parent = this;
-		this.children.push(section);
-	}
-	toSafeString() {
-		var out = '';
+function sectionToHTML(section) {
+	var out = '';
 
-		if (this.text) {
-			var slug = this.text.toLowerCase().replace(/[^\w]+/g, '-');
-			out += '<li>\n<a href="#' + slug + '">' + this.text + '</a>\n';
+	if (section.text) {
+		var slug = section.text.toLowerCase().replace(/[^\w]+/g, '-');
+		out += '<li><a href="#' + slug + '">' + section.text + '</a>';
+	}
+	if (section.children) {
+		out += '<ol>';
+		for (var i = 0; i < section.children.length; ++i) {
+			out += sectionToHTML(section.children[i]);
 		}
-		if (this.children) {
-			out += '<ol>\n';
-			for (var i = 0; i < this.children.length; ++i) {
-				out += this.children[i].toSafeString();
+		out += '</ol>';
+	}
+	if (section.text) {
+		out += '</li>';
+	}
+	return out;
+}
+
+class Section {
+	constructor(parent, text, headingDepth) {
+		if (text) {
+			this.text = text;
+		}
+		if (parent) {
+			this.parent = parent;
+			this.depth = parent.depth + 1;
+			if (!parent.children) {
+				parent.children = [];
+				parent.highestHeading = headingDepth;
 			}
-			out += '</ol>\n';
+			parent.children.push(this);
+		} else {
+			this.depth = 0;
 		}
-		if (this.text) {
-			out += '</li>\n';
-		}
-		return out;
 	}
 }
 
 function makeOutline(headings) {
 	var outline = new Section();
-	var sectionDepth = 1;
-
-	if (headings.length === 0) {
-		return outline;
-	}
-
 	var currentSection = outline;
 	var heading;
 	for (var i = 0; i < headings.length; ++i) {
 		var h = headings[i];
-		// h.depth, h.text
-
 		if (!currentSection.children) {
-		} else if (h.depth > sectionDepth && h.depth > currentSection.highestHeading) {
-			// make new section
+			// always use an empty section
+		} else if (h.depth >= currentSection.depth &&
+		           h.depth > currentSection.highestHeading) {
 			currentSection = heading;
-			sectionDepth += 1;
-		} else if (h.depth < sectionDepth) {
-			// go to parent section
+		} else if (h.depth <= currentSection.depth) {
 			currentSection = currentSection.parent;
-			sectionDepth -= 1;
 		}
-
-		heading = new Section(h.text);
-		currentSection.addChildSection(heading, h.depth);
+		heading = new Section(currentSection, h.text, h.depth);
 	}
-
 	return outline;
 }
 
 function makeToc(headings) {
 	var outline = makeOutline(headings);
-	// console.log(util.inspect(outline, { depth: null }));
+	console.log(util.inspect(outline, { depth: null }));
 	if (!outline.children) {
 		return '';
 	}
 	return '<div class="m-toc"><div class="toc-heading">Table of contents <span class="toggle">[<a href="#">hide</a>]</span></div>' +
-		outline.toSafeString() +
+		sectionToHTML(outline) +
 		'</div>';
 }
 
