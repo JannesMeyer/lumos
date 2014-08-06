@@ -30,13 +30,13 @@ function sectionToHTML(section) {
 
 class Section {
 	constructor(parent, text, headingDepth) {
-		if (text) {
+		if (text !== undefined) {
 			this.text = text;
 		}
-		if (parent) {
+		if (parent !== undefined) {
 			this.parent = parent;
 			this.depth = parent.depth + 1;
-			if (!parent.children) {
+			if (parent.children === undefined) {
 				parent.children = [];
 				parent.highestHeading = headingDepth;
 			}
@@ -49,32 +49,33 @@ class Section {
 
 function makeOutline(headings) {
 	var outline = new Section();
-	var currentSection = outline;
+
+	var section = outline;
 	var heading;
-	for (var i = 0; i < headings.length; ++i) {
+	for (var i = 0; i < headings.length; i++) {
 		var h = headings[i];
-		if (!currentSection.children) {
+		if (!section.children) {
 			// always use an empty section
-		} else if (h.depth >= currentSection.depth &&
-		           h.depth > currentSection.highestHeading) {
-			currentSection = heading;
-		} else if (h.depth <= currentSection.depth) {
-			currentSection = currentSection.parent;
+		} else if (h.depth > section.highestHeading) {
+			section = heading;
+		} else if (h.depth <= section.depth) {
+			section = section.parent;
 		}
-		heading = new Section(currentSection, h.text, h.depth);
+		heading = new Section(section, h.text, h.depth);
 	}
+
 	return outline;
 }
 
 function makeToc(headings) {
 	var outline = makeOutline(headings);
-	console.log(util.inspect(outline, { depth: null }));
-	if (!outline.children) {
-		return '';
-	}
-	return '<div class="m-toc"><div class="toc-heading">Table of contents <span class="toggle">[<a href="#">hide</a>]</span></div>' +
+	// console.log(util.inspect(outline, { depth: null }));
+	var script = '<script>function toggleTOC() { document.getElementsByClassName("m-toc")[0].classList.toggle("toc-hidden"); }</script>';
+	return outline.children ? '<div class="m-toc">' + script +
+		'<div class="toc-heading">Contents <span class="toggle">[<a href="javascript:toggleTOC()">toggle</a>]</span></div>' +
+		'<div class="toc-content">' +
 		sectionToHTML(outline) +
-		'</div>';
+		'</div></div>' : '';
 }
 
 export function makeHtml(content) {
