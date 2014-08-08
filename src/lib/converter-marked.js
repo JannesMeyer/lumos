@@ -72,7 +72,7 @@ function makeToc(headings) {
 	// console.log(util.inspect(outline, { depth: null }));
 	var script = '<script>function toggleTOC() { document.getElementsByClassName("m-toc")[0].classList.toggle("toc-hidden"); }</script>';
 	return outline.children ? '<div class="m-toc">' + script +
-		'<div class="toc-heading">Contents <span class="toggle">[<a href="javascript:toggleTOC()">toggle</a>]</span></div>' +
+		'<div class="toc-heading">Content <small class="toggle"><a href="javascript:toggleTOC()">toggle</a></small></div>' +
 		'<div class="toc-content">' +
 		sectionToHTML(outline) +
 		'</div></div>' : '';

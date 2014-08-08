@@ -45,6 +45,7 @@
     "gulp-traceur": "0.x",
     "gulp-util": "2.x",
     "jstransform": "5.x",
+    "normalize.css": "^3.0.1",
     "react": "0.x",
     "socket.io-client": "^1.0.6",
     "webpack": "1.x"

@@ -75,9 +75,8 @@ var SearchBar = React.createClass({
 	},
 	render() {
 		return (
-			<form method="get">
+			<form method="get" className="m-search">
 				<input
-					className="m-search"
 					ref="searchBox"
 					type="text"
 					name="q"
@@ -152,38 +151,34 @@ var Page = React.createClass({
 		       (nextProps.content !== this.props.content);
 	},
 	componentDidMount() {
-		var section = this.getDOMNode();
+		var element = this.getDOMNode();
 		keypress.on([], 'x', event => {
-			if (scroll.isAtElement(section)) {
+			if (scroll.isAtElement(element)) {
 				scroll.to(0);
 			} else {
-				scroll.toElement(section);
+				scroll.toElement(element);
 			}
 		});
 	},
 	componentWillUpdate(nextProps) {
 		// Only scroll to top after a navigation, not after a reload
 		if (nextProps.isUserNavigation) {
-			var section = this.getDOMNode();
-			if (!scroll.isAtElement(section)) {
+			var element = this.getDOMNode();
+			if (!scroll.isAtElement(element)) {
 				scroll.to(0);
 			}
 		}
 	},
 	render() {
-		// TODO: no content: <p style="color: #999">+++ empty +++</p>
 		return (
-			<section className="m-page" role="content">
+			<div className="m-page" role="content">
 				<div className="m-page-buttons">
 					<PageButton name="edit" icon="pencil" href={this.props.editURL} title="Edit page (E)" />
 					<FullscreenButton />
 				</div>
-				<div className="m-page-title">
-					<h1>{this.props.title}</h1>
-					<p>{this.props.creationDate}</p>
-				</div>
+				<h1 className="m-page-title">{this.props.title}</h1>
 				<article dangerouslySetInnerHTML={{ __html: this.props.content }} />
-			</section>
+			</div>
 		);
 	}
 });
@@ -361,6 +356,7 @@ var MyHTML = React.createClass({
 		// <link rel="preload" href="/fonts/glyphicons-halflings-regular.woff" type="font/woff" />
 
 		// TODO: Send 'Content-Type'(+JSON) and 'X-UA-Compatible' as headers
+		// <link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/bootstrap.css" />
 		return (
 			<html>
 				<head>
@@ -368,8 +364,7 @@ var MyHTML = React.createClass({
 					<title>{data.title}</title>
 					<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 					<meta name="viewport" content="width=device-width, initial-scale=1" />
-					<link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/bootstrap.css" />
-					<link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/theme-one.css" />
+					<link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/theme.css" />
 					<link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/hljs/github.css" />
 					<Favicon color={this.state.color} template="/a2b8e37dbe533b/images/favicon-template.png" />
 					<script defer src="/a2b8e37dbe533b/javascripts/main.bundle.js"></script>
