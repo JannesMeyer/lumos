@@ -1078,6 +1078,7 @@ body {
 .m-page > article {
   color: #333;
   line-height: 1.5;
+  max-width: 46em;
 }
 .m-page > article > *:first-child {
   margin-top: 0 !important;
@@ -1140,23 +1141,6 @@ body {
 .m-page > article blockquote {
   font-size: 1em;
 }
-.m-page > article .callout {
-  margin: 20px 0;
-  padding: 20px;
-  border-left: 3px solid #5bc0de;
-  background-color: #f4f8fa;
-}
-.m-page > article .callout h4 {
-  margin-top: 0;
-  margin-bottom: 5px;
-  color: #5bc0de;
-}
-.m-page > article .callout p:last-child {
-  margin-bottom: 0;
-}
-.m-page > article .callout code {
-  background-color: #fff;
-}
 .m-toc {
   display: inline-block;
   border: 1px solid #ccc;
@@ -1203,6 +1187,23 @@ body {
 }
 :root:fullscreen .m-toc {
   display: none;
+}
+.m-page > article .callout {
+  margin: 20px 0;
+  padding: 20px;
+  border-left: 3px solid #5bc0de;
+  background-color: #f4f8fa;
+}
+.m-page > article .callout h4 {
+  margin-top: 0;
+  margin-bottom: 5px;
+  color: #5bc0de;
+}
+.m-page > article .callout p:last-child {
+  margin-bottom: 0;
+}
+.m-page > article .callout code {
+  background-color: #fff;
 }
 @font-face {
   font-family: 'Glyphicons Halflings';
