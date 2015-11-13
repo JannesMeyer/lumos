@@ -1,8 +1,7 @@
 {
   "name": "lumos",
   "version": "1.0.0",
-  "author": "Jannes Meyer <jannes.meyer+npm@gmail.com>",
-  "engine": "node 0.11.13",
+  "author": "Jannes Meyer <jannes.meyer@gmail.com>",
   "private": true,
   "bin": "./bin/lumos",
   "scripts": {
@@ -14,26 +13,25 @@
     "mdSuffix": ".md",
     "indexFile": "index.md",
     "editURLProtocol": "lumos-connect://",
-    "editor": "subl",
+    "editor": "/usr/local/bin/subl",
     "editorArgs": [],
     "diaryBaseDir": "/Users/jannes/Dropbox/Notes/Tagebuch"
   },
   "dependencies": {
-    "bluebird": "2.x",
-    "debug": "^1.0.2",
+    "bluebird": "2.3.6",
+    "debug": "2.1.0",
     "envify": "1.x",
-    "express": "4.x",
-    "highlight.js": "8.x",
-    "iconv-lite": "^0.4.3",
-    "marked": "0.x",
-    "minimist": "0.x",
-    "morgan": "1.x",
-    "react": "0.x",
-    "socket.io": "^1.0.6"
+    "express": "4.10.0",
+    "highlight.js": "8.3.0",
+    "iconv-lite": "0.4.4",
+    "marked": "0.3.2",
+    "minimist": "0.2.0",
+    "morgan": "1.4.1",
+    "react": "0.12.0",
+    "socket.io": "1.0.6"
   },
   "devDependencies": {
-    "es6-shim": "0.x",
-    "esprima-fb": "4001.x",
+    "es6-shim": "0.19.1",
     "gulp": "3.x",
     "gulp-autoprefixer": "0.x",
     "gulp-changed": "0.x",
@@ -44,14 +42,12 @@
     "gulp-stylus": "1.x",
     "gulp-traceur": "0.x",
     "gulp-util": "2.x",
-    "jstransform": "5.x",
-    "normalize.css": "^3.0.1",
-    "react": "0.x",
-    "socket.io-client": "^1.0.6",
-    "webpack": "1.x"
+    "jstransform": "5.0.0",
+    "normalize.css": "3.0.1",
+    "socket.io-client": "1.0.6",
+    "webpack": "1.4.8"
   },
   "os": [
     "darwin"
-  ],
-  "preferGlobal": true
+  ]
 }
