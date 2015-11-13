@@ -1,7 +1,12 @@
-.DS_Store
-$*
 *.bundle.js
+
+$assets
+public
+node_modules
+dist
+
+# Sublime Text
 *.sublime-workspace
 
-/node_modules
-/dist
+# Mac OSX
+.DS_Store
