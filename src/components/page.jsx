@@ -1,11 +1,11 @@
 import React from 'react';
 
 // Browser-only
-var { get } = require('../client-lib/data-source');
-var favicon    = require('../client-lib/favicon-tool');
-var keypress   = require('../client-lib/keypress-tool');
-var scroll     = require('../client-lib/scroll-tool');
-var fullscreen = require('../client-lib/fullscreen-tool');
+import { get } from '../client-lib/data-source';
+import favicon from '../client-lib/favicon-tool';
+import keypress from '../client-lib/keypress-tool';
+import scroll from '../client-lib/scroll-tool';
+import fullscreen from '../client-lib/fullscreen-tool';
 
 
 // Master component
@@ -31,9 +31,6 @@ var colors = {
 	'red-chalk': [249, 98, 133],    // #f96285
 	'none': [160, 160, 160]         // #a0a0a0
 };
-
-// Client-side libraries
-var dataSource, favicon, keypress, scroll, fullscreen;
 
 // Feature detection (client-side features)
 var supported = {
@@ -368,7 +365,6 @@ var MyHTML = React.createClass({
 				<head>
 					<meta charSet="utf-8" />
 					<title>{data.title}</title>
-					<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 					<meta name="viewport" content="width=device-width, initial-scale=1" />
 					<link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/theme.css" />
 					<link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/hljs/github.css" />
@@ -390,12 +386,12 @@ var MyHTML = React.createClass({
  */
 
 export function renderToString(data) {
-	return React.renderComponentToString(<MyHTML data={data} />);
+	return React.renderToString(<MyHTML data={data} />);
 }
 
 export function renderToDOM(data) {
 
-	app = React.renderComponent(<MyHTML data={data} />, document);
+	app = React.render(<MyHTML data={data} />, document);
 	return app;
 }
 
