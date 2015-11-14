@@ -18,7 +18,8 @@ export default function cmd(args) {
   var argv = minimist(args);
 
   var options = {
-    directory: process.cwd(),
+    directory: '/Users/jannes/Dropbox/Notes',
+    //directory: process.cwd(),
     port: argv.port || config.defaultPort
   };
   startServer(options);
