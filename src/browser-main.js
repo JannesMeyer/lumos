@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import MyHTML from './components/MyHTML';
 import { get } from './client-lib/data-source';
 import { supported } from './constants';
@@ -52,7 +53,7 @@ addEventListener('load', event => {
 ////////////////////////////////////
 
 function renderToDOM(data) {
-  return React.render(<MyHTML data={data} />, document);
+  return ReactDOM.render(<MyHTML data={data} />, document);
 }
 
 // Event listeners

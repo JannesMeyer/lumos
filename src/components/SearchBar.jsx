@@ -6,7 +6,7 @@ import * as keypress from '../client-lib/keypress-tool';
 var SearchBar = React.createClass({
   componentDidMount() {
     keypress.on([], '/', event => {
-      var el = this.refs.searchBox.getDOMNode();
+      var el = this.refs.searchBox;
       el.focus();
     });
   },

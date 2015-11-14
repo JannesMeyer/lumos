@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import PageButton from './PageButton';
 import FullscreenButton from './FullscreenButton';
 
@@ -14,7 +15,7 @@ var Page = React.createClass({
            (nextProps.content !== this.props.content);
   },
   componentDidMount() {
-    var element = this.getDOMNode();
+    var element = ReactDOM.findDOMNode(this);
     keypress.on([], 'x', event => {
       if (scroll.isAtElement(element)) {
         scroll.to(0);
@@ -26,7 +27,7 @@ var Page = React.createClass({
   componentWillUpdate(nextProps) {
     // Only scroll to top after a navigation, not after a reload
     if (nextProps.isUserNavigation) {
-      var element = this.getDOMNode();
+      var element = ReactDOM.findDOMNode(this);
       if (!scroll.isAtElement(element)) {
         scroll.to(0);
       }
@@ -40,7 +41,7 @@ var Page = React.createClass({
           <FullscreenButton />
         </div>
         <h1 className="m-page-title">{this.props.title}</h1>
-        <article dangerouslySetInnerHTML={{ __html: this.props.content || 'no content' }} />
+        <article dangerouslySetInnerHTML={{ __html: this.props.content || '' }} />
       </div>
     );
   }

@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { colors, supported } from '../constants';
 
 // browser-only
@@ -14,7 +15,7 @@ var Favicon = React.createClass({
     this.faviconTemplate.then(result => {
       var context = result[0];
       var imageData = result[1];
-      var node = this.getDOMNode();
+      var node = ReactDOM.findDOMNode(this);
       var colorName = this.props.color;
       var color = colors[colorName];
 

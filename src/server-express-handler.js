@@ -8,13 +8,14 @@ import { SegmentedPath } from './classes/SegmentedPath';
 import { Directory } from './classes/Directory';
 
 import React from 'react';
+import ReactDOMServer from 'react-dom/server';
 import MyHTML from './components/MyHTML';
 import { get } from './client-lib/data-source';
 
 Promise.promisifyAll(fs);
 
 function render(data) {
-  return '<!DOCTYPE html>' + React.renderToString(<MyHTML data={data} />);
+  return '<!DOCTYPE html>' + ReactDOMServer.renderToString(<MyHTML data={data} />);
 }
 
 export default function handleRequest(baseDir) {
