@@ -1,15 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 import Promise from 'bluebird';
-import converter from './lib/converter-marked';
-import dateTool from './lib/date-tool';
-import layout from './templates/layout';
+import * as converter from './lib/converter-marked';
+import * as dateTool from './lib/date-tool';
+import * as layout from './templates/layout';
 import { config } from '../package.json';
 import { SegmentedPath } from './classes/SegmentedPath';
 import { Directory } from './classes/Directory';
 Promise.promisifyAll(fs);
 
-module.exports = function(baseDir) {
+export default function handleRequest(baseDir) {
 	var baseDirName = path.basename(baseDir);
 
 	return function(req, res, next) {
@@ -179,5 +179,3 @@ function mHTTPError(status, message) {
 	error.status = status;
 	return error;
 }
-
-// export default handleRequest;

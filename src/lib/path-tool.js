@@ -1,4 +1,4 @@
-var path = require('path');
+import path from 'path';
 
 export function name(filename) {
 	var basename = path.basename(filename);

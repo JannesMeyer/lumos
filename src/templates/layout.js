@@ -1,5 +1,5 @@
-import pageComponent from '../components/page';
+import { renderToString } from '../components/page';
 
 exports.render = function(data) {
-	return '<!DOCTYPE html>' + pageComponent.renderToString(data);
+	return '<!DOCTYPE html>' + renderToString(data);
 }

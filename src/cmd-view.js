@@ -2,7 +2,7 @@ import minimist from 'minimist';
 import { spawn } from 'child_process';
 import { config } from '../package.json';
 
-export function cmd(args) {
+export default function cmd(args) {
 	var argv = minimist(args);
 
 	if (argv._.length === 0) {

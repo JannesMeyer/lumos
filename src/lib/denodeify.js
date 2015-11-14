@@ -1,10 +1,7 @@
-// import Promise from 'bluebird';
-// TODO: lazy-loading of denodified functions
-
-/*
+/**
  * Converts node's async functions into Promises
  */
-function denodeify(thisArg, nodeFn) {
+export default function denodeify(thisArg, nodeFn) {
 	return function() {
 		var args = Array.prototype.slice.call(arguments);
 		return new Promise(function(resolve, reject) {
@@ -19,5 +16,3 @@ function denodeify(thisArg, nodeFn) {
 		});
 	};
 };
-
-export default denodeify;

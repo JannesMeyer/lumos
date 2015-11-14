@@ -1,16 +1,16 @@
-import page from './components/page';
-import dataSource from './client-lib/data-source';
+import * as page from './components/page';
+import { get } from './client-lib/data-source';
 import debugLib from 'debug';
 import io from 'socket.io-client';
 var debug = debugLib('lumos');
 // localStorage.debug = 'lumos';
 
 addEventListener('load', event => {
-
 	// Initialize React
-	dataSource.get(location.pathname).then(data => {
+	get(location.pathname).then(data => {
 		data.isUserNavigation = false;
-		app = page.renderToDOM(data);
+		// TODO: Update app variable in page.jsx
+		page.renderToDOM(data);
 	});
 
 	// TODO: how to know the port?
@@ -31,7 +31,7 @@ addEventListener('load', event => {
 	socket.on('change', () => {
 		debug('Content changed');
 
-		dataSource.get(location.pathname).then(data => {
+		get(location.pathname).then(data => {
 			data.isUserNavigation = false;
 			page.renderToDOM(data);
 		});

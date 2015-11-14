@@ -1,33 +1,21 @@
-var debug = require('../src/lib/debug')(undefined, { showStack: true });
+import serve from './cmd-serve';
+import view from './cmd-view';
+import edit from './cmd-edit';
+import diary from './cmd-diary';
+import search from './cmd-search';
 
-var serve = require('./cmd-serve');
-var view = require('./cmd-view');
-var edit = require('./cmd-edit');
-var diary = require('./cmd-diary');
-var search = require('./cmd-search');
+const commands = { serve, view, edit, diary, search };
 
-var commands = {
-	serve,
-	view,
-	edit,
-	diary,
-	search
-};
+// Take first argument
+let args = process.argv.slice(2);
+let command = args.shift();
 
-function getHelp() {
-	return 'usage: lumos <command> [<args>]\n'
-	     + '\n'
-	     + 'Available commands:\n'
-	     + '   ' + Object.keys(commands).join('\n   ');
-}
-
-// Main
-var args = process.argv.slice(2);
-var commandPath = commands[args.shift()];
-
-if (commands.hasOwnProperty(commandPath)) {
+if (commands.hasOwnProperty(command)) {
 	// Execute command
-	commands[commandPath].cmd(args);
+	commands[command](args);
 } else {
-	console.log(getHelp());
+	// Show help
+	console.log('Usage: lumos <command> [<args>]\n');
+	console.log('Available commands:');
+	console.log('   ' + Object.keys(commands).join('\n   '));
 }

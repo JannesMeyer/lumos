@@ -38,7 +38,7 @@ function createFiles(files) {
 	));
 }
 
-export function cmd(args) {
+export default function cmd(args) {
 	if (args.length === 0) {
 		var days = [dateTool.today()];
 	} else {

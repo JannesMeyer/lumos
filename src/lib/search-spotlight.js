@@ -1,4 +1,3 @@
-import Promise from 'bluebird';
 import { execFile } from 'child_process';
 
 function buildQuery(terms) {
@@ -15,7 +14,7 @@ function buildQuery(terms) {
 	return `kMDItemContentType == net.daringfireball.markdown && (** = "${terms}*"cdwt)`;
 }
 
-function search(directory, terms) {
+export default function search(directory, terms) {
 	// directory must not end in a slash
 	if (directory.endsWith('/')) {
 		directory = directory.replace(/\/+$/, '');
@@ -34,4 +33,3 @@ function search(directory, terms) {
 		});
 	});
 }
-export default search;

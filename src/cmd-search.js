@@ -3,7 +3,7 @@ import { execFile } from 'child_process';
 import search from './lib/search-spotlight';
 import debug from './lib/debug';
 
-export function cmd(args) {
+export default function cmd(args) {
 	// var argv = minimist(args);
 	// if (argv._.length === 0) {
 	// 	throw new Error('Not enough arguments');

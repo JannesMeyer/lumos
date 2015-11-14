@@ -40,7 +40,7 @@ function createFiles(files) {
 }
 
 // Needs an absolute path
-export function cmd(args) {
+export default function cmd(args) {
 	var argv = minimist(args);
 	if (argv._.length === 0) {
 		throw new Error('Need more arguments');

@@ -1,5 +1,3 @@
-import Promise from 'bluebird';
-
 // http://stackoverflow.com/questions/2353211/hsl-to-rgb-color-conversion
 
 export function load(url) {

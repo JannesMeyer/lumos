@@ -1,7 +1,7 @@
 import React from 'react';
 
 // Browser-only
-var dataSource = require('../client-lib/data-source');
+var { get } = require('../client-lib/data-source');
 var favicon    = require('../client-lib/favicon-tool');
 var keypress   = require('../client-lib/keypress-tool');
 var scroll     = require('../client-lib/scroll-tool');
@@ -373,7 +373,7 @@ var MyHTML = React.createClass({
 					<link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/theme.css" />
 					<link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/hljs/github.css" />
 					<Favicon color={this.state.color} template="/a2b8e37dbe533b/images/favicon-template.png" />
-					<script defer src="/a2b8e37dbe533b/javascripts/main.bundle.js"></script>
+					<script defer src="/a2b8e37dbe533b/javascripts/browser.bundle.js"></script>
 				</head>
 
 				<body>
@@ -421,7 +421,7 @@ function navigateTo(path, title) {
 	// TODO: Queue push state when in fullscreen, because it would exit fullscreen mode (in Chrome)
 	history.pushState(undefined, undefined, path);
 
-	dataSource.get(path)
+	get(path)
 	.then(data => {
 		data.isUserNavigation = true;
 		history.replaceState(data, undefined, path);
