@@ -40,7 +40,7 @@ var Page = React.createClass({
           <FullscreenButton />
         </div>
         <h1 className="m-page-title">{this.props.title}</h1>
-        <article dangerouslySetInnerHTML={{ __html: this.props.content }} />
+        <article dangerouslySetInnerHTML={{ __html: this.props.content || 'no content' }} />
       </div>
     );
   }
