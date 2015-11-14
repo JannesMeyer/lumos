@@ -7,7 +7,7 @@
 				".*",
 				"node_modules",
 				"dist",
-				"public/a2b8e37dbe533b/javascripts/"
+				"public/a2b8e37dbe533b/javascripts"
 			]
 		}
 	]
