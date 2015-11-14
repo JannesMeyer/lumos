@@ -1,5 +1,8 @@
-import * as page from './components/page';
+import React from 'react';
+import MyHTML from './components/MyHTML';
 import { get } from './client-lib/data-source';
+import { supported } from './constants';
+
 import debugLib from 'debug';
 import io from 'socket.io-client';
 var debug = debugLib('lumos');
@@ -10,7 +13,7 @@ addEventListener('load', event => {
 	get(location.pathname).then(data => {
 		data.isUserNavigation = false;
 		// TODO: Update app variable in page.jsx
-		page.renderToDOM(data);
+		renderToDOM(data);
 	});
 
 	// TODO: how to know the port?
@@ -33,13 +36,55 @@ addEventListener('load', event => {
 
 		get(location.pathname).then(data => {
 			data.isUserNavigation = false;
-			page.renderToDOM(data);
+			renderToDOM(data);
 		});
 	});
 
 	// Listen for navigation events
 	// TODO: e.preventDefault()
-	page.on('pageDidNavigate', pathname => {
+	on('pageDidNavigate', pathname => {
 		socket.emit('viewing', decodeURIComponent(location.pathname));
 	});
 });
+
+
+
+////////////////////////////////////
+
+function renderToDOM(data) {
+	return React.render(<MyHTML data={data} />, document);
+}
+
+// Event listeners
+var pageDidNavigateListeners = [];
+function on(eventName, listener) {
+	if (eventName === 'pageDidNavigate') {
+		pageDidNavigateListeners.push(listener);
+	} else {
+		console.warn('Unrecognized event name');
+	}
+}
+
+// TODO: links inside the page
+// TODO: Require a node (mid-tree or leaf) as argument
+// https://code.google.com/p/chromium/issues/detail?id=50298
+function navigateTo(path, title) {
+	if (!supported.history) {
+		// Fall back to normal navigation if the browser doesn't support the history API
+		location.href = path;
+	}
+
+	// TODO: Queue push state when in fullscreen, because it would exit fullscreen mode (in Chrome)
+	history.pushState(undefined, undefined, path);
+
+	get(path)
+	.then(data => {
+		data.isUserNavigation = true;
+		history.replaceState(data, undefined, path);
+		renderToDOM(data);
+
+		pageDidNavigateListeners.forEach(listener => {
+			listener(path);
+		});
+	});
+}

@@ -3,11 +3,19 @@ import path from 'path';
 import Promise from 'bluebird';
 import * as converter from './lib/converter-marked';
 import * as dateTool from './lib/date-tool';
-import * as layout from './templates/layout';
 import { config } from '../package.json';
 import { SegmentedPath } from './classes/SegmentedPath';
 import { Directory } from './classes/Directory';
+
+import React from 'react';
+import MyHTML from './components/MyHTML';
+import { get } from './client-lib/data-source';
+
 Promise.promisifyAll(fs);
+
+function render(data) {
+	return '<!DOCTYPE html>' + React.renderToString(<MyHTML data={data} />);
+}
 
 export default function handleRequest(baseDir) {
 	var baseDirName = path.basename(baseDir);
@@ -66,7 +74,7 @@ export default function handleRequest(baseDir) {
 					});
 					res.json(data);
 				} else {
-					res.end(layout.render(data));
+					res.end(render(data));
 				}
 			})
 			.catch(err => next(err));
@@ -128,7 +136,7 @@ export default function handleRequest(baseDir) {
 						});
 						res.json(data);
 					} else {
-						res.end(layout.render(data));
+						res.end(render(data));
 					}
 				})
 				.catch(err => next(err));

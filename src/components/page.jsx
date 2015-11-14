@@ -1,430 +1,48 @@
 import React from 'react';
+import PageButton from './PageButton';
+import FullscreenButton from './FullscreenButton';
 
-// Browser-only
-import { get } from '../client-lib/data-source';
-import favicon from '../client-lib/favicon-tool';
-import keypress from '../client-lib/keypress-tool';
-import scroll from '../client-lib/scroll-tool';
-import fullscreen from '../client-lib/fullscreen-tool';
-
-
-// Master component
-var app;
-
-// hex.colorrrs.com
-var colors = {
-	'blue': [96, 170, 223],         // #60aadf
-	'yellow': [249, 186, 0],        // #f9ba00
-	'green': [63, 191, 119],        // #3fbf77
-	'red': [255, 109, 97],          // #ff6d61
-	'purple': [216, 134, 200],      // #d886c8
-	'cyan': [23, 183, 207],         // #17b7cf
-	'orange': [255, 154, 41],       // #ff9a29
-	'magenta': [243, 124, 186],     // #f37cba
-	'blue-mist': [132, 154, 213],   // #849ad5
-	'purple-mist': [170, 144, 211], // #aa90d3
-	'tan': [187, 160, 141],         // #bba08d
-	'lemon-lime': [183, 191, 39],   // #b7bf27
-	'apple': [127, 191, 96],        // #7fbf60
-	'teal': [0, 185, 164],          // #00b9a4
-	'silver': [157, 174, 189],      // #9daebd
-	'red-chalk': [249, 98, 133],    // #f96285
-	'none': [160, 160, 160]         // #a0a0a0
-};
-
-// Feature detection (client-side features)
-var supported = {
-	history: typeof window !== 'undefined' && Boolean(window.history) && Boolean(window.history.pushState),
-	canvas2D: typeof window !== 'undefined' && Boolean(window.CanvasRenderingContext2D)
-};
-
-/*
- * React components
- */
-
-var BreadcrumbList = React.createClass({
-	handleClick(e) {
-		if (e.button === 0) {
-			var title = e.target.firstChild.data;
-			var path = e.target.pathname;
-			navigateTo(path, title);
-			e.preventDefault();
-		}
-	},
-	render() {
-		return (
-			<ol>
-				{this.props.breadcrumbs.map(item =>
-					<li key={item.path}><a href={item.path} onClick={this.handleClick}>{item.name}</a></li>
-				)}
-				<li className="more">
-					<ol>
-						{this.props.dirs.map(item =>
-							<li key={item.relative}><a href={item.link} onClick={this.handleClick}>{item.relative}</a></li>
-						)}
-					</ol>
-				</li>
-			</ol>
-		);
-	}
-});
-
-var SearchBar = React.createClass({
-	componentDidMount() {
-		keypress.on([], '/', event => {
-			var el = this.refs.searchBox.getDOMNode();
-			el.focus();
-		});
-	},
-	render() {
-		return (
-			<form method="get" className="m-search">
-				<input
-					ref="searchBox"
-					type="text"
-					name="q"
-					autoComplete="off"
-					spellCheck="false"
-					dir="auto" />
-			</form>
-		);
-	}
-});
-
-var ColorPicker = React.createClass({
-	handleChange(e) {
-		var color = e.target.value;
-		app.setState({ color });
-	},
-	render() {
-		return (
-			<select value={this.props.color} onChange={this.handleChange} className="m-colorpicker">
-			{this.props.colors.map(color =>
-				<option value={color} key={color}>{color}</option>
-			)}
-			</select>
-		);
-	}
-});
-
-var Header = React.createClass({
-	render() {
-		return (
-			<header className="m-header" ref="header">
-				<BreadcrumbList breadcrumbs={this.props.breadcrumbs} dirs={this.props.dirs} />
-				<SearchBar />
-				<ColorPicker colors={this.props.colors} color={this.props.color} />
-			</header>
-		);
-	}
-});
-
-var Navigation = React.createClass({
-	handleMouseDown(e) {
-		if (e.button === 0) {
-			var title = e.target.firstChild.data;
-			var path = e.target.pathname;
-			navigateTo(path, title);
-		}
-	},
-	handleClick(e) {
-		if (e.button === 0) {
-			e.preventDefault();
-		}
-	},
-	render() {
-		var items = this.props.items;
-		return (
-			<nav className="m-navigation">
-				<ul>{items.map((item, i) =>
-					<li key={item.name} className={item.isActive ? 'active' : ''}>
-						<a href={item.link} onMouseDown={this.handleMouseDown} onClick={this.handleClick}>{item.name}</a>
-					</li>
-				)}</ul>
-			</nav>
-		);
-	}
-});
+// browser-only
+import * as scroll from '../client-lib/scroll-tool';
+import * as keypress from '../client-lib/keypress-tool';
 
 // TODO: update twice for each page load (loading, loaded)
 var Page = React.createClass({
-	// TODO: doesn't work good with live reload
-	shouldComponentUpdate(nextProps) {
-		return (nextProps.filePath !== this.props.filePath) ||
-		       (nextProps.content !== this.props.content);
-	},
-	componentDidMount() {
-		var element = this.getDOMNode();
-		keypress.on([], 'x', event => {
-			if (scroll.isAtElement(element)) {
-				scroll.to(0);
-			} else {
-				scroll.toElement(element);
-			}
-		});
-	},
-	componentWillUpdate(nextProps) {
-		// Only scroll to top after a navigation, not after a reload
-		if (nextProps.isUserNavigation) {
-			var element = this.getDOMNode();
-			if (!scroll.isAtElement(element)) {
-				scroll.to(0);
-			}
-		}
-	},
-	render() {
-		return (
-			<div className="m-page" role="content">
-				<div className="m-page-buttons">
-					<PageButton name="edit" icon="pencil" href={this.props.editURL} title="Edit page (E)" />
-					<FullscreenButton />
-				</div>
-				<h1 className="m-page-title">{this.props.title}</h1>
-				<article dangerouslySetInnerHTML={{ __html: this.props.content }} />
-			</div>
-		);
-	}
+  // TODO: doesn't work good with live reload
+  shouldComponentUpdate(nextProps) {
+    return (nextProps.filePath !== this.props.filePath) ||
+           (nextProps.content !== this.props.content);
+  },
+  componentDidMount() {
+    var element = this.getDOMNode();
+    keypress.on([], 'x', event => {
+      if (scroll.isAtElement(element)) {
+        scroll.to(0);
+      } else {
+        scroll.toElement(element);
+      }
+    });
+  },
+  componentWillUpdate(nextProps) {
+    // Only scroll to top after a navigation, not after a reload
+    if (nextProps.isUserNavigation) {
+      var element = this.getDOMNode();
+      if (!scroll.isAtElement(element)) {
+        scroll.to(0);
+      }
+    }
+  },
+  render() {
+    return (
+      <div className="m-page" role="content">
+        <div className="m-page-buttons">
+          <PageButton name="edit" icon="pencil" href={this.props.editURL} title="Edit page (E)" />
+          <FullscreenButton />
+        </div>
+        <h1 className="m-page-title">{this.props.title}</h1>
+        <article dangerouslySetInnerHTML={{ __html: this.props.content }} />
+      </div>
+    );
+  }
 });
-
-var PageButton = React.createClass({
-	render() {
-		var props = this.props;
-		return (
-			<a className={'button-' + props.name} href={props.href} title={props.title} onClick={props.onClick}>
-				<span className={'glyphicon glyphicon-' + props.icon}></span>
-			</a>
-		);
-	}
-});
-
-var FullscreenButton = React.createClass({
-	getInitialState() {
-		return {
-			isFullscreen: false
-		};
-	},
-	componentDidMount() {
-		keypress.on([], 'f', this.toggleFullscreen);
-
-		// TODO: Use CSS selectors for this instead?
-		fullscreen.onChange(state => {
-			this.setState({ isFullscreen: state });
-		});
-	},
-	toggleFullscreen(e) {
-		fullscreen.toggle(document.documentElement);
-		e.preventDefault();
-		// e.currentTarget.blur()
-	},
-	render() {
-		return (
-			<PageButton name="fullscreen"
-			            icon={this.state.isFullscreen ? 'resize-small' : 'resize-full'}
-			            href=""
-			            title="Toggle fullscreen (F)"
-			            onClick={this.toggleFullscreen} />
-		);
-	}
-});
-
-var LumosApplication = React.createClass({
-	render() {
-		var data = this.props.data;
-		return (
-			<div className={'m-container s-' + this.props.color}>
-				<Header breadcrumbs={data.breadcrumbs}
-				        dirs={data.dirs}
-				        colors={this.props.colors}
-				        color={this.props.color} />
-				<div>
-					<Page filePath={data.filePath}
-					      title={data.title}
-					      creationDate={data.creationDate}
-					      content={data.content}
-					      editURL={data.editURL}
-					      isUserNavigation={data.isUserNavigation} />
-					<Navigation items={data.items} />
-				</div>
-			</div>
-		);
-	}
-});
-
-// TODO: Render the icon on the server-side, too
-var Favicon = React.createClass({
-	colorize() {
-		if (!supported.canvas2D) {
-			throw new Error('Canvas2D not supported');
-		}
-
-		this.faviconTemplate.then(result => {
-			var context = result[0];
-			var imageData = result[1];
-			var node = this.getDOMNode();
-			var colorName = this.props.color;
-			var color = colors[colorName];
-
-			node.href = favicon.colorize(context, imageData, color);
-			node.parentNode.replaceChild(node, node);
-		});
-	},
-	shouldComponentUpdate(nextProps) {
-		return nextProps.color !== this.props.color;
-	},
-	componentDidMount() {
-		if (supported.canvas2D) {
-			this.faviconTemplate = favicon.load(this.props.template);
-		}
-		this.colorize();
-	},
-	componentDidUpdate() {
-		this.colorize();
-	},
-	render() {
-		return <link rel="icon" href={this.props.template} />;
-	}
-});
-
-var MyHTML = React.createClass({
-
-	colors: Object.keys(colors),
-
-	getInitialState() {
-		return {
-			color: 'purple-mist'
-		};
-	},
-
-	componentDidMount() {
-		if (supported.history) {
-			var path = location.pathname;
-			history.replaceState(this.props.data, undefined, path);
-
-			addEventListener('popstate', e => {
-				if (!e.state) {
-					console.warn('undefined state after a popstate event', e.state);
-					return;
-				}
-				this.setProps({ data: e.state });
-			});
-		}
-
-		// Helper functions
-		var goToNext = (e) => {
-			var target = this.props.data.nextItem;
-			if (target) {
-				navigateTo(target.link, target.name);
-				e.preventDefault();
-			}
-		}
-		var goToPrevious = (e) => {
-			var target = this.props.data.prevItem;
-			if (target) {
-				navigateTo(target.link, target.name);
-				e.preventDefault();
-			}
-		}
-
-		// Key bindings
-		keypress.on([], 'e', event => {
-			if (this.props.data.editURL) {
-				location.href = this.props.data.editURL;
-			}
-		});
-		keypress.on([], 'j', goToNext);
-		keypress.on([], 'k', goToPrevious);
-		keypress.on([], 'right', goToNext);
-		keypress.on([], 'left', goToPrevious);
-		keypress.on([], 'enter', goToNext);
-		keypress.on(['shift'], 'enter', goToPrevious);
-
-		keypress.on(['executeDefault'], 'down', scroll.ifAtBottom(goToNext));
-		// keypress.on(['executeDefault'], 'space', scroll.ifAtBottom(goToNext));
-		keypress.on(['executeDefault'], 'up', scroll.ifAtTop(goToPrevious));
-		// keypress.on(['executeDefault', 'shift'], 'space', scroll.ifAtTop(goToPrevious));
-
-		// TODO: fix titles
-		keypress.on(['meta'], 'up', event => navigateTo('..', 'Title'));
-		keypress.on([], 'r', event => navigateTo('/', 'Title'));
-
-		keypress.on(['inputEl'], 'esc', event => {
-			var el = event.target;
-			if (el.blur) { el.blur(); }
-		});
-	},
-
-	render() {
-		var data = this.props.data;
-
-		// <link rel="preload" href="/fonts/glyphicons-halflings-regular.woff" type="font/woff" />
-
-		// TODO: Send 'Content-Type'(+JSON) and 'X-UA-Compatible' as headers
-		// <link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/bootstrap.css" />
-		return (
-			<html>
-				<head>
-					<meta charSet="utf-8" />
-					<title>{data.title}</title>
-					<meta name="viewport" content="width=device-width, initial-scale=1" />
-					<link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/theme.css" />
-					<link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/hljs/github.css" />
-					<Favicon color={this.state.color} template="/a2b8e37dbe533b/images/favicon-template.png" />
-					<script defer src="/a2b8e37dbe533b/javascripts/browser.bundle.js"></script>
-				</head>
-
-				<body>
-					<LumosApplication data={data} colors={this.colors} color={this.state.color} />
-				</body>
-			</html>
-		);
-	}
-});
-
-
-/*
- * Exports
- */
-
-export function renderToString(data) {
-	return React.renderToString(<MyHTML data={data} />);
-}
-
-export function renderToDOM(data) {
-
-	app = React.render(<MyHTML data={data} />, document);
-	return app;
-}
-
-// Event listeners
-var pageDidNavigateListeners = [];
-export function on(eventName, listener) {
-	if (eventName === 'pageDidNavigate') {
-		pageDidNavigateListeners.push(listener);
-	} else {
-		console.warn('Unrecognized event name');
-	}
-}
-
-// TODO: links inside the page
-// TODO: Require a node (mid-tree or leaf) as argument
-// https://code.google.com/p/chromium/issues/detail?id=50298
-function navigateTo(path, title) {
-	if (!supported.history) {
-		// Fall back to normal navigation if the browser doesn't support the history API
-		location.href = path;
-	}
-
-	// TODO: Queue push state when in fullscreen, because it would exit fullscreen mode (in Chrome)
-	history.pushState(undefined, undefined, path);
-
-	get(path)
-	.then(data => {
-		data.isUserNavigation = true;
-		history.replaceState(data, undefined, path);
-		app.setProps({ data });
-
-		pageDidNavigateListeners.forEach(listener => {
-			listener(path);
-		});
-	});
-}
+export default Page;
