@@ -1,34 +1,3 @@
-#!/usr/bin/env node --harmony
+#!/usr/bin/env node
 
-var debug = require('../src/lib/debug')(undefined, { showStack: true });
-
-var commands = {
-	serve: '../dist/cmd-serve',
-	view: '../dist/cmd-view',
-	edit: '../dist/cmd-edit',
-	diary: '../dist/cmd-diary',
-	search: '../dist/cmd-search'
-};
-
-function getHelp() {
-	return 'usage: lumos <command> [<args>]\n'
-	     + '\n'
-	     + 'Available commands:\n'
-	     + '   ' + Object.keys(commands).join('\n   ');
-}
-
-// Main
-var args = process.argv.slice(2);
-var commandPath = commands[args.shift()];
-
-if (commandPath) {
-	try {
-		// Execute command
-		console.time('command');
-		require(commandPath).cmd(args);
-	} catch(err) {
-		debug(err);
-	}
-} else {
-	console.log(getHelp());
-}
+// TODO: forward arguments to node ../dist/lumos-main.js

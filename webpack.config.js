@@ -50,10 +50,10 @@ var client = Object.assign({
 ///////////////////////
 
 var server = Object.assign({
-  entry: './src/server-main.js',
+  entry: './src/lumos-main.js',
   output: {
     path: './dist/',
-    filename: 'server.bundle.js',
+    filename: 'lumos.bundle.js',
     libraryTarget: 'commonjs2'
   },
   externals: /^[a-z][a-z\d\.\-]*$/, // Don't bundle packages
