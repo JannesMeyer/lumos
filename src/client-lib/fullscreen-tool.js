@@ -5,12 +5,13 @@ var fullscreenElement;
 var onChangeListeners = [];
 
 // Feature detection
-var supported = {
-	fullscreen: document.fullscreenEnabled ||
-		document.mozFullScreenEnabled ||
-		document.webkitFullscreenEnabled ||
-		document.msFullscreenEnabled
-};
+var supported = {};
+if (typeof document !== 'undefined') {
+	supported.fullscreen = document.fullscreenEnabled ||
+			document.mozFullScreenEnabled ||
+			document.webkitFullscreenEnabled ||
+			document.msFullscreenEnabled;
+}
 
 if (supported.fullscreen) {
 	/*

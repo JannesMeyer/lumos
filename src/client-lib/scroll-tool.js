@@ -1,5 +1,7 @@
-var html = document.documentElement;
-var body = document.body;
+if (typeof document !== 'undefined') {
+	var html = document.documentElement;
+	var body = document.body;
+}
 
 export function isAtTop() {
 	// Not part of any standard:
