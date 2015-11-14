@@ -9,9 +9,9 @@ var Navigation = React.createClass({
     }
   },
   handleClick(e) {
-    if (e.button === 0) {
-      e.preventDefault();
-    }
+    // if (e.button === 0) {
+    //   e.preventDefault();
+    // }
   },
   render() {
     var items = this.props.items;
