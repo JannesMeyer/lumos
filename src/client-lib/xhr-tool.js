@@ -29,25 +29,25 @@ https://gist.github.com/matthewp/3099268
  */
 
 function getJSON(path) {
-	var req = new XMLHttpRequest();
-	req.open('GET', path);
-	req.setRequestHeader('Accept', 'application/json');
+  var req = new XMLHttpRequest();
+  req.open('GET', path);
+  req.setRequestHeader('Accept', 'application/json');
 
-	return new Promise(function(resolve, reject) {
-		req.onload = event => {
-			try {
-				resolve(JSON.parse(req.response));
-			} catch(error) {
-				reject(error);
-			}
-		};
-		req.onerror = event => reject(new Error(req.status));
-		req.ontimeout = event => reject(new Error('Timed out'));
-		req.onabort = event => console.log('request aborted');
-		req.send();
-	})
-	.cancellable()
-	.catch(Promise.CancellationError, err => {
+  return new Promise(function(resolve, reject) {
+    req.onload = event => {
+      try {
+        resolve(JSON.parse(req.response));
+      } catch(error) {
+        reject(error);
+      }
+    };
+    req.onerror = event => reject(new Error(req.status));
+    req.ontimeout = event => reject(new Error('Timed out'));
+    req.onabort = event => console.log('request aborted');
+    req.send();
+  })
+  .cancellable()
+  .catch(Promise.CancellationError, err => {
         req.abort();
         throw err;
     });

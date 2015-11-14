@@ -11,11 +11,11 @@ let args = process.argv.slice(2);
 let command = args.shift();
 
 if (commands.hasOwnProperty(command)) {
-	// Execute command
-	commands[command](args);
+  // Execute command
+  commands[command](args);
 } else {
-	// Show help
-	console.log('Usage: lumos <command> [<args>]\n');
-	console.log('Available commands:');
-	console.log('   ' + Object.keys(commands).join('\n   '));
+  // Show help
+  console.log('Usage: lumos <command> [<args>]\n');
+  console.log('Available commands:');
+  console.log('   ' + Object.keys(commands).join('\n   '));
 }

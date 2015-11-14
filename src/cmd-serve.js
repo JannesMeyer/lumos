@@ -15,13 +15,13 @@ var debug = debugLib('lumos:main');
 Promise.promisifyAll(fs);
 
 export default function cmd(args) {
-	var argv = minimist(args);
+  var argv = minimist(args);
 
-	var options = {
-		directory: process.cwd(),
-		port: argv.port || config.defaultPort
-	};
-	startServer(options);
+  var options = {
+    directory: process.cwd(),
+    port: argv.port || config.defaultPort
+  };
+  startServer(options);
 }
 
 
