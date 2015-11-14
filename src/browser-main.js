@@ -1,8 +1,8 @@
 import page from './components/page';
-import dataSource from 'client-lib/data-source';
-import debug from 'debug';
+import dataSource from './client-lib/data-source';
+import debugLib from 'debug';
 import io from 'socket.io-client';
-debug = debug('lumos');
+var debug = debugLib('lumos');
 // localStorage.debug = 'lumos';
 
 addEventListener('load', event => {

@@ -1,6 +1,12 @@
-/** @jsx React.DOM */
-
 import React from 'react';
+
+// Browser-only
+var dataSource = require('../client-lib/data-source');
+var favicon    = require('../client-lib/favicon-tool');
+var keypress   = require('../client-lib/keypress-tool');
+var scroll     = require('../client-lib/scroll-tool');
+var fullscreen = require('../client-lib/fullscreen-tool');
+
 
 // Master component
 var app;
@@ -388,11 +394,6 @@ export function renderToString(data) {
 }
 
 export function renderToDOM(data) {
-	dataSource = require('client-lib/data-source');
-	favicon    = require('client-lib/favicon-tool');
-	keypress   = require('client-lib/keypress-tool');
-	scroll     = require('client-lib/scroll-tool');
-	fullscreen = require('client-lib/fullscreen-tool');
 
 	app = React.renderComponent(<MyHTML data={data} />, document);
 	return app;

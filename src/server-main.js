@@ -4,13 +4,13 @@ import express from 'express';
 import socket_io from 'socket.io';
 import http from 'http';
 import morgan from 'morgan';
-import debug from 'debug';
+import debugLib from 'debug';
 import Promise from 'bluebird';
 import requestHandler from './server-express-handler';
 import errorTemplate from './templates/error';
 import watch from './lib/watch';
 import { config } from '../package.json';
-debug = debug('lumos:main');
+var debug = debugLib('lumos:main');
 Promise.promisifyAll(fs);
 
 function startServer(options) {
