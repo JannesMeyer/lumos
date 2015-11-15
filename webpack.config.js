@@ -1,8 +1,6 @@
 'use strict';
 
 var webpack = require('webpack');
-var path = require('path');
-var absolutePath = path.join.bind(path, __dirname);
 
 //////////////////////////
 // Webpack configuration
@@ -13,7 +11,7 @@ var config = {
     loaders: [
       { test: /\.css$/,  loaders: ['style', 'css', 'autoprefixer'] },
       { test: /\.styl$/, loaders: ['style', 'css', 'autoprefixer', 'stylus'] },
-      { test: /\.jsx?$/, loader: 'babel', query: { presets: ['react', 'es2015'] }, include: absolutePath('src') },
+      { test: /\.jsx?$/, loader: 'babel', query: { presets: ['react', 'es2015'] }, exclude: /node_modules/ },
       { test: /\.json$/, loader: 'json' },
     ]
   },
