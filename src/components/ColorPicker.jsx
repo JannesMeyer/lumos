@@ -1,19 +1,22 @@
 import React from 'react';
 
-var ColorPicker = React.createClass({
-  handleChange(e) {
-    var color = e.target.value;
+export default class extends React.Component {
+
+  handleChange(ev) {
+    let color = ev.target.value;
     // TODO
     //app.setState({ color });
-  },
+  }
+
   render() {
+    let { color, colors } = this.props;
     return (
-      <select value={this.props.color} onChange={this.handleChange} className="m-colorpicker">
-      {this.props.colors.map(color =>
+      <select value={color} onChange={this.handleChange} className="m-colorpicker">
+      {colors.map(color =>
         <option value={color} key={color}>{color}</option>
       )}
       </select>
     );
   }
-});
-export default ColorPicker;
+
+}

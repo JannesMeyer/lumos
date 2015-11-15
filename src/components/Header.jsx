@@ -3,15 +3,17 @@ import BreadcrumbList from './BreadcrumbList';
 import SearchBar from './SearchBar';
 import ColorPicker from './ColorPicker';
 
-var Header = React.createClass({
+export default class extends React.Component {
+
   render() {
+    let { breadcrumbs, colors, color, dirs } = this.props;
     return (
       <header className="m-header" ref="header">
-        <BreadcrumbList breadcrumbs={this.props.breadcrumbs} dirs={this.props.dirs} />
+        <BreadcrumbList breadcrumbs={breadcrumbs} dirs={dirs} />
         <SearchBar />
-        <ColorPicker colors={this.props.colors} color={this.props.color} />
+        <ColorPicker colors={colors} color={color} />
       </header>
     );
   }
-});
-export default Header;
+
+}

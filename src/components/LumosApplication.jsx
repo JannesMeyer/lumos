@@ -3,15 +3,13 @@ import Header from './Header';
 import Page from './Page';
 import Navigation from './Navigation';
 
-var LumosApplication = React.createClass({
+export default class extends React.Component {
+
   render() {
-    var data = this.props.data;
+    let { data, color, colors } = this.props;
     return (
-      <div className={'m-container s-' + this.props.color}>
-        <Header breadcrumbs={data.breadcrumbs}
-                dirs={data.dirs}
-                colors={this.props.colors}
-                color={this.props.color} />
+      <div className={'m-container s-' + color}>
+        <Header breadcrumbs={data.breadcrumbs} dirs={data.dirs} colors={colors} color={color} />
         <div>
           <Page filePath={data.filePath}
                 title={data.title}
@@ -24,5 +22,5 @@ var LumosApplication = React.createClass({
       </div>
     );
   }
-});
-export default LumosApplication;
+
+}

@@ -6,7 +6,8 @@ import { colors, supported } from '../constants';
 import * as favicon from '../client-lib/favicon-tool';
 
 // TODO: Render the icon on the server-side, too
-var Favicon = React.createClass({
+export default class extends React.Component {
+
   colorize() {
     if (!supported.canvas2D) {
       throw new Error('Canvas2D not supported');
@@ -22,21 +23,25 @@ var Favicon = React.createClass({
       node.href = favicon.colorize(context, imageData, color);
       node.parentNode.replaceChild(node, node);
     });
-  },
+  }
+
   shouldComponentUpdate(nextProps) {
     return nextProps.color !== this.props.color;
-  },
+  }
+
   componentDidMount() {
     if (supported.canvas2D) {
       this.faviconTemplate = favicon.load(this.props.template);
     }
     this.colorize();
-  },
+  }
+
   componentDidUpdate() {
     this.colorize();
-  },
+  }
+
   render() {
     return <link rel="icon" href={this.props.template} />;
   }
-});
-export default Favicon;
+
+}

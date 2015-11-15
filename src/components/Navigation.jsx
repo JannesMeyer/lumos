@@ -1,20 +1,23 @@
 import React from 'react';
 
-var Navigation = React.createClass({
+export default class extends React.Component {
+
   handleMouseDown(e) {
     if (e.button === 0) {
-      var title = e.target.firstChild.data;
-      var path = e.target.pathname;
+      let title = e.target.firstChild.data;
+      let path = e.target.pathname;
       navigateTo(path, title);
     }
-  },
+  }
+
   handleClick(e) {
     // if (e.button === 0) {
     //   e.preventDefault();
     // }
-  },
+  }
+
   render() {
-    var items = this.props.items;
+    let { items } = this.props;
     return (
       <nav className="m-navigation">
         <ul>{items.map((item, i) =>
@@ -25,5 +28,5 @@ var Navigation = React.createClass({
       </nav>
     );
   }
-});
-export default Navigation;
+
+}

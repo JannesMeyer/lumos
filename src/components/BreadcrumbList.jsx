@@ -1,23 +1,26 @@
 import React from 'react';
 
-var BreadcrumbList = React.createClass({
-  handleClick(e) {
-    if (e.button === 0) {
-      var title = e.target.firstChild.data;
-      var path = e.target.pathname;
+export default class extends React.Component {
+
+  handleClick(ev) {
+    if (ev.button === 0) {
+      var title = ev.target.firstChild.data;
+      var path = ev.target.pathname;
       navigateTo(path, title);
-      e.preventDefault();
+      ev.preventDefault();
     }
-  },
+  }
+
   render() {
+    let { breadcrumbs, dirs } = this.props;
     return (
       <ol>
-        {this.props.breadcrumbs.map(item =>
+        {breadcrumbs.map(item =>
           <li key={item.path}><a href={item.path} onClick={this.handleClick}>{item.name}</a></li>
         )}
         <li className="more">
           <ol>
-            {this.props.dirs.map(item =>
+            {dirs.map(item =>
               <li key={item.relative}><a href={item.link} onClick={this.handleClick}>{item.relative}</a></li>
             )}
           </ol>
@@ -25,5 +28,5 @@ var BreadcrumbList = React.createClass({
       </ol>
     );
   }
-});
-export default BreadcrumbList;
+
+}

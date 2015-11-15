@@ -8,12 +8,14 @@ import * as scroll from '../client-lib/scroll-tool';
 import * as keypress from '../client-lib/keypress-tool';
 
 // TODO: update twice for each page load (loading, loaded)
-var Page = React.createClass({
+export default class extends React.Component {
+
   // TODO: doesn't work good with live reload
   shouldComponentUpdate(nextProps) {
     return (nextProps.filePath !== this.props.filePath) ||
            (nextProps.content !== this.props.content);
-  },
+  }
+
   componentDidMount() {
     var element = ReactDOM.findDOMNode(this);
     keypress.on([], 'x', event => {
@@ -23,7 +25,8 @@ var Page = React.createClass({
         scroll.toElement(element);
       }
     });
-  },
+  }
+
   componentWillUpdate(nextProps) {
     // Only scroll to top after a navigation, not after a reload
     if (nextProps.isUserNavigation) {
@@ -32,7 +35,8 @@ var Page = React.createClass({
         scroll.to(0);
       }
     }
-  },
+  }
+
   render() {
     return (
       <div className="m-page" role="content">
@@ -45,5 +49,5 @@ var Page = React.createClass({
       </div>
     );
   }
-});
-export default Page;
+
+}

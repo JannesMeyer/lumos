@@ -7,15 +7,14 @@ import { colors, supported } from '../constants';
 import * as keypress from '../client-lib/keypress-tool';
 import * as scroll from '../client-lib/scroll-tool';
 
-var MyHTML = React.createClass({
+var colorNames = Object.keys(colors);
 
-  colors: Object.keys(colors),
+export default class extends React.Component {
 
-  getInitialState() {
-    return {
-      color: 'purple-mist'
-    };
-  },
+  constructor(props) {
+    super(props);
+    this.state = { color: 'purple-mist' };
+  }
 
   componentDidMount() {
     if (supported.history) {
@@ -73,10 +72,11 @@ var MyHTML = React.createClass({
       var el = event.target;
       if (el.blur) { el.blur(); }
     });
-  },
+  }
 
   render() {
-    var data = this.props.data;
+    let { data } = this.props;
+    let { color } = this.state;
 
     // <link rel="preload" href="/fonts/glyphicons-halflings-regular.woff" type="font/woff" />
 
@@ -90,15 +90,15 @@ var MyHTML = React.createClass({
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/theme.css" />
           <link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/hljs/github.css" />
-          <Favicon color={this.state.color} template="/a2b8e37dbe533b/images/favicon-template.png" />
+          <Favicon color={color} template="/a2b8e37dbe533b/images/favicon-template.png" />
           <script defer src="/a2b8e37dbe533b/javascripts/browser.bundle.js"></script>
         </head>
 
         <body>
-          <LumosApplication data={data} colors={this.colors} color={this.state.color} />
+          <LumosApplication data={data} colors={colorNames} color={color} />
         </body>
       </html>
     );
   }
-});
-export default MyHTML;
+
+}
