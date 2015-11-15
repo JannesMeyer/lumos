@@ -11,7 +11,7 @@ var config = {
     loaders: [
       { test: /\.css$/,  loaders: ['style', 'css', 'autoprefixer'] },
       { test: /\.styl$/, loaders: ['style', 'css', 'autoprefixer', 'stylus'] },
-      { test: /\.jsx?$/, loader: 'babel', query: { presets: ['react', 'es2015'] }, exclude: /node_modules/ },
+      { test: /\.jsx?$/, loader: 'babel', query: { cacheDirectory: true, presets: ['react', 'es2015'] }, exclude: /node_modules/ },
       { test: /\.json$/, loader: 'json' },
     ]
   },
