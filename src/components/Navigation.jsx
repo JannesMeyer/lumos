@@ -1,5 +1,8 @@
 import React from 'react';
 
+// browser-only
+import './Navigation.styl';
+
 export default class extends React.Component {
 
   handleMouseDown(e) {

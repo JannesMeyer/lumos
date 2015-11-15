@@ -1,0 +1,138 @@
+@require '../../node_modules/normalize.css/normalize.css'
+//@require './fonts/glyphicons.styl'
+//@require './fonts/elena.styl'
+
+*
+  box-sizing: border-box
+
+body
+  -webkit-font-smoothing: antialiased
+  // text-rendering: optimizeLegibility
+  font-size: 14px
+
+:root:fullscreen body
+  font-size: 36px
+
+html, body
+  height: 100%
+
+.m-container
+  display: flex
+  flex-direction: column
+  min-height: 100%
+
+  > .m-header
+    flex-shrink: 0
+
+  > div
+    flex: 1
+    display: flex
+    > .m-page
+      flex: 1
+    > .m-navigation
+      flex: 0 0 250px
+
+@media (max-width: 767px)
+
+  .m-container
+    flex-direction: column-reverse
+
+    > div
+      flex-direction: column
+      > .m-page
+        flex-basis: auto
+      > .m-navigation
+        flex-basis: auto
+        border: none
+
+  .m-search,
+  .m-colorpicker
+    position: initial
+    margin-top: 10px
+
+
+custom-color($stripe, $nav-bg, $nav-border, $nav-link, $nav-link-active)
+  .m-header
+    border-bottom-color: $stripe
+    a:hover,
+    a:focus
+      color: $stripe
+
+  .m-search > input:focus
+    box-shadow: 0 0 2px 2px rgba($stripe, 0.75)
+
+  .m-navigation
+    background: $nav-bg
+    border-left-color: $nav-border
+    > ul
+      > li
+        > a
+          color: $nav-link
+        > a:hover,
+        > a:focus
+          background: lighten($nav-bg, 2)
+      > li.active
+        box-shadow: -2px 0 0 -1px white
+        > a
+          border-top-color: $nav-border
+          border-bottom-color: $nav-border
+          background: white
+        > a,
+        > a:hover,
+        > a:focus
+          color: $nav-link-active
+
+  // TODO: remove page-related stuff
+  .m-page-title
+    color: $nav-link-active
+
+.s-blue
+  custom-color(#60aadf, #e2edf7, #b3d2ea, #005795, #1f8aca)
+
+.s-yellow
+  custom-color(#f9ba00, #fbf0d8, #f6d997, #b46800, #ec9b00)
+
+.s-green
+  custom-color(#3fbf77, #dff1e5, #aadcbb, #006f12, #00a346)
+
+.s-red
+  custom-color(#ff6d61, #ffe4e2, #fdb8b4, #b90000, #f3301a)
+
+.s-purple
+  custom-color(#d886c8, #f6e7f3, #e7c2e0, #8c237b, #c059af)
+
+.s-cyan
+  custom-color(#17b7cf, #dcf0f4, #a2d8e3, #006582, #0099b7)
+
+.s-orange
+  custom-color(#ff9a29, #fdebdc, #facba3, #ba3f00, #f27200)
+
+.s-magenta
+  custom-color(#f37cba, #fce6f0, #f6bed9, #a9026b, #e1499d)
+
+.s-blue-mist
+  custom-color(#849ad5, #e7ebf5, #c0cbe6, #27448a, #5976bf)
+
+.s-purple-mist
+  custom-color(#aa90d3, #ede9f5, #d2c6e4, #583589, #8967bd)
+
+.s-tan
+  custom-color(#bba08d, #f0ebe8, #d9cdc5, #6d4c33, #9e7d65)
+
+.s-lemon-lime
+  custom-color(#b7bf27, #eff1db, #d8dc9f, #6a6e00, #9ba200)
+
+.s-apple
+  custom-color(#7fbf60, #e6f1e1, #bfdbb2, #146e00, #50a226)
+
+.s-teal
+  custom-color(#00b9a4, #d7f0ec, #94d9cf, #00674f, #009b81)
+
+.s-silver
+  custom-color(#9daebd, #ebeef1, #cbd3da, #475d6e, #798ea1)
+
+.s-red-chalk
+  custom-color(#f96285, #fde2e7, #f8b4c1, #ae0022, #e71858)
+
+.s-none
+  custom-color(#a0a0a0, #ebebeb, #cdcdcd, #4c4c4c, #7d7d7d)

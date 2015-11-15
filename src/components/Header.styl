@@ -1,0 +1,60 @@
+:root:fullscreen .m-header
+  display: none
+
+.m-header
+  padding: 8px 50px 10px
+  background-color: hsl(0, 0%, 96%)
+  border-bottom: 5px solid transparent // color later
+
+  a
+    text-decoration: none
+
+  ol, ul
+    list-style: none
+    margin: 0
+    padding: 0
+
+  a
+    color: #a0a0a0
+    transition: color 0.1s
+
+  > ol
+    font-size: 1.1em
+    > li
+      margin: 0
+      margin-top: 6px
+      > ol
+        list-style-type: none
+        > li
+          display: inline-block
+        > li > a
+          padding: 0 10px
+        > li:first-child > a
+          padding-left: 0
+        > li:last-child > a
+          padding-right: 0
+        > li::after
+          content: "•"
+          color: #ccc
+        > li:last-child::after
+          display: none
+    > li:first-child
+      margin-top: 0
+      font-size: 1.8em
+      line-height: 1.25
+
+  > .m-search > input
+    position: absolute
+    top: 11px
+    right: 15px
+    width: 300px
+    border: none
+    outline: none
+    padding: 4px
+    padding-left: 5px
+    color: #666
+
+  > .m-colorpicker
+    position: absolute
+    top: 50px
+    right 15px

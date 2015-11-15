@@ -6,6 +6,7 @@ import FullscreenButton from './FullscreenButton';
 // browser-only
 import * as scroll from '../client-lib/scroll-tool';
 import * as keypress from '../client-lib/keypress-tool';
+import './Page.styl';
 
 // TODO: update twice for each page load (loading, loaded)
 export default class extends React.Component {

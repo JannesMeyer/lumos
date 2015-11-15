@@ -9,7 +9,6 @@ var config = {
   cache: true,
   module: {
     loaders: [
-      { test: /\.css$/,  loaders: ['style', 'css', 'autoprefixer'] },
       { test: /\.styl$/, loaders: ['style', 'css', 'autoprefixer', 'stylus'] },
       { test: /\.jsx?$/, loader: 'babel', query: { cacheDirectory: true, presets: ['react', 'es2015'] }, exclude: /node_modules/ },
       { test: /\.json$/, loader: 'json' },
@@ -53,6 +52,9 @@ var server = Object.assign({
     path: './dist/',
     filename: 'lumos.bundle.js',
     libraryTarget: 'commonjs2'
+  },
+  resolveLoader: {
+    alias: { style: 'raw-loader', css: 'raw-loader', autoprefixer: 'raw-loader', stylus: 'raw-loader' }
   },
   externals: /^[a-z][a-z\d\.\-]*$/, // Don't bundle packages
   target: 'node',

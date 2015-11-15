@@ -3,6 +3,9 @@ import BreadcrumbList from './BreadcrumbList';
 import SearchBar from './SearchBar';
 import ColorPicker from './ColorPicker';
 
+// browser-only
+import './Header.styl';
+
 export default class extends React.Component {
 
   render() {

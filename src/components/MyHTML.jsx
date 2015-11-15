@@ -6,6 +6,7 @@ import { colors, supported } from '../constants';
 // browser-only
 import * as keypress from '../client-lib/keypress-tool';
 import * as scroll from '../client-lib/scroll-tool';
+import './MyHTML.styl';
 
 var colorNames = Object.keys(colors);
 
@@ -82,18 +83,17 @@ export default class extends React.Component {
 
     // TODO: Send 'Content-Type'(+JSON) and 'X-UA-Compatible' as headers
     // <link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/bootstrap.css" />
+    // <link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/theme-one.css" />
     return (
       <html>
         <head>
           <meta charSet="utf-8" />
           <title>{data.title}</title>
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/theme.css" />
           <link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/hljs/github.css" />
           <Favicon color={color} template="/a2b8e37dbe533b/images/favicon-template.png" />
           <script defer src="/a2b8e37dbe533b/javascripts/browser.bundle.js"></script>
         </head>
-
         <body>
           <LumosApplication data={data} colors={colorNames} color={color} />
         </body>
