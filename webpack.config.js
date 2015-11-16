@@ -1,6 +1,7 @@
 'use strict';
 
 var webpack = require('webpack');
+var SystemBellPlugin = require('system-bell-webpack-plugin');
 
 //////////////////////////
 // Webpack configuration
@@ -26,7 +27,8 @@ if (process.env.NODE_ENV === 'production') {
   ];
 } else {
   config.plugins = [
-    new webpack.DefinePlugin({ __DEV__: true })
+    new webpack.DefinePlugin({ __DEV__: true }),
+    new SystemBellPlugin()
   ];
 }
 
