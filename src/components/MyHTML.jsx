@@ -82,8 +82,6 @@ export default class extends React.Component {
     // <link rel="preload" href="/fonts/glyphicons-halflings-regular.woff" type="font/woff" />
 
     // TODO: Send 'Content-Type'(+JSON) and 'X-UA-Compatible' as headers
-    // <link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/bootstrap.css" />
-    // <link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/theme-one.css" />
     return (
       <html>
         <head>
@@ -91,8 +89,9 @@ export default class extends React.Component {
           <title>{data.title}</title>
           <meta name="viewport" content="width=device-width, initial-scale=1" />
           <link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/hljs/github.css" />
+          <link rel="stylesheet" href="/a2b8e37dbe533b/main.bundle.css" />
           <Favicon color={color} template="/a2b8e37dbe533b/images/favicon-template.png" />
-          <script defer src="/a2b8e37dbe533b/javascripts/browser.bundle.js"></script>
+          <script defer src="/a2b8e37dbe533b/browser.bundle.js"></script>
         </head>
         <body>
           <LumosApplication data={data} colors={colorNames} color={color} />

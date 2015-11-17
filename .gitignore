@@ -1,10 +1,10 @@
 *.bundle.js
+*.bundle.css
 *.log
 
 $assets
-public
 node_modules
-dist
+build
 
 # Sublime Text
 *.sublime-workspace

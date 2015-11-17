@@ -6,8 +6,7 @@
 			"folder_exclude_patterns": [
 				".*",
 				"node_modules",
-				"dist",
-				"public/a2b8e37dbe533b/javascripts"
+				"build"
 			]
 		}
 	]

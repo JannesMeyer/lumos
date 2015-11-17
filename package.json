@@ -7,7 +7,7 @@
   "scripts": {
     "watch": "./node_modules/.bin/webpack -w",
     "build": "./node_modules/.bin/webpack",
-    "start": "node dist/lumos.bundle serve"
+    "start": "node build/lumos.bundle.js serve"
   },
   "config": {
     "defaultPort": 9000,
@@ -40,6 +40,7 @@
     "babel-preset-es2015": "6.1.18",
     "babel-preset-react": "6.1.18",
     "css-loader": "0.23.0",
+    "extract-text-webpack-plugin": "0.9.1",
     "json-loader": "0.5.3",
     "raw-loader": "0.5.1",
     "style-loader": "0.13.0",

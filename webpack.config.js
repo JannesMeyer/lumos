@@ -1,63 +1,70 @@
 'use strict';
 
 var webpack = require('webpack');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var SystemBellPlugin = require('system-bell-webpack-plugin');
 
 //////////////////////////
 // Webpack configuration
 //////////////////////////
-var config = {
-  cache: true,
-  module: {
-    loaders: [
-      { test: /\.styl$/, loaders: ['style', 'css', 'autoprefixer', 'stylus'] },
-      { test: /\.jsx?$/, loader: 'babel', query: { cacheDirectory: true, presets: ['react', 'es2015'] }, exclude: /node_modules/ },
-      { test: /\.json$/, loader: 'json' },
-    ]
-  },
-  resolve: {
-    extensions: ['', '.js', '.jsx', '.web.js']
-  }
-};
-
+var loaders = [
+  { test: /\.jsx?$/, loader: 'babel', query: { cacheDirectory: true, presets: ['react', 'es2015'] }, exclude: /node_modules/ },
+  { test: /\.json$/, loader: 'json' },
+];
+var plugins;
 if (process.env.NODE_ENV === 'production') {
-  config.plugins = [
+  plugins = [
     new webpack.DefinePlugin({ __DEV__: false, 'process.env.NODE_ENV': '"production"' }),
-    new webpack.optimize.UglifyJsPlugin({ comments: / ^/, compress: { warnings: false }})
+    new webpack.optimize.UglifyJsPlugin({ comments: / ^/, compress: { warnings: false }}),
   ];
 } else {
-  config.plugins = [
+  plugins = [
     new webpack.DefinePlugin({ __DEV__: true }),
-    new SystemBellPlugin()
+    new SystemBellPlugin(),
   ];
 }
+var resolve = {
+  extensions: ['', '.js', '.jsx', '.web.js'],
+};
 
 ///////////////////////
 // Client-side bundle
 ///////////////////////
 
-var client = Object.assign({
+var client = {
   entry: './src/browser-main.js',
   output: {
-    path: './public/a2b8e37dbe533b/javascripts/', // Avoid clashes with any subdirectory names
+    path: './public/a2b8e37dbe533b/', // Avoid clashes with any subdirectory names
     filename: 'browser.bundle.js'
-  }
-}, config);
+  },
+
+  module: {
+    loaders: loaders.concat({ test: /\.styl$/, loader: ExtractTextPlugin.extract('style', 'css?sourceMap!autoprefixer!stylus') })
+  },
+  plugins: plugins.concat(new ExtractTextPlugin('main.bundle.css')),
+  resolve: resolve,
+};
 
 ///////////////////////
 // Server-side bundle
 ///////////////////////
 
-var server = Object.assign({
+var server = {
   entry: './src/lumos-main.js',
   output: {
-    path: './dist/',
+    path: './build/',
     filename: 'lumos.bundle.js',
     libraryTarget: 'commonjs2'
   },
-  resolveLoader: {
-    alias: { style: 'raw-loader', css: 'raw-loader', autoprefixer: 'raw-loader', stylus: 'raw-loader' }
+
+  module: {
+    loaders: loaders.concat(
+      { test: /\.styl$/, loader: 'raw' }
+    )
   },
+  plugins: plugins,
+  resolve: resolve,
+
   externals: /^[a-z][a-z\d\.\-]*$/, // Don't bundle packages
   target: 'node',
   node: {
@@ -67,7 +74,7 @@ var server = Object.assign({
     Buffer: false,
     __filename: false,
     __dirname: false
-  }
-}, config);
+  },
+};
 
 module.exports = [ client, server ];
