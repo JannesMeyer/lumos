@@ -1,12 +1,14 @@
+// browser-only
+import './MyHTML.styl';
+import * as keypress from '../client-lib/keypress-tool';
+import * as scroll from '../client-lib/scroll-tool';
+
 import React from 'react';
 import Favicon from './Favicon';
 import LumosApplication from './LumosApplication';
 import { colors, supported } from '../constants';
 
-// browser-only
-import * as keypress from '../client-lib/keypress-tool';
-import * as scroll from '../client-lib/scroll-tool';
-import './MyHTML.styl';
+
 
 var colorNames = Object.keys(colors);
 
@@ -79,7 +81,7 @@ export default class extends React.Component {
     let { data } = this.props;
     let { color } = this.state;
 
-    // <link rel="preload" href="/fonts/glyphicons-halflings-regular.woff" type="font/woff" />
+    //
 
     // TODO: Send 'Content-Type'(+JSON) and 'X-UA-Compatible' as headers
     return (
@@ -88,8 +90,9 @@ export default class extends React.Component {
           <meta charSet="utf-8" />
           <title>{data.title}</title>
           <meta name="viewport" content="width=device-width, initial-scale=1" />
-          <link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/hljs/github.css" />
-          <link rel="stylesheet" href="/a2b8e37dbe533b/main.bundle.css" />
+          <link rel="preload" href="/a2b8e37dbe533b/glyphicons-halflings-regular.woff" type="font/woff" />
+          <link rel="stylesheet" href="/a2b8e37dbe533b/stylesheets/hljs/github.css" type="text/css" />
+          <link rel="stylesheet" href="/a2b8e37dbe533b/main.bundle.css" type="text/css" />
           <Favicon color={color} template="/a2b8e37dbe533b/images/favicon-template.png" />
           <script defer src="/a2b8e37dbe533b/browser.bundle.js"></script>
         </head>

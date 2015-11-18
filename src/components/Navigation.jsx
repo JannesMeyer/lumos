@@ -1,7 +1,7 @@
-import React from 'react';
-
 // browser-only
 import './Navigation.styl';
+
+import React from 'react';
 
 export default class extends React.Component {
 
