@@ -6,10 +6,6 @@ import dateTool from './lib/date-tool';
 import { config } from '../package.json';
 Promise.promisifyAll(fs);
 
-function isDefined(value) {
-  return value !== undefined;
-}
-
 function editor(files) {
   if (files === undefined) {
     files = [];
