@@ -18,7 +18,6 @@ import { Directory } from './classes/Directory';
 import React from 'react';
 import ReactDOMServer from 'react-dom/server';
 import MyHTML from './components/MyHTML';
-import { get } from './client-lib/data-source';
 
 
 var debug = debugLib('lumos:main');

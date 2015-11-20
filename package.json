@@ -31,7 +31,8 @@
     "react": "0.14.2",
     "react-dom": "0.14.2",
     "socket.io": "1.3.7",
-    "socket.io-client": "1.3.7"
+    "socket.io-client": "1.3.7",
+    "xhr-tool": "1.0.8"
   },
   "devDependencies": {
     "autoprefixer-loader": "3.1.0",

@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import MyHTML from './components/MyHTML';
-import { get } from './client-lib/data-source';
+import { getJSON } from 'xhr-tool';
 import { supported } from './constants';
 
 import debugLib from 'debug';
@@ -11,7 +11,7 @@ var debug = debugLib('lumos');
 
 addEventListener('load', event => {
   // Initialize React
-  get(location.pathname).then(data => {
+  getJSON(location.pathname).then(data => {
     data.isUserNavigation = false;
     // TODO: Update app variable in page.jsx
     renderToDOM(data);
@@ -78,8 +78,7 @@ function navigateTo(path, title) {
   // TODO: Queue push state when in fullscreen, because it would exit fullscreen mode (in Chrome)
   history.pushState(undefined, undefined, path);
 
-  get(path)
-  .then(data => {
+  getJSON(path).then(data => {
     data.isUserNavigation = true;
     history.replaceState(data, undefined, path);
     renderToDOM(data);
