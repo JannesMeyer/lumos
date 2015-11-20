@@ -12,7 +12,7 @@ import * as errorTemplate from './templates/error';
 import * as watch from './lib/watch';
 
 import * as converter from './lib/converter-marked';
-import * as dateTool from './lib/date-tool';
+import { getDateString2 } from 'date-tool';
 import { SegmentedPath } from './classes/SegmentedPath';
 import { Directory } from './classes/Directory';
 import React from 'react';
@@ -176,8 +176,7 @@ function handleRequest(baseDir) {
         data.editURL = config.editURLProtocol + 'open/' + encodeURIComponent(requestPathMd.absolute).replace(/'/g, '%27');
         data.content = converter.makeHtml(file.content);
 
-        var creationDate = dateTool.createFromDate(file.stat.birthtime);
-        data.creationDate = dateTool.toString(creationDate);
+        data.creationDate = getDateString2(file.stat.birthtime);
         data.creationTime = '';
 
         // Read directory

@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import Promise from 'bluebird';
 import childProcess from 'child_process';
-import dateTool from './lib/date-tool';
+import { parseIsoDateString } from 'date-tool';
 import { config } from '../package.json';
 Promise.promisifyAll(fs);
 
@@ -35,24 +35,19 @@ function createFiles(files) {
 }
 
 export default function cmd(args) {
-  if (args.length === 0) {
-    var days = [dateTool.today()];
-  } else {
-    var days = args.map(day => {
-      return dateTool.parseIsoDate(day)
-    });
-  }
+  // Read dates from command line
+  var days = (args.length > 0 ? args.map(parseIsoDateString) : [ new Date() ]);
 
   // Convert to paths
-  var files = days.map(d => {
-    var fileName = dateTool.getMonthName(d) + ' ' + d.day + config.mdSuffix;
-    var filePath = path.join(config.diaryBaseDir, d.year.toString(), d.month.toString(), fileName);
-    return filePath;
-  });
+  var files = days.map(date => path.join(
+    config.diaryBaseDir,
+    String(date.getFullYear()),
+    String(date.getMonth() + 1),
+    getShortMonthName(date) + ' ' + date.getDate() + config.mdSuffix
+  ));
 
   // Open the files in an editor
-  createFiles(files)
-  .then(() => {
+  createFiles(files).then(() => {
     // TODO: respect errors
     editor(files);
   });

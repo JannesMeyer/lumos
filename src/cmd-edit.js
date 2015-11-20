@@ -3,7 +3,6 @@ import path from 'path';
 import minimist from 'minimist';
 import Promise from 'bluebird';
 import childProcess from 'child_process';
-import dateTool from './lib/date-tool';
 import { config } from '../package.json';
 Promise.promisifyAll(fs);
 
@@ -22,8 +21,7 @@ function createFiles(files) {
   return Promise.all(files.map(f => {
       var dir = path.dirname(f);
 
-      return fs.statAsync(dir)
-      .then(stat => {
+      return fs.statAsync(dir).then(stat => {
         if (stat.isFile()) {
           throw new Error('Found a file instead of a directory');
         }

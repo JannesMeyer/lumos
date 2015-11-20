@@ -1,6 +1,6 @@
 import fs from 'fs';
 import iconv from 'iconv-lite';
-import debounce from './debounce';
+import { debounce } from 'date-tool';
 
 function fixEncoding(callback) {
   return function() {
