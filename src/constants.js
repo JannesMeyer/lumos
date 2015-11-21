@@ -1,3 +1,4 @@
+// hex.colorrrs.com
 var colors = {
   'blue': [96, 170, 223],         // #60aadf
   'yellow': [249, 186, 0],        // #f9ba00
@@ -16,8 +17,7 @@ var colors = {
   'silver': [157, 174, 189],      // #9daebd
   'red-chalk': [249, 98, 133],    // #f96285
   'none': [160, 160, 160]         // #a0a0a0
-};// hex.colorrrs.com
-
+};
 
 // Feature detection (client-side features)
 var supported = {
