@@ -3,7 +3,7 @@ import iconv from 'iconv-lite';
 import debug from 'debug';
 import { debounce } from 'date-tool';
 
-var log = debug('lumos');
+var log = debug('lumos:watcher');
 
 export function wacthDebounced(directory, eventHandler) {
   log(`Setting up file watching for '${directory}'`);

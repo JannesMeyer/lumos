@@ -7,7 +7,7 @@
   "scripts": {
     "watch": "./node_modules/.bin/webpack -w",
     "build": "./node_modules/.bin/webpack",
-    "start": "DEBUG=lumos node build/lumos.bundle.js serve"
+    "start": "DEBUG=lumos:* node build/lumos.bundle.js serve"
   },
   "config": {
     "defaultPort": 9000,
