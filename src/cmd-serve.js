@@ -9,7 +9,7 @@ import morgan from 'morgan';
 import debug from 'debug';
 import Promise from 'bluebird';
 import * as errorTemplate from './templates/error';
-import { watchDebouncedByFilename } from './lib/watch';
+import { watchDebouncedByFilename } from './lib/file-watcher';
 
 import * as converter from './lib/converter-marked';
 import { getDateString2 } from 'date-tool';
