@@ -9,6 +9,9 @@ import { supported } from './constants'
 
 var log = debug('lumos');
 
+// Show lumos log messages in the browser console
+localStorage.debug = 'lumos';
+
 addEventListener('load', event => {
   // Initialize React
   getJSON(location.pathname).then(data => {
