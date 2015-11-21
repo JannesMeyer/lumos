@@ -6,7 +6,7 @@ import express from 'express';
 import socket_io from 'socket.io';
 import http from 'http';
 import morgan from 'morgan';
-import debugLib from 'debug';
+import debug from 'debug';
 import Promise from 'bluebird';
 import * as errorTemplate from './templates/error';
 import { watchDebouncedByFilename } from './lib/watch';
@@ -20,7 +20,7 @@ import ReactDOMServer from 'react-dom/server';
 import MyHTML from './components/MyHTML';
 
 
-var debug = debugLib('lumos:main');
+var log = debug('lumos:main');
 Promise.promisifyAll(fs);
 
 export default function cmd(args) {
@@ -59,7 +59,7 @@ function startServer(options) {
       // Normalize UTF-8
       pathname = pathname.normalize();
 
-      debug('viewing: ' + pathname);
+      log('viewing: ' + pathname);
 
       socket.rooms.forEach(r => socket.leave(r));
       socket.join(pathname);
@@ -80,14 +80,14 @@ function startServer(options) {
     // TODO: index.md
 
     var pathname = '/' + filename.slice(0, -config.mdSuffix.length);
-    debug('file changed: ' + pathname);
+    log('file changed: ' + pathname);
 
     // Emit event
     io.in(pathname).emit('change');
   });
 
   server.listen(options.port, () => {
-    debug('HTTP server started');
+    log('HTTP server started');
   });
   return server;
 }
