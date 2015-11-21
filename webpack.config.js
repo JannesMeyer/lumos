@@ -32,6 +32,7 @@ var resolve = {
 ///////////////////////
 
 var client = {
+  cache: true,
   entry: './src/browser-main.js',
   output: {
     path: './public/a2b8e37dbe533b/', // Avoid clashes with any subdirectory names
@@ -50,6 +51,7 @@ var client = {
 ///////////////////////
 
 var server = {
+  cache: true,
   entry: './src/lumos-main.js',
   output: {
     path: './build/',
