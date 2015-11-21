@@ -5,7 +5,7 @@ import { debounce } from 'date-tool';
 
 var log = debug('lumos:watcher');
 
-export function wacthDebounced(directory, eventHandler) {
+export function watchDebounced(directory, eventHandler) {
   log(`Setting up file watching for '${directory}'`);
 
   fs.watch(directory, { recursive: true }, debounce(eventHandler, 50));
