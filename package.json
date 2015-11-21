@@ -10,6 +10,7 @@
     "start": "DEBUG=lumos:* node build/lumos.bundle.js serve"
   },
   "config": {
+    "directory": "/Users/jannes/Dropbox/Notes/",
     "defaultPort": 9000,
     "mdSuffix": ".md",
     "indexFile": "index.md",
