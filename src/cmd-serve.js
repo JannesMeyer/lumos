@@ -9,7 +9,7 @@ import morgan from 'morgan';
 import debugLib from 'debug';
 import Promise from 'bluebird';
 import * as errorTemplate from './templates/error';
-import * as watch from './lib/watch';
+import { watchDebouncedByFilename } from './lib/watch';
 
 import * as converter from './lib/converter-marked';
 import { getDateString2 } from 'date-tool';
@@ -67,7 +67,7 @@ function startServer(options) {
   });
 
   // Watch for changes
-  watch.debouncedByFilename(options.directory, (event, filename) => {
+  watchDebouncedByFilename(options.directory, (event, filename) => {
     filename = filename.normalize();
 
     // Ignore invisible files

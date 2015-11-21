@@ -1,27 +1,31 @@
 import fs from 'fs';
 import iconv from 'iconv-lite';
+import debug from 'debug';
 import { debounce } from 'date-tool';
 
-function fixEncoding(callback) {
-  return function() {
-    if (arguments[1] !== undefined) {
-      arguments[1] = iconv.decode(iconv.encode(arguments[1], 'iso-8859-1'), 'utf-8');
-    }
-    callback.apply(undefined, arguments);
-  };
+var log = debug('lumos');
+
+export function wacthDebounced(directory, eventHandler) {
+  log(`Setting up file watching for '${directory}'`);
+
+  fs.watch(directory, { recursive: true }, debounce(eventHandler, 50));
 }
 
-export function debounced(dir, changeHandler) {
-  fs.watch(dir, { recursive: true }, debounce(changeHandler, 50));
-}
+export function watchDebouncedByFilename(directory, eventHandler) {
+  log(`Setting up file watching for '${directory}'`);
 
-export function debouncedByFilename(dir, changeHandler) {
+  let callback = eventHandler;
+
+  // Handle Node.js + FSEvents bug
   if (process.platform === 'darwin') {
-    // Account for that weird node.js bug with FSEvents on OSX
-    // TODO: Remove when node.js is fixed
-    changeHandler = fixEncoding(changeHandler);
+    callback = function(event, filename) {
+      if (filename != null) {
+        arguments[1] = iconv.decode(iconv.encode(filename, 'iso-8859-1'), 'utf-8');
+      }
+      eventHandler.apply(null, arguments);
+    };
   }
 
-  // Group events based on filename (1)
-  fs.watch(dir, { recursive: true }, debounce(changeHandler, 50, 1));
+  // Group events based on filename (2nd argument)
+  fs.watch(directory, { recursive: true }, debounce(callback, 50, 1));
 }
