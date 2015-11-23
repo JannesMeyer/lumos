@@ -11,7 +11,7 @@
   },
   "config": {
     "directory": "/Users/jannes/Dropbox/Notes/",
-    "defaultPort": 9000,
+    "port": 9000,
     "mdSuffix": ".md",
     "indexFile": "index.md",
     "editURLProtocol": "lumos-connect://",

@@ -8,7 +8,6 @@ import http from 'http';
 import morgan from 'morgan';
 import debug from 'debug';
 import Promise from 'bluebird';
-import * as errorTemplate from './templates/error';
 import { watchDebouncedByFilename } from './lib/file-watcher';
 
 import * as converter from './lib/converter-marked';
@@ -24,24 +23,24 @@ var log = debug('lumos:main');
 Promise.promisifyAll(fs);
 
 export default function cmd(args) {
-  var argv = minimist(args);
-
-  var options = {
-    directory: '/Users/jannes/Dropbox/Notes',
-    //directory: process.cwd(),
-    port: argv.port || config.defaultPort
+  let argv = minimist(args);
+  let options = {
+    directory: argv.dir || config.directory,
+    port: argv.port || config.port
   };
+
   startServer(options);
 }
 
-
+/**
+ * Start a server
+ *
+ * @params options { directory, port }
+ */
 function startServer(options) {
-  // options.directory
-  // options.port
-
-  var app = express();
-  var server = http.createServer(app);
-  var io = socket_io(server, { path: '/581209544f9a07/socket.io' });
+  let app = express();
+  let server = http.createServer(app);
+  let io = socket_io(server, { path: '/581209544f9a07/socket.io' });
 
   app.use(morgan(':method :url :status (done after :response-time ms)'));
   app.use(express.static(path.join(__dirname, '../public'), { maxAge: 31557600000 }));
@@ -50,7 +49,7 @@ function startServer(options) {
   // development error handler
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
-    res.end(errorTemplate.render(err));
+    res.end(renderError(err));
   });
 
   // WebSocket
@@ -79,7 +78,7 @@ function startServer(options) {
     // TODO: compare modification time
     // TODO: index.md
 
-    var pathname = '/' + filename.slice(0, -config.mdSuffix.length);
+    let pathname = '/' + filename.slice(0, -config.mdSuffix.length);
     log('file changed: ' + pathname);
 
     // Emit event
@@ -97,6 +96,23 @@ function startServer(options) {
 
 function render(data) {
   return '<!DOCTYPE html>' + ReactDOMServer.renderToString(<MyHTML data={data} />);
+}
+
+function renderError(error) {
+  return `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Error</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/images/favicon.png">
+</head>
+<body>
+<h1>${error.status || ''} ${error.message}</h1>
+<pre>${error.stack}</pre>
+</body>
+</html>`;
 }
 
 function handleRequest(baseDir) {
