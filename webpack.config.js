@@ -8,6 +8,7 @@ var SystemBellPlugin = require('system-bell-webpack-plugin');
 // Webpack configuration
 //////////////////////////
 var loaders = [
+  { test: /\.tsx?$/, loader: 'ts' },
   { test: /\.jsx?$/, loader: 'babel', query: { cacheDirectory: true, presets: ['react', 'es2015'] }, exclude: /node_modules/ },
   { test: /\.json$/, loader: 'json' },
 ];
@@ -24,7 +25,7 @@ if (process.env.NODE_ENV === 'production') {
   ];
 }
 var resolve = {
-  extensions: ['', '.js', '.jsx', '.web.js'],
+  extensions: ['', '.js', '.jsx', '.ts', '.tsx', '.web.js'],
 };
 
 ///////////////////////

@@ -54,6 +54,7 @@
     "style-loader": "0.13.0",
     "stylus-loader": "1.4.2",
     "system-bell-webpack-plugin": "1.0.0",
+    "ts-loader": "^0.7.1",
     "webpack": "1.12.6"
   },
   "os": [

@@ -95,7 +95,7 @@ function startServer(options) {
 
 
 function render(data) {
-  return '<!DOCTYPE html>' + ReactDOMServer.renderToString(<MyHTML data={data} />);
+    return '<!DOCTYPE html>' + ReactDOMServer.renderToString(React.createElement(MyHTML, { data } ));
 }
 
 function renderError(error) {
