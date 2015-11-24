@@ -5,12 +5,14 @@ var fullscreenElement;
 var onChangeListeners = [];
 
 // Feature detection
-var supported = {};
+var supported = {
+  fullscreen: false
+};
 if (typeof document !== 'undefined') {
   supported.fullscreen = document.fullscreenEnabled ||
-      document.mozFullScreenEnabled ||
-      document.webkitFullscreenEnabled ||
-      document.msFullscreenEnabled;
+      document['mozFullScreenEnabled'] ||
+      document['webkitFullscreenEnabled'] ||
+      document['msFullscreenEnabled'];
 }
 
 if (supported.fullscreen) {
@@ -44,9 +46,9 @@ if (supported.fullscreen) {
 
   function getElement() {
     return document.fullscreenElement ||
-           document.mozFullScreenElement ||
-           document.webkitFullscreenElement ||
-           document.msFullscreenElement;
+           document['mozFullScreenElement'] ||
+           document['webkitFullscreenElement'] ||
+           document['msFullscreenElement'];
   }
 
   // http://stackoverflow.com/questions/8427413/webkitrequestfullscreen-fails-when-passing-element-allow-keyboard-input-in-safar
@@ -59,9 +61,9 @@ if (supported.fullscreen) {
   }
 
   var exitFullscreen = (document.exitFullscreen ||
-                        document.mozCancelFullScreen ||
-                        document.webkitExitFullscreen ||
-                        document.msExitFullscreen)
+                        document['mozCancelFullScreen'] ||
+                        document['webkitExitFullscreen'] ||
+                        document['msExitFullscreen'])
                        .bind(document);
 }
 

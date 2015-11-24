@@ -1,9 +1,9 @@
-import fs from 'fs';
-import path from 'path';
-import Promise from 'bluebird';
-import childProcess from 'child_process';
-import { parseIsoDateString } from 'date-tool';
-import { config } from '../package.json';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as childProcess from 'child_process';
+import * as Promise from 'bluebird';
+import { parseIsoDateString, getShortMonthName } from 'date-tool';
+import config from './config';
 Promise.promisifyAll(fs);
 
 function editor(files) {

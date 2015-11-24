@@ -1,15 +1,15 @@
 // browser-only
 import './Navigation.styl';
 
-import React from 'react';
+import * as React from 'react';
 
-export default class extends React.Component {
+export default class extends React.Component<any, any> {
 
   handleMouseDown(e) {
     if (e.button === 0) {
       let title = e.target.firstChild.data;
       let path = e.target.pathname;
-      navigateTo(path, title);
+      // TODO: navigateTo(path, title);
     }
   }
 

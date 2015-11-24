@@ -1,21 +1,21 @@
-import minimist from 'minimist';
-import { config } from '../package.json';
-import fs from 'fs';
-import path from 'path';
-import express from 'express';
-import socket_io from 'socket.io';
-import http from 'http';
-import morgan from 'morgan';
-import debug from 'debug';
-import Promise from 'bluebird';
+import * as minimist from 'minimist';
+import config from './config';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as express from 'express';
+import * as socket_io from 'socket.io';
+import * as http from 'http';
+import * as morgan from 'morgan';
+import * as debug from 'debug';
+import * as Promise from 'bluebird';
 import { watchDebouncedByFilename } from './lib/file-watcher';
 
 import * as converter from './lib/converter-marked';
 import { getDateString2 } from 'date-tool';
 import { SegmentedPath } from './classes/SegmentedPath';
 import { Directory } from './classes/Directory';
-import React from 'react';
-import ReactDOMServer from 'react-dom/server';
+import * as React from 'react';
+import * as ReactDOMServer from 'react-dom/server';
 import MyHTML from './components/MyHTML';
 
 

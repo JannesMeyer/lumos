@@ -1,7 +1,7 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import io from 'socket.io-client';
-import debug from 'debug';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
+import * as io from 'socket.io-client';
+import * as debug from 'debug';
 import { getJSON } from 'xhr-tool';
 
 import MyHTML from './components/MyHTML';
@@ -10,7 +10,7 @@ import { supported } from './constants'
 var log = debug('lumos');
 
 // Show lumos log messages in the browser console
-localStorage.debug = 'lumos';
+localStorage.setItem('debug', 'lumos');
 
 addEventListener('load', event => {
   // Initialize React
@@ -38,7 +38,7 @@ addEventListener('load', event => {
   socket.on('change', () => {
     log('Content changed');
 
-    get(location.pathname).then(data => {
+    getJSON(location.pathname).then(data => {
       data.isUserNavigation = false;
       renderToDOM(data);
     });
@@ -56,7 +56,7 @@ addEventListener('load', event => {
 ////////////////////////////////////
 
 function renderToDOM(data) {
-  return ReactDOM.render(<MyHTML data={data} />, document);
+  return ReactDOM.render(React.createElement(MyHTML, {data}), document.documentElement);
 }
 
 // Event listeners

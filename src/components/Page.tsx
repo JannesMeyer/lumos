@@ -3,13 +3,13 @@ import './Page.styl';
 import * as scroll from '../client-lib/scroll-tool';
 import * as keypress from '../client-lib/keypress-tool';
 
-import React from 'react';
-import ReactDOM from 'react-dom';
+import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import PageButton from './PageButton';
 import FullscreenButton from './FullscreenButton';
 
 // TODO: update twice for each page load (loading, loaded)
-export default class extends React.Component {
+export default class extends React.Component<any, any> {
 
   // TODO: doesn't work good with live reload
   shouldComponentUpdate(nextProps) {

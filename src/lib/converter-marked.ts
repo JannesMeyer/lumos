@@ -1,6 +1,6 @@
-import marked from 'marked';
-import hljs from 'highlight.js';
-import util from 'util';
+import * as marked from 'marked';
+import * as hljs from 'highlight.js';
+import * as util from 'util';
 
 marked.setOptions({
   gfm: true,
@@ -29,7 +29,7 @@ function sectionToHTML(section) {
 }
 
 class Section {
-  constructor(parent, text, headingDepth) {
+  constructor(parent?, text?, headingDepth?) {
     if (text !== undefined) {
       this.text = text;
     }
@@ -83,9 +83,9 @@ export function makeHtml(content) {
   var headings = tokens.filter(item => item.type === 'heading');
   var toc = makeToc(headings);
 
-  var content = marked.parser(tokens);
-  content = content.replace(/(<table>)/g, '<div class="table-responsive"><table class="table table-hover">');
-  content = content.replace(/(<\/table>)/g, '</table></div>');
+  var content2 = marked.parser(tokens);
+  content2 = content2.replace(/(<table>)/g, '<div class="table-responsive"><table class="table table-hover">');
+  content2 = content2.replace(/(<\/table>)/g, '</table></div>');
 
-  return toc + content;
+  return toc + content2;
 }

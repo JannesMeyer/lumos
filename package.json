@@ -9,16 +9,6 @@
     "build": "./node_modules/.bin/webpack",
     "start": "DEBUG=lumos:* node build/lumos.bundle.js serve"
   },
-  "config": {
-    "directory": "/Users/jannes/Dropbox/Notes/",
-    "port": 9000,
-    "mdSuffix": ".md",
-    "indexFile": "index.md",
-    "editURLProtocol": "lumos-connect://",
-    "editor": "/usr/local/bin/subl",
-    "editorArgs": [],
-    "diaryBaseDir": "/Users/jannes/Dropbox/Notes/Tagebuch"
-  },
   "dependencies": {
     "bluebird": "2.3.6",
     "date-tool": "1.0.4",

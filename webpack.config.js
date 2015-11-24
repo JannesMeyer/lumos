@@ -34,7 +34,7 @@ var resolve = {
 
 var client = {
   cache: true,
-  entry: './src/browser-main.js',
+  entry: './src/browser-main.ts',
   output: {
     path: './public/a2b8e37dbe533b/', // Avoid clashes with any subdirectory names
     filename: 'browser.bundle.js'
@@ -53,7 +53,7 @@ var client = {
 
 var server = {
   cache: true,
-  entry: './src/lumos-main.js',
+  entry: './src/lumos-main.ts',
   output: {
     path: './build/',
     filename: 'lumos.bundle.js',

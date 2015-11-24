@@ -1,6 +1,6 @@
-import fs from 'fs';
-import iconv from 'iconv-lite';
-import debug from 'debug';
+import * as fs from 'fs';
+import * as iconv from 'iconv-lite';
+import * as debug from 'debug';
 import { debounce } from 'date-tool';
 
 var log = debug('lumos:watcher');

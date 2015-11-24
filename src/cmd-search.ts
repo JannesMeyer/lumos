@@ -1,6 +1,6 @@
 import { execFile } from 'child_process';
-import debug from 'debug';
-import { config } from '../package.json';
+import * as debug from 'debug';
+import config from './config';
 
 var log = debug('lumos:search');
 

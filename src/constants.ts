@@ -22,7 +22,7 @@ var colors = {
 // Feature detection (client-side features)
 var supported = {
   history: typeof window !== 'undefined' && Boolean(window.history) && Boolean(window.history.pushState),
-  canvas2D: typeof window !== 'undefined' && Boolean(window.CanvasRenderingContext2D)
+  canvas2D: typeof window !== 'undefined' && Boolean(window['CanvasRenderingContext2D'])
 };
 
 export { colors, supported };

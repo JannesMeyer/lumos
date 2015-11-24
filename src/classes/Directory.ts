@@ -1,14 +1,17 @@
-import path from 'path';
-import fs from 'fs';
-import Promise from 'bluebird';
-import { config } from '../../package.json';
+import * as path from 'path';
+import * as fs from 'fs';
+import * as Promise from 'bluebird';
 import { SegmentedPath } from './SegmentedPath';
+import config from '../config';
+
 Promise.promisifyAll(fs);
 
 /**
  * A class that represents a directory
  */
 export class Directory {
+
+  
 
   constructor(path) {
     this.path = path;

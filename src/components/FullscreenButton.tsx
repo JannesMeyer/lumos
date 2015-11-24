@@ -1,11 +1,11 @@
-import React from 'react';
+import * as React from 'react';
 import PageButton from './PageButton';
 
 // browser-only
 import * as keypress from '../client-lib/keypress-tool';
 import * as fullscreen from '../client-lib/fullscreen-tool';
 
-export default class extends React.Component {
+export default class extends React.Component<any, any> {
 
   constructor(props) {
     super(props);

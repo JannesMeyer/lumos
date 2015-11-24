@@ -1,12 +1,12 @@
 // browser-only
 import './Header.styl';
 
-import React from 'react';
+import * as React from 'react';
 import BreadcrumbList from './BreadcrumbList';
 import SearchBar from './SearchBar';
 import ColorPicker from './ColorPicker';
 
-export default class extends React.Component {
+export default class extends React.Component<any, any> {
 
   render() {
     let { breadcrumbs, colors, color, dirs } = this.props;

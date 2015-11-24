@@ -1,9 +1,9 @@
-import React from 'react';
+import * as React from 'react';
 import Header from './Header';
 import Page from './Page';
 import Navigation from './Navigation';
 
-export default class extends React.Component {
+export default class extends React.Component<any, any> {
 
   render() {
     let { data, color, colors } = this.props;

@@ -3,7 +3,7 @@ import './MyHTML.styl';
 import * as keypress from '../client-lib/keypress-tool';
 import * as scroll from '../client-lib/scroll-tool';
 
-import React from 'react';
+import * as React from 'react';
 import Favicon from './Favicon';
 import LumosApplication from './LumosApplication';
 import { colors, supported } from '../constants';
@@ -12,7 +12,7 @@ import { colors, supported } from '../constants';
 
 var colorNames = Object.keys(colors);
 
-export default class extends React.Component {
+export default class extends React.Component<any, any> {
 
   constructor(props) {
     super(props);
@@ -29,7 +29,7 @@ export default class extends React.Component {
           console.warn('undefined state after a popstate event', e.state);
           return;
         }
-        this.setProps({ data: e.state });
+        // TODO: this.setProps({ data: e.state });
       });
     }
 
@@ -37,14 +37,14 @@ export default class extends React.Component {
     var goToNext = (e) => {
       var target = this.props.data.nextItem;
       if (target) {
-        navigateTo(target.link, target.name);
+        // TODO: navigateTo(target.link, target.name);
         e.preventDefault();
       }
     }
     var goToPrevious = (e) => {
       var target = this.props.data.prevItem;
       if (target) {
-        navigateTo(target.link, target.name);
+        // TODO: navigateTo(target.link, target.name);
         e.preventDefault();
       }
     }
@@ -68,8 +68,8 @@ export default class extends React.Component {
     // keypress.on(['executeDefault', 'shift'], 'space', scroll.ifAtTop(goToPrevious));
 
     // TODO: fix titles
-    keypress.on(['meta'], 'up', event => navigateTo('..', 'Title'));
-    keypress.on([], 'r', event => navigateTo('/', 'Title'));
+    //keypress.on(['meta'], 'up', event => navigateTo('..', 'Title'));
+    //keypress.on([], 'r', event => navigateTo('/', 'Title'));
 
     keypress.on(['inputEl'], 'esc', event => {
       var el = event.target;

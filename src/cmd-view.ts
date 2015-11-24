@@ -1,6 +1,6 @@
-import minimist from 'minimist';
+import * as minimist from 'minimist';
 import { spawn } from 'child_process';
-import { config } from '../package.json';
+import config from './config';
 
 export default function cmd(args) {
   var argv = minimist(args);

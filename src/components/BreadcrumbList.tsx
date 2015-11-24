@@ -1,12 +1,12 @@
-import React from 'react';
+import * as React from 'react';
 
-export default class extends React.Component {
+export default class extends React.Component<any, any> {
 
   handleClick(ev) {
     if (ev.button === 0) {
       var title = ev.target.firstChild.data;
       var path = ev.target.pathname;
-      navigateTo(path, title);
+      // TODO: navigateTo(path, title);
       ev.preventDefault();
     }
   }

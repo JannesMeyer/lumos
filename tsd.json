@@ -1,0 +1,51 @@
+{
+  "version": "v4",
+  "repo": "borisyankov/DefinitelyTyped",
+  "ref": "master",
+  "path": "typings",
+  "bundle": "typings/tsd.d.ts",
+  "installed": {
+    "react/react.d.ts": {
+      "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
+    },
+    "node/node.d.ts": {
+      "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
+    },
+    "bluebird/bluebird.d.ts": {
+      "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
+    },
+    "react/react-dom.d.ts": {
+      "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
+    },
+    "minimist/minimist.d.ts": {
+      "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
+    },
+    "debug/debug.d.ts": {
+      "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
+    },
+    "morgan/morgan.d.ts": {
+      "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
+    },
+    "express/express.d.ts": {
+      "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
+    },
+    "serve-static/serve-static.d.ts": {
+      "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
+    },
+    "mime/mime.d.ts": {
+      "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
+    },
+    "socket.io-client/socket.io-client.d.ts": {
+      "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
+    },
+    "socket.io/socket.io.d.ts": {
+      "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
+    },
+    "marked/marked.d.ts": {
+      "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
+    },
+    "highlightjs/highlightjs.d.ts": {
+      "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
+    }
+  }
+}

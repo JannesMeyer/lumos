@@ -1,9 +1,9 @@
-import fs from 'fs';
-import path from 'path';
-import minimist from 'minimist';
-import Promise from 'bluebird';
-import childProcess from 'child_process';
-import { config } from '../package.json';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as minimist from 'minimist';
+import * as Promise from 'bluebird';
+import * as childProcess from 'child_process';
+import config from './config';
 Promise.promisifyAll(fs);
 
 function editor(files) {
