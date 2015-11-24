@@ -20,22 +20,24 @@ export default function cmd(args) {
 /**
  * Search files in directory using `mdfind`
  */
-function search(directory, terms) {
+function search(directory, terms): Promise<string[]> {
   // directory must not end in a slash
   if (directory.endsWith('/')) {
     directory = directory.replace(/\/+$/, '');
   }
 
   return new Promise(function(resolve, reject) {
-    execFile('mdfind', ['-onlyin', directory, buildQuery(terms)], (err, out) => {
-      if (err) {
-        return reject(err);
-      }
-      if (out === '') {
-        return resolve([]);
-      }
-      resolve(out.trim().split('\n')
-                 .map(result => result.slice(directory.length)));
+    execFile('mdfind', ['-onlyin', directory, buildQuery(terms)], (err, stdout) => {
+      // if (err) {
+      //   return reject(err);
+      // }
+      let str = stdout.toString('utf8');
+      // if (str === '') {
+      //   return resolve([]);
+      // }
+      let arr = str.trim().split('\n');
+      let arr2 = arr.map(r => r.slice(directory.length));
+      resolve(arr2);
     });
   });
 }

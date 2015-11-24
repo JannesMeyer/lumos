@@ -7,7 +7,6 @@ import * as socket_io from 'socket.io';
 import * as http from 'http';
 import * as morgan from 'morgan';
 import * as debug from 'debug';
-import * as Promise from 'bluebird';
 import { watchDebouncedByFilename } from './lib/file-watcher';
 
 import * as converter from './lib/converter-marked';
@@ -20,13 +19,12 @@ import MyHTML from './components/MyHTML';
 
 
 var log = debug('lumos:main');
-Promise.promisifyAll(fs);
 
 export default function cmd(args) {
   let argv = minimist(args);
   let options = {
-    directory: argv.dir || config.directory,
-    port: argv.port || config.port
+    directory: argv['dir'] || config.directory,
+    port: argv['port'] || config.port
   };
 
   startServer(options);

@@ -1,10 +1,8 @@
-import * as fs from 'fs';
+import * as fs from 'q-io/fs';
 import * as path from 'path';
 import * as minimist from 'minimist';
-import * as Promise from 'bluebird';
 import * as childProcess from 'child_process';
 import config from './config';
-Promise.promisifyAll(fs);
 
 function editor(files) {
   if (files === undefined) {
@@ -21,13 +19,13 @@ function createFiles(files) {
   return Promise.all(files.map(f => {
       var dir = path.dirname(f);
 
-      return fs.statAsync(dir).then(stat => {
-        if (stat.isFile()) {
+      return fs.stat(dir).then(stat => {
+        if (stat.node.isFile()) {
           throw new Error('Found a file instead of a directory');
         }
       }, err => {
         // TODO: Does fs.statAsync throw if the directory doesn't exist?
-        return fs.mkdirAsync(dir);
+        return fs.makeDirectory(dir);
       });
     }
   ));

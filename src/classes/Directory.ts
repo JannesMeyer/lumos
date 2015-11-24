@@ -1,10 +1,7 @@
 import * as path from 'path';
-import * as fs from 'fs';
-import * as Promise from 'bluebird';
+import * as fs from 'q-io/fs';
 import { SegmentedPath } from './SegmentedPath';
 import config from '../config';
-
-Promise.promisifyAll(fs);
 
 /**
  * A class that represents a directory
