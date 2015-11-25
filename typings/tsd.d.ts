@@ -13,6 +13,7 @@
 /// <reference path="highlightjs/highlightjs.d.ts" />
 /// <reference path="q-io/Q-io.d.ts" />
 /// <reference path="q/Q.d.ts" />
+/// <reference path="async/async.d.ts" />
 
 declare module 'iconv-lite' {
    export function decode(input: Buffer, encoding: string): string;

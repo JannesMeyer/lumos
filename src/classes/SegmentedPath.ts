@@ -5,24 +5,26 @@ import * as path from 'path';
  */
 export class SegmentedPath {
 
-  constructor(basePath, segments) {
-    if (!Array.isArray(segments)) {
-      throw new TypeError('segments needs to be an array');
-    }
-    if (typeof basePath !== 'string') {
-      throw new TypeError('basePath needs to be a string');
-    }
+  basePath: string;
+  baseDirName: string;
+  segments: string[];
+  absolute: string;
+  relative: string;
+  name: string;
+  sortStr: string;
+  isHidden: boolean;
+  isDir: boolean;
+  
+  fullName: string;  
+  extension: string;
+  link: string;
+
+  constructor(basePath: string, segments: string[]) {
     this.basePath = basePath;
     this.baseDirName = path.basename(basePath);
     this.segments = segments;
+    
     this.update();
-    // this.name = String
-    // this.extension = String
-    // this.basename = String
-    // this.sortString = String
-    // this.link = String
-    // this.isHidden = Boolean
-    // this.isDir = Boolean
   }
 
   update() {

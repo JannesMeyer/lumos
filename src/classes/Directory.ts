@@ -1,5 +1,6 @@
+import * as async from 'async';
 import * as path from 'path';
-import * as fs from 'q-io/fs';
+import * as fs from 'fs';
 import { SegmentedPath } from './SegmentedPath';
 import config from '../config';
 
@@ -8,51 +9,83 @@ import config from '../config';
  */
 export class Directory {
 
-  
+  path: SegmentedPath;
+  dirs: SegmentedPath[];
+  files: SegmentedPath[];
 
   constructor(path) {
     this.path = path;
-    // this.dirs = [SegmentedPath, ...]
-    // this.files = [SegmentedPath, ...]
   }
 
   readContents() {
     var contents;
-    return fs.readdirAsync(this.path.absolute)
-    .then(names => {
-      contents = names.map(name => new SegmentedPath(this.path.absolute, [name]));
-      // Find out whether these are directories or files
-      var promises = contents.map(item => fs.statAsync(item.absolute));
-      return Promise.all(promises);
-    })
-    .then(stats => {
-      // TODO: use for..of instead
-      // Correct isDir information
-      contents.forEach(function(item, i) {
-        item.isDir = stats[i].isDirectory();
-        if (item.isDir) {
-          item.link = encodeURIComponent(item.name) + '/';
-        } else {
-          item.makeFile();
-          item.link = encodeURIComponent(item.name);
-        }
+    
+    return new Promise((resolve, reject) => {
+      fs.readdir(this.path.absolute, (err, files) => {
+        // Get absolute path for each file
+        var contents = files.map(filename => new SegmentedPath(this.path.absolute, [ filename ]));
+        
+        // Stat each file to see whether it's a directory or not
+        async.map(contents.map(p => p.absolute), fs.stat, (err, stats) => {
+          if (err) { reject(err); }
+          
+          contents.forEach((item, i) => {
+            item.isDir = stats[i].isDirectory();
+            if (item.isDir) {
+              item.link = encodeURIComponent(item.name) + '/';
+            } else {
+              item.makeFile();
+              item.link = encodeURIComponent(item.name);
+            }
+          });
+          
+          // TODO: sort
+          // TODO: itemFilterFn
+          
+          // Set dirs and files
+          this.dirs = contents.filter(i => i.isDir);
+          this.files = contents.filter(i => !i.isDir);
+          
+          resolve(this);
+        });
       });
-
-      // sort
-      contents.sort(itemSort);
-      contents = contents.filter(itemFilterFn);
-
-      // split
-      for (var i = 0; i < contents.length; ++i) {
-        if (!contents[i].isDir) {
-          break;
-        }
-      }
-      this.dirs = contents.slice(0, i);
-      this.files = contents.slice(i);
-
-      return this;
     });
+    
+    
+    // return fs.readdir(this.path.absolute).then(names => {
+    //   contents = names.map(name => new SegmentedPath(this.path.absolute, [name]));
+    //   // Find out whether these are directories or files
+    //   var promises = contents.map(item => fs.stat(item.absolute));
+    //   return Promise.all(promises);
+    // })
+    // .then(stats => {
+    //   // TODO: use for..of instead
+    //   // Correct isDir information
+    //   contents.forEach(function(item, i) {
+    //     item.isDir = stats[i].isDirectory();
+    //     if (item.isDir) {
+    //       item.link = encodeURIComponent(item.name) + '/';
+    //     } else {
+    //       item.makeFile();
+    //       item.link = encodeURIComponent(item.name);
+    //     }
+    //   });
+
+    //   // sort
+    //   contents.sort(itemSort);
+    //   contents = contents.filter(itemFilterFn);
+
+    //   // split
+    //   for (var i = 0; i < contents.length; ++i) {
+    //     if (!contents[i].isDir) {
+    //       break;
+    //     }
+    //   }
+    //   this.dirs = contents.slice(0, i);
+    //   this.files = contents.slice(i);
+
+    //   return this;
+    // });
   }
 
   hasFile(name) {
