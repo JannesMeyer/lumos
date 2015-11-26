@@ -132,3 +132,5 @@ function itemFilterFn(item) {
   }
   return true;
 }
+
+export default Directory;
