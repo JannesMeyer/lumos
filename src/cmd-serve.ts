@@ -119,7 +119,7 @@ function lumosDirectory2(basePath): express.RequestHandler {
     
     // TODO: normalize and redirect
     // TODO: error if it tries to break out of sandbox
-    // TODO: cache by normalized urlPath
+    // TODO: cache by normalized urlPath. Implicitly build the whole tree!
     
     if (urlPath.endsWith('/')) {
       let directory = new Directory(urlPath, base);
@@ -127,10 +127,11 @@ function lumosDirectory2(basePath): express.RequestHandler {
       // TODO: get a fs.stat()
     } else {
       let file = new File(urlPath, base);
+      // TODO: getParent()
       // TODO: prepare data (content, other files in container)
       // TODO: get a fs.stat()
     }
-     
+    
   };
 }
 

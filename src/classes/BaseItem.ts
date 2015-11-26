@@ -46,6 +46,10 @@ export default class BaseItem {
 		
 	}
 	
+	getParent() {
+		
+	}
+	
 	/**
 	 * Get absolute path
 	 */
