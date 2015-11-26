@@ -1,6 +1,11 @@
 import * as path from 'path';
 import Directory from './Directory';
 
+/**
+ * The only useful you can do with an instance of this is to use fs.stat()
+ * Then you can decide whether to create a File or Directory instance, which
+ * extend this class.
+ */
 export default class BaseItem {
 	
 	/**
@@ -22,10 +27,14 @@ export default class BaseItem {
 	isHidden: boolean;
 	
 	/** Cached: The absolute path for use in OS-level functions. Goes up the chain of bases. */
-	// TODO: needs to be normalized?
+	// TODO: needs to be normalized? so it needs to be a function. Can't break out of base.
 	//absolutePath: string;
 	
 	constructor() {
+		
+	}
+	
+	stat() {
 		
 	}
 	

@@ -112,6 +112,28 @@ function render(data: MyHtmlProps) {
     return '<!DOCTYPE html>' + ReactDOMServer.renderToString(React.createElement(MyHTML, { data } ));
 }
 
+function lumosDirectory2(basePath): express.RequestHandler {
+  let base = new Directory(basePath);
+  return function (req, res, next) {
+    let urlPath = decodeURIComponent(req.path);
+    
+    // TODO: normalize and redirect
+    // TODO: error if it tries to break out of sandbox
+    // TODO: cache by normalized urlPath
+    
+    if (urlPath.endsWith('/')) {
+      let directory = new Directory(urlPath, base);
+      // TODO: prepare data (index.md, other files in container)
+      // TODO: get a fs.stat()
+    } else {
+      let file = new File(urlPath, base);
+      // TODO: prepare data (content, other files in container)
+      // TODO: get a fs.stat()
+    }
+     
+  };
+}
+
 function lumosDirectory(baseDir): express.RequestHandler {
   var baseDirName = path.basename(baseDir);
   
