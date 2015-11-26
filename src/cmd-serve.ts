@@ -120,8 +120,9 @@ function lumosDirectory(baseDir): express.RequestHandler {
     
     var requestedItem = new SegmentedPath(baseDir, [ processedPath ]);
     if (!requestedItem.verifyDescendance()) {
-        next(new HttpError(400, 'Bad Request'));
-        return;
+      // TODO: change this to res.sendCode()
+      next(new HttpError(400, 'Bad Request'));
+      return;
     }
 
     // Prepare data to render
