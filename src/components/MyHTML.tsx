@@ -12,7 +12,16 @@ import { colors, supported } from '../constants';
 
 var colorNames = Object.keys(colors);
 
-export default class extends React.Component<any, any> {
+interface MyHtmlProps {
+  baseDirName?: string;
+  title?: string;
+  breadcrumbs?: string[];
+  items?: SegmentedPath[];
+  dirs?: SegmentedPath[];
+  content?: SegmentedPath[];
+}
+
+export default class extends React.Component<MyHtmlProps, any> {
 
   constructor(props) {
     super(props);

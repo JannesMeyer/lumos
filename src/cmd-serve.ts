@@ -23,15 +23,6 @@ interface ServerOptions {
   port: number;
 }
 
-interface MyHtmlProps {
-  baseDirName?: string;
-  title?: string;
-  breadcrumbs?: string[];
-  items?: SegmentedPath[];
-  dirs?: SegmentedPath[];
-  content?: SegmentedPath[];
-}
-
 class HttpError extends Error {
   code: number;
   constructor(code: number, message: string) {
