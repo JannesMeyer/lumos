@@ -8,8 +8,8 @@ var SystemBellPlugin = require('system-bell-webpack-plugin');
 // Webpack configuration
 //////////////////////////
 var loaders = [
-  { test: /\.tsx?$/, loader: 'ts' },
-  { test: /\.jsx?$/, loader: 'babel', query: { cacheDirectory: true, presets: ['react', 'es2015'] }, exclude: /node_modules/ },
+  { test: /\.tsx?$/, loader: 'ts', exclude: /node_modules/ },
+  //{ test: /\.jsx?$/, loader: 'babel', query: { cacheDirectory: true, presets: ['react', 'es2015'] }, exclude: /node_modules/ },
   { test: /\.json$/, loader: 'json' },
 ];
 var plugins;
@@ -25,27 +25,27 @@ if (process.env.NODE_ENV === 'production') {
   ];
 }
 var resolve = {
-  extensions: ['', '.js', '.jsx', '.ts', '.tsx', '.web.js'],
+  extensions: ['', '.ts', '.tsx'],
 };
 
 ///////////////////////
 // Client-side bundle
 ///////////////////////
 
-var client = {
-  cache: true,
-  entry: './src/browser-main.ts',
-  output: {
-    path: './public/a2b8e37dbe533b/', // Avoid clashes with any subdirectory names
-    filename: 'browser.bundle.js'
-  },
+// var client = {
+//   cache: true,
+//   entry: './src/browser-main.ts',
+//   output: {
+//     path: './public/a2b8e37dbe533b/', // Avoid clashes with any subdirectory names
+//     filename: 'browser.bundle.js'
+//   },
 
-  module: {
-    loaders: loaders.concat({ test: /\.styl$/, loader: ExtractTextPlugin.extract('style', 'css?sourceMap!autoprefixer!stylus') })
-  },
-  plugins: plugins.concat(new ExtractTextPlugin('main.bundle.css')),
-  resolve: resolve,
-};
+//   module: {
+//     loaders: loaders.concat({ test: /\.styl$/, loader: ExtractTextPlugin.extract('style', 'css?sourceMap!autoprefixer!stylus') })
+//   },
+//   plugins: plugins.concat(new ExtractTextPlugin('main.bundle.css')),
+//   resolve: resolve,
+// };
 
 ///////////////////////
 // Server-side bundle
@@ -80,4 +80,4 @@ var server = {
   },
 };
 
-module.exports = [ client, server ];
+module.exports = [ server ];

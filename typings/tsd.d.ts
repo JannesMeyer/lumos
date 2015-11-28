@@ -11,13 +11,11 @@
 /// <reference path="socket.io/socket.io.d.ts" />
 /// <reference path="marked/marked.d.ts" />
 /// <reference path="highlightjs/highlightjs.d.ts" />
-/// <reference path="q-io/Q-io.d.ts" />
-/// <reference path="q/Q.d.ts" />
 /// <reference path="async/async.d.ts" />
+
+/// <reference path="../node_modules/typescript/lib/lib.es6.d.ts" />
 
 declare module 'iconv-lite' {
    export function decode(input: Buffer, encoding: string): string;
    export function encode(input: string, encoding: string): Buffer;
 }
-
-

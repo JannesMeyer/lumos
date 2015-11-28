@@ -1,12 +1,12 @@
 {
 	"compilerOptions": {
-		"target": "ES6",
+		"target": "ES5",
 		"module": "commonjs",
 		"jsx": "react",
-		"moduleResolution": "node"
+		"noLib": true
 	},
-	"exclude": [
-		"node_modules",
-		"*.json"
+	"files": [
+		"typings/tsd.d.ts",
+		"src/lumos-main.ts"
 	]
 }
