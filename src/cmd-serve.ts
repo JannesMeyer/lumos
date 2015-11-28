@@ -8,15 +8,13 @@ import * as socket_io from 'socket.io';
 import * as http from 'http';
 import * as morgan from 'morgan';
 import * as debug from 'debug';
-//import { watchDebouncedByFilename } from './lib/file-watcher';
+import { watchDebouncedByFilename } from './lib/file-watcher';
 
-//import { getDateString2 } from 'date-tool';
-//import * as converter from './lib/converter-marked';
+import { getDateString2 } from 'date-tool';
+import * as converter from './lib/converter-marked';
 import Directory from './classes/Directory';
 import File from './classes/File';
 //import { render } from './components/MyHTML';
-
-console.log(minimist);
 
 interface ServerOptions {
   directory: string;

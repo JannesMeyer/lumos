@@ -29,6 +29,12 @@ function sectionToHTML(section) {
 }
 
 class Section {
+  text: string;
+  parent: Section;
+  depth: number;
+  children: Section[];
+  highestHeading: number;
+  
   constructor(parent?, text?, headingDepth?) {
     if (text !== undefined) {
       this.text = text;
