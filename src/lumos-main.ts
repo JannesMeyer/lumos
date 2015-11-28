@@ -1,10 +1,10 @@
 import serve from './cmd-serve';
-import view from './cmd-view';
-import edit from './cmd-edit';
-import diary from './cmd-diary';
-import search from './cmd-search';
+// import view from './cmd-view';
+// import edit from './cmd-edit';
+// import diary from './cmd-diary';
+// import search from './cmd-search';
 
-const commands = { serve, view, edit, diary, search };
+const commands = { serve/*, view, edit, diary, search*/ };
 
 // Take first argument
 let args = process.argv.slice(2);

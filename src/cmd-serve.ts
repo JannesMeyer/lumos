@@ -8,13 +8,15 @@ import * as socket_io from 'socket.io';
 import * as http from 'http';
 import * as morgan from 'morgan';
 import * as debug from 'debug';
-import { watchDebouncedByFilename } from './lib/file-watcher';
+//import { watchDebouncedByFilename } from './lib/file-watcher';
 
-import * as converter from './lib/converter-marked';
-import { getDateString2 } from 'date-tool';
-import { SegmentedPath } from './classes/SegmentedPath';
-import { Directory } from './classes/Directory';
-import { render } from './components/MyHTML';
+//import { getDateString2 } from 'date-tool';
+//import * as converter from './lib/converter-marked';
+import Directory from './classes/Directory';
+import File from './classes/File';
+//import { render } from './components/MyHTML';
+
+console.log(minimist);
 
 interface ServerOptions {
   directory: string;
@@ -108,6 +110,8 @@ function lumosDirectory(basePath): express.RequestHandler {
     
     if (urlPath.endsWith('/')) {
       let directory = new Directory(urlPath, base);
+      
+      
       // TODO: prepare data (index.md, other files in container)
       // TODO: get a fs.stat()
     } else {
@@ -117,6 +121,14 @@ function lumosDirectory(basePath): express.RequestHandler {
       // TODO: get a fs.stat()
     }
   };
+}
+
+function readDirectoryData(): Promise<any> {
+  return Promise.resolve({});
+}
+
+function readFileData(): Promise<any> {
+  return Promise.resolve({});
 }
 
 function showError(error: HttpError, req: express.Request, res: express.Response, next: Function) {

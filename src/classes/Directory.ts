@@ -1,10 +1,10 @@
-//import * as path from 'path';
 import BaseItem from './BaseItem';
 
 export default class Directory extends BaseItem {
 	
-	constructor() {
-		super();
+	constructor(path: string, base?: Directory) {
+		super(path, base);
+		console.log('New Directory');
 	}
 	
 }

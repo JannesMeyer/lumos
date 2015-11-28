@@ -30,8 +30,8 @@ export default class BaseItem {
 	// TODO: needs to be normalized? so it needs to be a function. Can't break out of base.
 	//absolutePath: string;
 	
-	constructor() {
-		
+	constructor(path: string, base?: Directory) {
+		console.log('New BaseItem');
 	}
 	
 	stat() {
