@@ -11,9 +11,6 @@
     "node/node.d.ts": {
       "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
     },
-    "bluebird/bluebird.d.ts": {
-      "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
-    },
     "react/react-dom.d.ts": {
       "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
     },
@@ -45,12 +42,6 @@
       "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
     },
     "highlightjs/highlightjs.d.ts": {
-      "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
-    },
-    "q/Q.d.ts": {
-      "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
-    },
-    "q-io/Q-io.d.ts": {
       "commit": "ba424f7ee39717d51c17699a09ac8df312a7e9a1"
     },
     "async/async.d.ts": {
