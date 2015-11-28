@@ -4,6 +4,7 @@ import * as keypress from '../client-lib/keypress-tool';
 import * as scroll from '../client-lib/scroll-tool';
 
 import * as React from 'react';
+import * as ReactDOMServer from 'react-dom/server';
 import Favicon from './Favicon';
 import LumosApplication from './LumosApplication';
 import { colors, supported } from '../constants';
@@ -12,7 +13,7 @@ import { colors, supported } from '../constants';
 
 var colorNames = Object.keys(colors);
 
-interface MyHtmlProps {
+interface MyHTMLProps {
   baseDirName?: string;
   title?: string;
   breadcrumbs?: string[];
@@ -21,7 +22,11 @@ interface MyHtmlProps {
   content?: SegmentedPath[];
 }
 
-export default class extends React.Component<MyHtmlProps, any> {
+export function render(data: MyHTMLProps) {
+    return '<!DOCTYPE html>' + ReactDOMServer.renderToString(React.createElement(MyHTML, { data } ));
+}
+
+export default class extends React.Component<MyHTMLProps, any> {
 
   constructor(props) {
     super(props);
