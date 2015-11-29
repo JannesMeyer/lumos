@@ -5,8 +5,7 @@
 		"jsx": "react",
 		"noLib": true
 	},
-	"files": [
-		"typings/tsd.d.ts",
-		"src/lumos-main.ts"
+	"exclude": [
+		"node_modules"
 	]
 }
