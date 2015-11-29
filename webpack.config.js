@@ -54,10 +54,13 @@ var client = {
 
 var server = {
   cache: true,
-  entry: './src/lumos-main.ts',
+  entry: {
+    lumos: './src/lumos-main.ts',
+    test: './test/test.ts'
+  },
   output: {
     path: './build/',
-    filename: 'lumos.bundle.js',
+    filename: '[name].bundle.js',
     libraryTarget: 'commonjs2'
   },
 
