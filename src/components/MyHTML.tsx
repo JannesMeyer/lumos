@@ -8,8 +8,8 @@ import * as ReactDOMServer from 'react-dom/server';
 import Favicon from './Favicon';
 import LumosApplication from './LumosApplication';
 import { colors, supported } from '../constants';
-
-
+import Directory from '../classes/Directory';
+import File from '../classes/File';
 
 var colorNames = Object.keys(colors);
 
@@ -17,16 +17,16 @@ interface MyHTMLProps {
   baseDirName?: string;
   title?: string;
   breadcrumbs?: string[];
-  items?: SegmentedPath[];
-  dirs?: SegmentedPath[];
-  content?: SegmentedPath[];
+  items?: File[];
+  dirs?: Directory[];
+  content?: File[];
 }
 
 export function render(data: MyHTMLProps) {
     return '<!DOCTYPE html>' + ReactDOMServer.renderToString(React.createElement(MyHTML, { data } ));
 }
 
-export default class extends React.Component<MyHTMLProps, any> {
+export default class MyHTML extends React.Component<any, any> {
 
   constructor(props) {
     super(props);
