@@ -1,4 +1,4 @@
-import * as path from 'path';
+import * as pathApi from 'path';
 import Directory from './Directory';
 
 /**
@@ -27,19 +27,58 @@ export default class BaseItem {
 	isHidden: boolean;
 	
 	/** Cached: The absolute path for use in OS-level functions. Goes up the chain of bases. */
-	// TODO: needs to be normalized? so it needs to be a function. Can't break out of base.
-	//absolutePath: string;
+	absolutePath: string;
 	
 	constructor(path: string, base?: Directory) {
-		console.log('New BaseItem');
+		this.base = base;
+		
+		let items = path.split(pathApi.sep).filter(i => i !== '.').map(i => i.normalize());
+		
+		// TODO: normalize first
+		items.forEach(i => {
+			if (i === '..') {
+				throw new Error('.. is not allowed in the path');
+			}
+		});
+		
+		// Preserve root level
+		if (base == null && items.length >= 2 && items[0] === '') {
+			items[1] = pathApi.sep + items[1];
+		}
+		
+		this.pathComponents = items.filter(i => i !== '');
+		this.updateValues();
+	}
+	
+	/**
+	 * Update the derived values
+	 */
+	updateValues() {		
+		// Compute absolute path
+		let components = [];
+		let baseDir = this.base;
+		while (baseDir != null) {
+			components.push(...baseDir.pathComponents);
+			baseDir = baseDir.base;
+		}
+		components.push(...this.pathComponents);
+		
+		if (components.length === 0) {
+			throw new Error('Empty paths are not allowed');
+		}
+
+		this.name = components[components.length - 1];
+		this.normalizedName = this.name.toLocaleLowerCase();
+		this.isHidden = this.name.startsWith('.');
+		this.absolutePath = pathApi.join(...components);
 	}
 	
 	stat() {
 		
 	}
 	
-	normalize() {
-		
+	static normalize(path1: string, path2: string) {
+		return pathApi.normalize(pathApi.join(path1, path2));
 	}
 	
 	isDir() {
