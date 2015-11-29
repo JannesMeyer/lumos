@@ -1,4 +1,3 @@
-import * as fs from 'q-io/fs';
 import * as path from 'path';
 import * as minimist from 'minimist';
 import * as childProcess from 'child_process';
@@ -19,14 +18,14 @@ function createFiles(files) {
   return Promise.all(files.map(f => {
       var dir = path.dirname(f);
 
-      return fs.stat(dir).then(stat => {
-        if (stat.node.isFile()) {
-          throw new Error('Found a file instead of a directory');
-        }
-      }, err => {
-        // TODO: Does fs.statAsync throw if the directory doesn't exist?
-        return fs.makeDirectory(dir);
-      });
+      // return fs.stat(dir).then(stat => {
+      //   if (stat.node.isFile()) {
+      //     throw new Error('Found a file instead of a directory');
+      //   }
+      // }, err => {
+      //   // TODO: Does fs.statAsync throw if the directory doesn't exist?
+      //   return fs.makeDirectory(dir);
+      // });
     }
   ));
 }
