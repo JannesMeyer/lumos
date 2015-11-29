@@ -19,3 +19,5 @@ declare module 'iconv-lite' {
    export function decode(input: Buffer, encoding: string): string;
    export function encode(input: string, encoding: string): Buffer;
 }
+
+declare var __DEV__: boolean;
