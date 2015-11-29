@@ -11,7 +11,6 @@
 /// <reference path="socket.io/socket.io.d.ts" />
 /// <reference path="marked/marked.d.ts" />
 /// <reference path="highlightjs/highlightjs.d.ts" />
-/// <reference path="async/async.d.ts" />
 
 /// <reference path="../node_modules/typescript/lib/lib.es6.d.ts" />
 
