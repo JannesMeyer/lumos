@@ -1,7 +1,6 @@
 import * as minimist from 'minimist';
 import config from './config';
 import * as fs from 'fs';
-import * as async from 'async';
 import * as path from 'path';
 import * as express from 'express';
 import * as socket_io from 'socket.io';
@@ -99,7 +98,8 @@ export function startServer(options: ServerOptions) {
 function lumosDirectory(basePath): express.RequestHandler {
   let base = new Directory(basePath);
   
-  return function showPage(req, res, next) {
+  return (req, res, next) => {
+    
     let urlPath = decodeURIComponent(req.path);
     
     // TODO: normalize and redirect
@@ -108,7 +108,6 @@ function lumosDirectory(basePath): express.RequestHandler {
     
     if (urlPath.endsWith('/')) {
       let directory = new Directory(urlPath, base);
-      
       
       // TODO: prepare data (index.md, other files in container)
       // TODO: get a fs.stat()
