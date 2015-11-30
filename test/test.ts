@@ -30,7 +30,27 @@ describe('Directory', () => {
     let dir = new Directory('/', baseDir);
     return dir.readContent().then(items => {
       assert.equal(true, items.every(i => (i instanceof Directory || i instanceof File)));
-      assert.equal(true, items.some(i => (i.name === 'Exposé einer Bachelorthesis.md')));
+      assert.equal(true, items.some(i => (i.name === 'Exposé einer Bachelorthesis')));
+    });
+  });
+  
+});
+
+describe('File', () => {
+  
+  let baseDir = new Directory('/Users/jannes/Dropbox/Notes/');
+  
+  it('initializes correctly', () => {
+    let file = new File('index.md', baseDir);
+    assert.equal(file.absolutePath, '/Users/jannes/Dropbox/Notes/index.md');
+    assert.equal(file.name, 'index');
+  });
+  
+  it('can read its contents', () => {
+    let file = new File('index.md', baseDir);
+    return file.readContent().then(content => {
+      assert.equal(typeof content, 'string');
+      assert.equal(content.length > 10, true);
     });
   });
   
