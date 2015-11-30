@@ -13,7 +13,7 @@ export default class File extends BaseItem {
 		return pathApi.basename(name, pathApi.extname(name));
 	}
 	
-	inspect() {
+	inspect(): string {
 		return `[File ${this.name}]`;
 	}
 	

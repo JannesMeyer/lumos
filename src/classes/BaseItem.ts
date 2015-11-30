@@ -1,3 +1,4 @@
+import * as fs from 'fs';
 import * as pathApi from 'path';
 import Directory from './Directory';
 
@@ -73,27 +74,25 @@ export default class BaseItem {
 		this.absolutePath = pathApi.join(...components);
 	}
 	
-	stat() {
-		
+	inspect(): string {
+		return `[Directory ${this.name}]`;
+	}
+	
+	stat(): Promise<fs.Stats> {
+		return stat(this.absolutePath);
 	}
 	
 	static normalize(path1: string, path2: string) {
 		return pathApi.normalize(pathApi.join(path1, path2));
 	}
 	
-	isDir() {
-		
-	}
-	
-	getParent() {
-		
-	}
-	
-	/**
-	 * Get absolute path
-	 */
-	toString() {
-		
-	}
-	
+}
+
+/**
+ * fs.stat as Promise
+ */
+export function stat(path: string): Promise<fs.Stats> {
+	return new Promise((resolve, reject) => {
+		fs.stat(path, (err, stats) => (err ? reject(err) : resolve(stats)));
+	});
 }

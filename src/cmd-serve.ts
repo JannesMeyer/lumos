@@ -108,7 +108,21 @@ function lumosDirectory(basePath): express.RequestHandler {
     
     if (urlPath.endsWith('/')) {
       let directory = new Directory(urlPath, base);
+      let indexFile = new File(urlPath + 'index.md', base);
       
+      // directory.stat().then(stats => {
+      //   console.log('stats', stats);
+      // });
+      
+      directory.readContent().then(content => {
+        console.log('content', content);
+      });
+      
+      // indexFile.readContent().then(content => {
+      //   console.log('index.md', content);
+      // });
+      
+      res.end('Bye');
       // TODO: prepare data (index.md, other files in container)
       // TODO: get a fs.stat()
     } else {
