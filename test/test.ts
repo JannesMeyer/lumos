@@ -46,11 +46,11 @@ describe('File', () => {
     assert.equal(file.name, 'index');
   });
   
-  it('can read its contents', () => {
+  it('can read its contents, which should start with a #', () => {
     let file = new File('index.md', baseDir);
     return file.readContent().then(content => {
       assert.equal(typeof content, 'string');
-      assert.equal(content.length > 10, true);
+      assert.equal(content[0], '#');
     });
   });
   
