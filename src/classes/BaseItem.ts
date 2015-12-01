@@ -30,6 +30,9 @@ export default class BaseItem {
 	/** Cached: The absolute path for use in OS-level functions. Goes up the chain of bases. */
 	absolutePath: string;
 	
+	/** Cache: Relative path from the first base */
+	relativeToFirstBase: string;
+	
 	constructor(path: string, base?: Directory) {
 		this.base = base;
 		

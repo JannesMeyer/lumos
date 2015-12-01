@@ -34,6 +34,14 @@ describe('Directory', () => {
     });
   });
   
+  it('can be used to create links relative to the base', () => {
+    let dir = new Directory('/test/asd', baseDir);
+    let file = new File('asdf.md', dir);
+    
+    assert.equal('/test/asd/', dir.relativeToFirstBase);
+    assert.equal('/test/asd/asdf', file.relativeToFirstBase);
+  });
+  
 });
 
 describe('File', () => {
